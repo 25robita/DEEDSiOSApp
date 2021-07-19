@@ -1,21 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { loadAsync } from 'expo-font';
+import { getItemAsync, setItemAsync } from 'expo-secure-store';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { fetchResource } from './app/getters/get';
+import LoginScreen from './app/screens/LoginScreen';
+import MainScreen from './app/screens/MainScreen';
+import WaitingScreen from './app/screens/WaitingScreen';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+setItemAsync("p", "hgc,gcyhuj")
+
+class App extends Component {
+    state = { screen: "wait" }
+    constructor(props) {
+        super(props)
+    }
+    componentDidMount() {
+        loadAsync({
+            schoolbox: require("./app/assets/fonts/schoolbox.ttf")
+        })
+        fetchResource("/") //
+            .then(_ => {
+                this.setState({ screen: "main" })
+            }, _ => {
+                this.setState({ screen: "login" })
+            })
+    }
+    render() {
+        return (
+            <View>
+                {
+                    this.state.screen == "login"
+                        ? <LoginScreen onLogin={_ => { this.setState({ screen: "main" }) }} />
+                        : (
+                            this.state.screen == "main"
+                                ? <MainScreen />
+                                : (
+                                    this.state.screen == "wait"
+                                        ? <WaitingScreen />
+                                        : null
+                                )
+                        )
+                }
+            </View>
+        )
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// AppRegistry.registerComponent('main', () => App);
+export default App;
