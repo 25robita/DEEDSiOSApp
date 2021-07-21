@@ -1,8 +1,5 @@
-// import { dummyUserDetails } from '../consts'
 import { parse } from "node-html-parser"
 import { getItemAsync } from 'expo-secure-store'
-
-// console.log(getInternetCredentials("deeds.cgs.vic.edu.au"))
 
 function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are correct
     return new Promise((resolve, reject) => {
@@ -13,7 +10,6 @@ function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are 
                         .then(username => {
                             getItemAsync("p")
                                 .then(password => {
-                                    // console.log(username, password)
                                     var options = {
                                         method: "POST",
                                         body: Object.entries(
@@ -22,19 +18,16 @@ function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are 
                                             })
                                         ).reduce((b, c) => (b.append(...c), b), new FormData())
                                     }
-                                    // console.log(options.body)
                                     fetch(
                                         "https://camberwell-login.cloudworkengine.net/module.php/core/loginuserpass.php",
                                         // r.url,
                                         Object.assign({}, masterOptions, options))
                                         .then(r => {
-                                            // console.log(r.url)
                                             if (r.url == "https://camberwell-login.cloudworkengine.net/module.php/core/loginuserpass.php") {
-                                                reject()
+                                                reject(r)
                                                 return
                                             }
                                             else resolve(r)
-                                            // resolve(parse(await r.text()))
                                         })
                                 })
                         })
@@ -45,7 +38,6 @@ function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are 
                         var d = parse(t)
                         var SAMLResponseInpt = d.querySelector("input[name=SAMLResponse]")
                         var SAMLResponse = SAMLResponseInpt.attributes.value
-                        // console.log("samlresponse: ...", SAMLResponse.slice(SAMLResponse.length - 5000))
                         fetch("https://deeds.cgs.vic.edu.au/saml/consume.php", Object.assign({}, masterOptions, {
                             method: "POST",
                             body: Object.entries({

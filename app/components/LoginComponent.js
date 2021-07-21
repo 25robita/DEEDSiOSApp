@@ -1,3 +1,4 @@
+import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { Text, TextInput, View, Animated, Image, Pressable, Linking } from 'react-native';
 import { Easing, useDerivedValue } from 'react-native-reanimated';
@@ -52,7 +53,7 @@ class LoginComponent extends Component {
     }
     onLogin = _ => {
         this.props.onSubmit(this.state.username, this.state.password, isIncorrectPassword => {
-            this.setState({ errorMessage: (isIncorrectPassword) ? "Incorrect username or password" : "Unknown Error encountered" })
+            this.setState({ errorMessage: (isIncorrectPassword.ok) ? "Incorrect username or password" : "Unknown Error encountered" })
         })
     }
     handleOpenBrowserUsername() {

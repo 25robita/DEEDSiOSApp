@@ -4,7 +4,6 @@ function getTimetable() {
     return new Promise((resolve, reject) => {
         fetchHTMLResource("/timetable")
             .then(d => {
-                // console.log(d)
                 var getTimetableHeaderName = (th) => th.childNodes[0].textContent.trim()
 
                 var data = {}
@@ -21,7 +20,6 @@ function getTimetable() {
                     }
                 })
                 timetable.querySelectorAll(".timetable-subject")
-                    // .filter(el => el.innerText.trim())
                     .forEach(el => {
                         var td = el.parentNode.parentNode
                         var tr = td.parentNode
@@ -65,7 +63,6 @@ function getTimetable() {
                         }
                     })
                 data = Object.values(data)
-                // console.log(data)
                 data = data.map((_, colIndex) => data.map(row => row[colIndex]));
 
                 resolve(data)
@@ -73,64 +70,90 @@ function getTimetable() {
     })
 }
 
+function condenseTimetable(timetable) {
+    let condensed = [{ "code": -1 }]; // not undefined
+    for (let period of timetable) {
+        let lastPeriod = condensed[condensed.length - 1]
+        if (period.code == lastPeriod.code) {
+            lastPeriod.period = (lastPeriod.period.startsWith("Lunch"))
+                ? "Lunch"
+                : (
+                    (lastPeriod.period.split(" ")[0] == period.period.split(" ")[0])
+                        ? lastPeriod.period + " & " + period.period.split(" ")[1]
+                        : lastPeriod.period + " & " + period.period
+                )
+            lastPeriod.time = `${lastPeriod.time.split("–")[0]}–${period.time.split("–")[1]}`
+            continue
+        }
+        condensed.push(period)
+    }
+    condensed = condensed.map(period => {
+        if (!period.period) {
+            return period
+        }
+        let l = period.period.split(" & ")
+        if (l.length > 2) {
+            period.period = `${l[0]} – ${l[l.length - 1]}`
+        }
+        return period
+    })
+    return condensed.slice(1, condensed.length == 3 ? -1 : undefined)
+}
+
+function isCurrentTimeOrLater(timeString, now) {
+    var times = timeString.split("–")
+    var isStart = true
+
+    // is less than end
+    var timeEnd = times[1]
+    var endHours,
+        endMinutes,
+        endAPM
+    [timeEnd, endHours, endMinutes, endAPM] = timeEnd.matchAll(/(\d+):(\d+)([ap])/g).next().value
+    endHours = (endHours - - (((endAPM == "p" && endHours != 12) || (endAPM == "a" && endHours == 12)) ? 12 : 0)) % 24
+    return isStart && (
+        (now.getHours() < endHours) ||
+        (
+            (now.getHours() == endHours) &&
+            (now.getMinutes() <= endMinutes)
+        )
+    )
+}
+
+function getDay(day, now) {
+    return new Promise((resolve, reject) => {
+        getTimetable()
+            .then(timetable => {
+                let today = timetable[day]
+                today = condenseTimetable(today)
+                if (now) {
+                    let hasHighlighted = false;
+                    today.map(i => {
+                        if (hasHighlighted) {
+                            return i
+                        }
+                        i.now = isCurrentTimeOrLater(i.time, now)
+                        if (i.now) {
+                            hasHighlighted = true
+                        }
+                        return i
+                    })
+                }
+                resolve(today)
+            }, reject)
+    })
+}
+
 function getNowOnwards() {
     return new Promise((resolve, reject) => {
-        function isCurrentTime(timeString, now) {
-            var times = timeString.split("–")
-            var isStart = true
-
-            // is less than end
-            var timeEnd = times[1]
-            var endHours,
-                endMinutes,
-                endAPM
-            [timeEnd, endHours, endMinutes, endAPM] = timeEnd.matchAll(/(\d+):(\d+)([ap])/g).next().value
-            endHours = (endHours - - (((endAPM == "p" && endHours != 12) || (endAPM == "a" && endHours == 12)) ? 12 : 0)) % 24
-            return isStart && (
-                (now.getHours() < endHours) ||
-                (
-                    (now.getHours() == endHours) &&
-                    (now.getMinutes() <= endMinutes)
-                )
-            )
-        }
-
-        getTimetable().then(timetable => {
-            var now = new Date()
-            var today = timetable[(now.getDay() + 6) % 7]
-            console.log(now.toTimeString())
-            var thisAndNextPeriods = today.filter(i => i && i.time && isCurrentTime(i.time, now))
-            var condensed = [{ code: -1 }] // not undefined
-            for (var period of thisAndNextPeriods) {
-                var lastPeriod = condensed[condensed.length - 1]
-                if (period.code == lastPeriod.code) {
-                    lastPeriod.period = (lastPeriod.period.startsWith("Lunch"))
-                        ? "Lunch"
-                        : (
-                            (lastPeriod.period.split(" ")[0] == period.period.split(" ")[0])
-                                ? lastPeriod.period + " & " + period.period.split(" ")[1]
-                                : lastPeriod.period + " & " + period.period
-                        )
-                    lastPeriod.time = `${lastPeriod.time.split("–")[0]}–${period.time.split("–")[1]}`
-                    continue
-                }
-                condensed.push(period)
-            }
-            condensed = condensed.map(period => {
-                if (!period.period) {
-                    return period
-                }
-                var l = period.period.split(" & ")
-                if (l.length > 2) {
-                    period.period = `${l[0]} – ${l[l.length - 1]}`
-                }
-                return period
-            })
-
-            resolve(condensed.slice(1, condensed.length == 3 ? -1 : undefined))
-        }, reject)
+        let now = new Date()
+        getDay((now.getDay() + 6) % 7)
+            .then((today) => {
+                let thisAndNextPeriods = today.filter(i => i && i.time && isCurrentTimeOrLater(i.time, now))
+                resolve(thisAndNextPeriods)
+            }, reject)
     })
 
 }
 
-export { getNowOnwards }
+export { getNowOnwards, getDay }

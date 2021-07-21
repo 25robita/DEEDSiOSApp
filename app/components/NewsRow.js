@@ -50,7 +50,6 @@ class NewsRow extends Component {
     componentDidMount() {
         fetchJSONResource("/news/lists/feed")
             .then(data => {
-                console.log(data)
                 this.setState({
                     feed: data.slice(0, 3) // maxlength 3
                 })
@@ -70,7 +69,6 @@ class NewsRow extends Component {
         this.state.willUpdate = true
         fetchJSONResource("/news/lists/feed")
             .then(data => {
-                console.log(data)
                 this.setState({
                     feed: data.slice(0, 3), // maxlength 3
                     showActivity: false

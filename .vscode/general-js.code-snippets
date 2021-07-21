@@ -24,5 +24,11 @@
         "body": [
             "console.log(\"$TM_FILENAME:$TM_LINE_NUMBER says ${0:hello}\");"
         ]
+    },
+    "Log location and Object": {
+        "prefix": "logobjloc",
+        "body": [
+            "console.log(\"$TM_FILENAME:$TM_LINE_NUMBER says:\", ${0:\"hello\"});"
+        ]
     }
 }

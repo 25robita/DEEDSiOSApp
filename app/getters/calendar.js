@@ -38,7 +38,6 @@ function getCalendar() {
                                 isFirst: false
                             } : null),
                         ]
-                        // console.log(JSON.stringify(sectionListData, undefined, "\t"))
                         resolve(sectionListData)
                     }, _ => {
                         reject()

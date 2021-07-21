@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { styles, timetableStyles } from "../consts"
 import { getNowOnwards } from '../getters/timetable';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
@@ -10,8 +10,13 @@ import SectionComponent from './SectionComponent';
 function TimetableSubject(props) {
     return (
         props.data ?
-            <View style={[timetableStyles.row, styles.shadow]}>
-                <View style={[timetableStyles.cell, timetableStyles.header, (props.data.empty) ? timetableStyles.longCell : {}]}>
+            <View style={[timetableStyles.row, styles.shadow, (props.data.now) ? timetableStyles.nowCell : {}]}>
+                <View style={[
+                    timetableStyles.cell,
+                    timetableStyles.header,
+                    (props.data.empty) ? timetableStyles.longCell : {},
+                    (props.data.now) ? timetableStyles.nowCellHeader : {}
+                ]}>
                     <ContentText style={[styles.heading]}>{props.data.period}</ContentText>
                     <TimeComponent time={props.data.time} />
                 </View>
@@ -42,7 +47,6 @@ class TimetableRow extends Component {
         }
     }
     componentDidMount = () => {
-        console.log("TimetableRow.js:38 says hello");
         this.state.willUpdate = true // won't trigger event
         getNowOnwards()
             .then(timetable => {
@@ -71,26 +75,34 @@ class TimetableRow extends Component {
             })
     }
 
-    render(props) {
+    handleScreenChange = () => {
+        this.props.changeScreen("timetable")
+    }
+
+    render() {
         return (
             <View>
                 {
                     (this.state.timetable.length || !this.state.isFilled)
                         ? (
                             <SectionComponent title="timetable">
-                                <LoaderComponent
-                                    state={
-                                        !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity
-                                            ? "loading"
-                                            : (this.state.failed)
-                                                ? "failed"
-                                                : "loaded"
-                                    }
-                                    failText="Unable to load the timetable at the moment"
+                                <Pressable
+                                    onPress={this.handleScreenChange}
                                 >
-                                    <TimetableSubject data={this.state.timetable[0]} />
-                                    <TimetableSubject data={this.state.timetable[1]} />
-                                </LoaderComponent>
+                                    <LoaderComponent
+                                        state={
+                                            !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity
+                                                ? "loading"
+                                                : (this.state.failed)
+                                                    ? "failed"
+                                                    : "loaded"
+                                        }
+                                        failText="Unable to load the timetable at the moment"
+                                    >
+                                        <TimetableSubject data={this.state.timetable[0]} />
+                                        <TimetableSubject data={this.state.timetable[1]} />
+                                    </LoaderComponent>
+                                </Pressable>
                             </SectionComponent>
                         )
                         : null
@@ -100,5 +112,5 @@ class TimetableRow extends Component {
     }
 
 }
-
+export { TimetableSubject };
 export default TimetableRow;

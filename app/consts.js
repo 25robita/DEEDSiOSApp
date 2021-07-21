@@ -10,17 +10,21 @@ const customColours = {
     highlightGold: "#daaa00"
 }
 
-const dummyUserDetails = { // definitely not my username and password
-    username: "25robita",
-    password: "Mone[4.C]tisingFLI{7\\5}TCHVaccin(6^E)ator<6*1>"
-}
-
 const styles = StyleSheet.create({
     topBar: {
         height: "13%",
         width: "100%",
         backgroundColor: customColours.darkBlue,
-        zIndex: 1000
+        zIndex: 1000,
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: 20,
+        alignItems: "center"
+    },
+    topBarHeading: {
+        color: "white",
+        fontWeight: "700",
+        fontSize: 16
     },
     container: {
         backgroundColor: customColours.backgroundColor,
@@ -86,6 +90,13 @@ const timetableStyles = StyleSheet.create({
     },
     longCell: {
         width: "100%"
+    },
+    nowCell: {
+        // shadowRadius: 10,
+        // shadowOpacity: 0.5
+    },
+    nowCellHeader: {
+        backgroundColor: customColours.lightBlue,
     },
     header: {
         backgroundColor: "#fff"
@@ -427,4 +438,4 @@ const icons = {
     "masonry-Component_Homepage_WikiController": ""
 }
 
-export { icons, newsStyles, customColours, dummyUserDetails, styles, timetableStyles, loginStyles }
+export { icons, newsStyles, customColours, styles, timetableStyles, loginStyles }

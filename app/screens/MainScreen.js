@@ -9,6 +9,9 @@ import { Component } from 'react/cjs/react.production.min';
 
 class MainScreen extends Component {
     state = {}
+    constructor(props) {
+        super(props)
+    }
     onRefresh = () => {
         console.log("MainScreen.js:13 says hello");
         this.setState({})
@@ -21,10 +24,10 @@ class MainScreen extends Component {
                     <ScrollView style={{ minHeight: "100%" }}>
                         <RefreshControl onRefresh={this.onRefresh} />
                         <View style={{ padding: '5%', marginBottom: "20%" }}>
-                            <TimetableRow />
-                            <CalendarRow />
-                            <NewsRow />
-                            <DueWorkRow />
+                            <TimetableRow changeScreen={this.props.changeScreen} />
+                            <CalendarRow changeScreen={this.props.changeScreen} />
+                            <NewsRow changeScreen={this.props.changeScreen} />
+                            <DueWorkRow changeScreen={this.props.changeScreen} />
                         </View>
                     </ScrollView>
 

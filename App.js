@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { fetchResource } from './app/getters/get';
 import LoginScreen from './app/screens/LoginScreen';
 import MainScreen from './app/screens/MainScreen';
+import TimetableScreen from './app/screens/TimetableScreen';
 import WaitingScreen from './app/screens/WaitingScreen';
 
 setItemAsync("p", "hgc,gcyhuj")
@@ -18,26 +19,33 @@ class App extends Component {
         loadAsync({
             schoolbox: require("./app/assets/fonts/schoolbox.ttf")
         })
-        fetchResource("/") //
+        fetchResource("/")
             .then(_ => {
                 this.setState({ screen: "main" })
             }, _ => {
                 this.setState({ screen: "login" })
             })
     }
+    handleScreenChange = (screen) => {
+        this.setState({ screen })
+    }
     render() {
         return (
             <View>
                 {
                     this.state.screen == "login"
-                        ? <LoginScreen onLogin={_ => { this.setState({ screen: "main" }) }} />
+                        ? <LoginScreen changeScreen={this.handleScreenChange} />
                         : (
                             this.state.screen == "main"
-                                ? <MainScreen />
+                                ? <MainScreen changeScreen={this.handleScreenChange} />
                                 : (
                                     this.state.screen == "wait"
-                                        ? <WaitingScreen />
-                                        : null
+                                        ? <WaitingScreen changeScreen={this.handleScreenChange} />
+                                        : (
+                                            this.state.screen == "timetable"
+                                                ? <TimetableScreen changeScreen={this.handleScreenChange} />
+                                                : null
+                                        )
                                 )
                         )
                 }
