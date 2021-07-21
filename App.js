@@ -11,7 +11,7 @@ import WaitingScreen from './app/screens/WaitingScreen';
 setItemAsync("p", "hgc,gcyhuj")
 
 class App extends Component {
-    state = { screen: "wait" }
+    state = { screen: "timetable" }
     constructor(props) {
         super(props)
     }
@@ -19,12 +19,12 @@ class App extends Component {
         loadAsync({
             schoolbox: require("./app/assets/fonts/schoolbox.ttf")
         })
-        fetchResource("/")
-            .then(_ => {
-                this.setState({ screen: "main" })
-            }, _ => {
-                this.setState({ screen: "login" })
-            })
+        // fetchResource("/")
+        //     .then(_ => {
+        //         this.setState({ screen: "main" })
+        //     }, _ => {
+        //         this.setState({ screen: "login" })
+        //     })
     }
     handleScreenChange = (screen) => {
         this.setState({ screen })

@@ -1,58 +1,127 @@
 import React, { Component } from 'react';
-import { Text, View, SafeAreaView, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Pressable } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import IconComponent from '../components/IconComponent';
+import { ContentText, Meta } from '../components/TextComponents';
 import { TimetableSubject } from '../components/TimetableRow';
 import { TopBarBackButton, TopBarHeading } from '../components/TopBar';
-import { styles } from '../consts';
-import { getDay } from '../getters/timetable';
+import { customColours, styles } from '../consts';
+import { getDayAndFull } from '../getters/timetable';
 
+const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+]
 function handleKeyExtraction(index, item) {
     return item + index
 }
 
-function handleRenderItem({ item }) {
+var handleRenderItem = ({ item }) => {
     return (
-        <TimetableSubject data={item} />
+        <View>
+            <TimetableSubject data={item} />
+        </View>
     )
 }
 
+class DaySelector extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    render() {
+        return (
+            <View
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    top: 8,
+                    borderBottomColor: customColours.grey + "50",
+                    borderBottomWidth: 2,
+                    zIndex: 1002,
+                    backgroundColor: customColours.backgroundColor
+                }}
+            >
+                <Pressable onPress={this.props.onPrevious} hitSltop={50}>
+                    <IconComponent style={{
+                        fontSize: 20,
+                        // bottom: 10
+                    }} name="previous" />
+                </Pressable>
+                <View
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginHorizontal: 40
+                    }}
+                >
+                    <ContentText
+                        style={{
+                            fontWeight: "600",
+                            fontSize: 16
+                        }}
+                    >{days[this.props.day]}</ContentText>
+                    <FlatList
+                        horizontal={true}
+                        data={["•", "•", "•", "•", "•", "•", "•"]}
+                        contentContainerStyle={{
+                            display: "flex",
+                            alignItems: "center"
+                        }}
+                        renderItem={
+                            ({ item, index }) => {
+                                return (
+                                    <Meta
+                                        style={{
+                                            fontSize: 35 - (Math.abs(this.props.day - index) * 4),
+                                            padding: 0,
+                                            margin: 0
+                                        }}
+                                    >
+                                        {item}
+                                    </Meta>
+                                )
+                            }
+                        }
+                        keyExtractor={handleKeyExtraction}
+                    />
+                </View>
+                <Pressable onPress={this.props.onNext} hitSltop={50}>
+                    <IconComponent style={{
+                        fontSize: 20,
+                        // bottom: 10
+                    }} name="next" />
+                </Pressable>
+            </View>
+        );
+    }
+}
 
 class TimetableSubScreen extends Component {
     constructor(props) {
         super(props);
-        let now = new Date();
-        let day = props.day;
-        this.state = { timetable: [], day, now, willUpdate: false };
     }
-    updateTimetable() {
-        getDay(this.state.day, this.state.now)
-            .then(timetable => {
-                this.state.willUpdate = true
 
-                this.setState({ timetable })
-            }, _ => {
-                console.log("f")
-            })
-    }
-    componentDidMount() {
-        this.updateTimetable()
-    }
-    componentDidUpdate() {
-        this.state.day = this.props.day
-        let now = new Date()
-        this.state.now = (now.getDay() + 6) % 7 == this.state.day ? now : undefined
-        if (!this.state.willUpdate) {
-            this.updateTimetable()
-        }
-        this.state.willUpdate = false
-    }
     render() {
+        if (!this.props.timetable) {
+            console.log("TimetableScreen.js:28 says:", this.props);
+            return null
+        }
+        console.log("TimetableScreen.js:32 says:", this.props.timetable.length)
         return (
             <View style={{ padding: '5%', marginBottom: "20%", flex: 1 }}>
                 <FlatList
                     scrollEnabled={false}
                     style={{ overflow: "visible", height: "100%", flexGrow: 1 }}
-                    data={this.state.timetable}
+                    data={this.props.timetable}
                     keyExtractor={handleKeyExtraction}
                     renderItem={handleRenderItem}
                 />
@@ -62,14 +131,33 @@ class TimetableSubScreen extends Component {
 }
 
 class TimetableScreen extends Component {
+    state = {
+        timetable: [],
+        fullTimetable: [],
+        day: 0,
+        now: undefined,
+        willUpdate: false
+    }
     constructor(props) {
         super(props);
-        let now = new Date()
-        let day = (now.getDay() + 6) % 7;
-        let dayName = now.toLocaleDateString(undefined, { weekday: 'long' });
-        this.state = { timetable: [], day, dayName, now };
+        let now = new Date();
+        let day = (now.getDay() + 6) % 7
+        let dayName = now.toLocaleDateString(undefined, { weekday: "long" })
+        console.log("TimetableScreen.js:70 says:", day);
+        this.state = { day, now, dayName };
     }
-
+    updateTimetable = () => {
+        getDayAndFull(this.state.day, this.state.now)
+            .then(([timetable, fullTimetable]) => {
+                this.state.willUpdate = true
+                this.setState({ fullTimetable })
+            }, _ => {
+                console.log("f")
+            })
+    }
+    componentDidMount = () => {
+        this.updateTimetable()
+    }
     onRefresh = () => {
         this.setState({ day: this.state.day })
     }
@@ -77,33 +165,22 @@ class TimetableScreen extends Component {
         this.props.changeScreen("main")
     }
     handleIncreaseDay = () => {
-        console.log("TimetableScreen.js:81 says hi");
-        let days = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-        ]
-        let day = this.state.day != 6 ? this.state.day + 1 : 6;
+        let day = (this.state.day != 6) ? this.state.day + 1 : 6;
         let dayName = days[day];
-        this.setState({ day, dayName, now: undefined })
+        this.setState({
+            day,
+            dayName,
+            now: undefined
+        })
     }
     handleDecreaseDay = () => {
-        let days = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-        ]
         let day = this.state.day != 0 ? this.state.day - 1 : 0;
         let dayName = days[day];
-        this.setState({ day, dayName, now: undefined })
+        this.setState({
+            day,
+            dayName,
+            now: undefined
+        })
     }
     render() {
         return (
@@ -115,14 +192,22 @@ class TimetableScreen extends Component {
                     <TopBarHeading>Timetable – {this.state.dayName}</TopBarHeading>
                 </View>
                 <SafeAreaView>
+                    <DaySelector
+                        day={this.state.day}
+                        onNext={this.handleIncreaseDay}
+                        onPrevious={this.handleDecreaseDay}
+                    />
                     <ScrollView style={{ minHeight: "100%" }}>
                         <RefreshControl onRefresh={this.onRefresh} />
                         <GestureRecognizer
                             onSwipeLeft={this.handleIncreaseDay}
                             onSwipeRight={this.handleDecreaseDay}
-                            style={{ minHeight: "100%" }}
+                            style={{ minHeight: "100%", marginBottom: 150 }}
                         >
-                            <TimetableSubScreen day={this.state.day} />
+                            <TimetableSubScreen
+                                day={this.state.day}
+                                timetable={(this.state.fullTimetable || [])[this.state.day]}
+                            />
                         </GestureRecognizer>
                     </ScrollView>
                 </SafeAreaView >

@@ -63,7 +63,9 @@ function getTimetable() {
                         }
                     })
                 data = Object.values(data)
-                data = data.map((_, colIndex) => data.map(row => row[colIndex]));
+                data = data
+                    .map((_, colIndex) => data.map(row => row[colIndex]))
+                    .filter(day => day.reduce((a, b) => a || b, false))
 
                 resolve(data)
             }, reject)
@@ -73,6 +75,10 @@ function getTimetable() {
 function condenseTimetable(timetable) {
     let condensed = [{ "code": -1 }]; // not undefined
     for (let period of timetable) {
+        if (!period) {
+            condensed.push(period)
+            return
+        }
         let lastPeriod = condensed[condensed.length - 1]
         if (period.code == lastPeriod.code) {
             lastPeriod.period = (lastPeriod.period.startsWith("Lunch"))
@@ -126,6 +132,10 @@ function getDay(day, now) {
             .then(timetable => {
                 let today = timetable[day]
                 today = condenseTimetable(today)
+                if (!today) {
+                    resolve(today);
+                    return
+                }
                 if (now) {
                     let hasHighlighted = false;
                     today.map(i => {
@@ -144,6 +154,33 @@ function getDay(day, now) {
     })
 }
 
+function getDayAndFull(day, now) {
+    return new Promise((resolve, reject) => {
+        getTimetable()
+            .then(timetable => {
+                timetable = timetable.map(item => {
+                    return condenseTimetable(item)
+                })
+                let today = timetable[day]
+                if (now) {
+                    let hasHighlighted = false;
+                    today.map(i => {
+                        if (hasHighlighted) {
+                            return i
+                        }
+                        i.now = isCurrentTimeOrLater(i.time, now)
+                        if (i.now) {
+                            hasHighlighted = true
+                        }
+                        return i
+                    })
+                }
+                timetable[day] = today
+                resolve([undefined, timetable])
+            }, reject)
+    })
+}
+
 function getNowOnwards() {
     return new Promise((resolve, reject) => {
         let now = new Date()
@@ -156,4 +193,4 @@ function getNowOnwards() {
 
 }
 
-export { getNowOnwards, getDay }
+export { getNowOnwards, getDay, getDayAndFull }
