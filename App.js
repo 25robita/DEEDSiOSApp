@@ -22,7 +22,8 @@ const navigatorOptions = {
 
 const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
     headerLeft: _ => null,
-    gestureEnabled: false
+    gestureEnabled: false,
+    animationEnabled: false,
 })
 
 const hideHeaders = {
@@ -70,7 +71,9 @@ class App extends Component {
                     <MainStack.Screen
                         name="Home"
                         component={MainScreen}
-                        options={navigatorOptionsHideBack}
+                        options={Object.assign({}, navigatorOptionsHideBack, {
+                            title: ""
+                        })}
                     />
                     <MainStack.Screen
                         name="Timetable"

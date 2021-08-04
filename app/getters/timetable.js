@@ -157,10 +157,10 @@ function getDay(day, now) {
 function getDayAndFull(day, now) {
     return new Promise((resolve, reject) => {
         getTimetable()
-            .then(timetable => {
-                timetable = timetable.map(item => {
-                    return condenseTimetable(item)
-                })
+            .then(longTimetable => {
+                let timetable = longTimetable.map(item =>
+                    condenseTimetable(item)
+                )
                 let today = timetable[day]
                 if (now) {
                     let hasHighlighted = false;
@@ -176,7 +176,7 @@ function getDayAndFull(day, now) {
                     })
                 }
                 timetable[day] = today
-                resolve([undefined, timetable])
+                resolve([undefined, timetable, longTimetable])
             }, reject)
     })
 }

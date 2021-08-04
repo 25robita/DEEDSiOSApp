@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
         // width: "100%",
         backgroundColor: customColours.darkBlue,
         // zIndex: 1000,
-        display: "flex",
-        justifyContent: "flex-end",
-        padding: 20,
-        alignItems: "center"
+        // display: "flex",
+        // justifyContent: "flex-end",
+        // padding: 20,
+        // alignItems: "center"
     },
     topBarHeading: {
         color: "white",

@@ -10,6 +10,7 @@ import { customColours, styles } from '../consts';
 import { getDayAndFull } from '../getters/timetable';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { dispatch, navigate } from '../RootNavigation';
+import { decodeTimetable, minifyTimetable } from '../MinifyTimetable';
 
 const DaysTabs = createMaterialTopTabNavigator();
 
@@ -123,7 +124,7 @@ class TimetableSubScreen extends Component {
         //     console.log("TimetableScreen.js:28 says:", this.props);
         //     return null
         // }
-        // console.log("TimetableScreen.js:32 says:", this.props.route.params.timetable)
+        console.log("TimetableScreen.js:32 says:", this.props.route.params.timetable)
         // console.log("TimetableScreen.js:127 says:", this.props.route.params.day);
         console.log("TimetableScreen.js:128 says:", "hello");
         return (
@@ -156,32 +157,43 @@ class TimetableScreen extends Component {
         let now = new Date();
         let day = (now.getDay() + 6) % 7
         let dayName = now.toLocaleDateString(undefined, { weekday: "long" })
-        console.log("TimetableScreen.js:70 says:", day);
+        // console.log("TimetableScreen.js:70 says:", day);
         this.state = { day, now, dayName };
     }
     updateTimetable = () => {
+        console.log("TimetableScreen.js:164 says:", "hello");
         getDayAndFull(this.state.day, this.state.now)
-            .then(([timetable, fullTimetable]) => {
+            .then(([timetable, fullTimetable, uncondensedTimetable]) => {
+                // console.log("TimetableScreen.js:167 says:", "hi");
                 this.state.willUpdate = true;
                 this.props.navigation.setOptions({
                     title: "test",
                     animationsEnabled: false
                 })
+                let x;
+                console.log(x = minifyTimetable(uncondensedTimetable))
+
                 this.props.navigation.dispatch(StackActions.replace("Timetable", {
-                    fullTimetable
+                    timetable: x
                 }))
                 // this.props.navigation.push("Timetable", {
                 //     fullTimetable
                 // })
-                console.log("TimetableScreen.js:169 says:", "heehoo");
+                // console.log("TimetableScreen.js:169 says:", "heehoo");
                 // this.setState({ fullTimetable })
             }, _ => {
                 console.log("f")
             })
     }
     componentDidMount = () => {
-        if (!this.props.route.params.fullTimetable) {
+        if (!this.props.route.params.timetable) {
             this.updateTimetable()
+        }
+        else {
+            console.log("TimetableScreen.js:193 says:", this.props.route.params.timetable[1]);
+            this.setState({
+                fullTimetable: decodeTimetable(...this.props.route.params.timetable)
+            })
         }
     }
     onRefresh = () => {
@@ -223,6 +235,7 @@ class TimetableScreen extends Component {
         })
     }
     render() {
+        console.log("TimetableScreen.js:238 says:", this.state.fullTimetable);
         return (
             <View style={styles.container}>
                 <SafeAreaView>
@@ -242,7 +255,7 @@ class TimetableScreen extends Component {
                                             name={day}
                                             style={{ minHeight: "100%" }}
                                             component={TimetableSubScreen}
-                                            initialParams={{ day: index, timetable: (this.props.route.params.fullTimetable || [])[index] }}
+                                            initialParams={{ day: index, timetable: (this.state.fullTimetable || []) }}
                                         />
                                     ))
                                 }
