@@ -1,3 +1,4 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { loadAsync } from 'expo-font';
 import { getItemAsync, setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
@@ -7,11 +8,30 @@ import LoginScreen from './app/screens/LoginScreen';
 import MainScreen from './app/screens/MainScreen';
 import TimetableScreen from './app/screens/TimetableScreen';
 import WaitingScreen from './app/screens/WaitingScreen';
+import { createStackNavigator } from '@react-navigation/stack';
+import { customColours, styles } from './app/consts';
+import { MainNavigationReference, navigate } from './app/RootNavigation';
 
-setItemAsync("p", "hgc,gcyhuj")
+const MainStack = createStackNavigator();
+
+const navigatorOptions = {
+    headerStyle: [styles.topBar],
+    headerTitleStyle: [styles.topBarHeading],
+    headerTintColor: customColours.white
+}
+
+const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
+    headerLeft: _ => null,
+    gestureEnabled: false
+})
+
+const hideHeaders = {
+    headerShown: false,
+    gestureEnabled: false
+}
 
 class App extends Component {
-    state = { screen: "timetable" }
+    // state = { screen: "wait" }
     constructor(props) {
         super(props)
     }
@@ -19,37 +39,47 @@ class App extends Component {
         loadAsync({
             schoolbox: require("./app/assets/fonts/schoolbox.ttf")
         })
-        // fetchResource("/")
-        //     .then(_ => {
-        //         this.setState({ screen: "main" })
-        //     }, _ => {
-        //         this.setState({ screen: "login" })
-        //     })
+        fetchResource("/")
+            .then(_ => {
+                navigate("Home")
+            }, _ => {
+                navigate("Login")
+            })
+
+
     }
     handleScreenChange = (screen) => {
         this.setState({ screen })
     }
     render() {
         return (
-            <View>
-                {
-                    this.state.screen == "login"
-                        ? <LoginScreen changeScreen={this.handleScreenChange} />
-                        : (
-                            this.state.screen == "main"
-                                ? <MainScreen changeScreen={this.handleScreenChange} />
-                                : (
-                                    this.state.screen == "wait"
-                                        ? <WaitingScreen changeScreen={this.handleScreenChange} />
-                                        : (
-                                            this.state.screen == "timetable"
-                                                ? <TimetableScreen changeScreen={this.handleScreenChange} />
-                                                : null
-                                        )
-                                )
-                        )
-                }
-            </View>
+            <NavigationContainer
+                ref={MainNavigationReference}
+            >
+                <MainStack.Navigator>
+                    <MainStack.Screen
+                        name="Waiting"
+                        component={WaitingScreen}
+                        options={hideHeaders}
+                    />
+                    <MainStack.Screen
+                        name="Login"
+                        component={LoginScreen}
+                        options={hideHeaders}
+                    />
+                    <MainStack.Screen
+                        name="Home"
+                        component={MainScreen}
+                        options={navigatorOptionsHideBack}
+                    />
+                    <MainStack.Screen
+                        name="Timetable"
+                        component={TimetableScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                </MainStack.Navigator>
+            </NavigationContainer >
         )
     }
 }

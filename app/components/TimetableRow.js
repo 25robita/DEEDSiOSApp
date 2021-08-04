@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { styles, timetableStyles } from "../consts"
 import { getNowOnwards } from '../getters/timetable';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
+import { navigate } from '../RootNavigation';
 
 function TimetableSubject(props) {
     return (
@@ -71,27 +72,35 @@ class TimetableRow extends Component {
             })
     }
 
+    handleScreenToTimetable = () => {
+        navigate("Timetable");
+        // this.props.navigation.navigate("Timetable")
+        // this.props.changeScreen("timetable")
+    }
+
     render(props) {
         return (
             <View>
                 {
                     (this.state.timetable.length || !this.state.isFilled)
                         ? (
-                            <SectionComponent title="timetable">
-                                <LoaderComponent
-                                    state={
-                                        !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity
-                                            ? "loading"
-                                            : (this.state.failed)
-                                                ? "failed"
-                                                : "loaded"
-                                    }
-                                    failText="Unable to load the timetable at the moment"
-                                >
-                                    <TimetableSubject data={this.state.timetable[0]} />
-                                    <TimetableSubject data={this.state.timetable[1]} />
-                                </LoaderComponent>
-                            </SectionComponent>
+                            <Pressable onPress={this.handleScreenToTimetable}>
+                                <SectionComponent title="timetable">
+                                    <LoaderComponent
+                                        state={
+                                            !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity
+                                                ? "loading"
+                                                : (this.state.failed)
+                                                    ? "failed"
+                                                    : "loaded"
+                                        }
+                                        failText="Unable to load the timetable at the moment"
+                                    >
+                                        <TimetableSubject data={this.state.timetable[0]} />
+                                        <TimetableSubject data={this.state.timetable[1]} />
+                                    </LoaderComponent>
+                                </SectionComponent>
+                            </Pressable>
                         )
                         : null
                 }

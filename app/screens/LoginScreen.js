@@ -45,7 +45,7 @@ class LoginScreen extends Component {
                         jsVars
                     )
                 ))
-                this.props.changeScreen("main")
+                this.props.navigation.navigate("Home")
             }, cb)
     }
     render() {

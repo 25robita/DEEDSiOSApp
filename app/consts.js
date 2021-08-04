@@ -7,15 +7,16 @@ const customColours = {
     grey: "#9a9a9a",
     foreground: "#242424",
     lightBlue: "#e5f4ff",
-    highlightGold: "#daaa00"
-}
+    highlightGold: "#daaa00",
+    white: "#ffffff"
+} // add dark mode and stuff
 
 const styles = StyleSheet.create({
     topBar: {
-        height: "13%",
-        width: "100%",
+        // height: "13%",
+        // width: "100%",
         backgroundColor: customColours.darkBlue,
-        zIndex: 1000,
+        // zIndex: 1000,
         display: "flex",
         justifyContent: "flex-end",
         padding: 20,
@@ -23,8 +24,8 @@ const styles = StyleSheet.create({
     },
     topBarHeading: {
         color: "white",
-        fontWeight: "700",
-        fontSize: 16
+        // fontWeight: "700",
+        // fontSize: 16
     },
     container: {
         backgroundColor: customColours.backgroundColor,

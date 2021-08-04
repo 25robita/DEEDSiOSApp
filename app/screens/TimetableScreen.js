@@ -1,5 +1,6 @@
+import { CommonActions, createNavigationContainerRef, NavigationContainer, StackActions } from '@react-navigation/native';
 import React, { Component } from 'react';
-import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Pressable } from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Pressable, Text } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
@@ -7,6 +8,12 @@ import { TimetableSubject } from '../components/TimetableRow';
 import { TopBarBackButton, TopBarHeading } from '../components/TopBar';
 import { customColours, styles } from '../consts';
 import { getDayAndFull } from '../getters/timetable';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { dispatch, navigate } from '../RootNavigation';
+
+const DaysTabs = createMaterialTopTabNavigator();
+
+const DaysTabsRef = createNavigationContainerRef();
 
 const days = [
     "Monday",
@@ -17,6 +24,7 @@ const days = [
     "Saturday",
     "Sunday"
 ]
+
 function handleKeyExtraction(index, item) {
     return item + index
 }
@@ -107,25 +115,29 @@ class DaySelector extends Component {
 
 class TimetableSubScreen extends Component {
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     render() {
-        if (!this.props.timetable) {
-            console.log("TimetableScreen.js:28 says:", this.props);
-            return null
-        }
-        console.log("TimetableScreen.js:32 says:", this.props.timetable.length)
+        // if (!this.props.route.params.timetable) {
+        //     console.log("TimetableScreen.js:28 says:", this.props);
+        //     return null
+        // }
+        // console.log("TimetableScreen.js:32 says:", this.props.route.params.timetable)
+        // console.log("TimetableScreen.js:127 says:", this.props.route.params.day);
+        console.log("TimetableScreen.js:128 says:", "hello");
         return (
-            <View style={{ padding: '5%', marginBottom: "20%", flex: 1 }}>
-                <FlatList
-                    scrollEnabled={false}
-                    style={{ overflow: "visible", height: "100%", flexGrow: 1 }}
-                    data={this.props.timetable}
-                    keyExtractor={handleKeyExtraction}
-                    renderItem={handleRenderItem}
-                />
-            </View>
+            <ScrollView style={{ minHeight: "100%" }}>
+                <View style={{ padding: '5%', /*marginBottom: "20%",*/ flex: 1, minHeight: "100%", backgroundColor: customColours.backgroundColor }}>
+                    <FlatList
+                        scrollEnabled={false}
+                        style={{ overflow: "visible", height: "100%", flexGrow: 1 }}
+                        data={this.props.route.params.timetable}
+                        keyExtractor={handleKeyExtraction}
+                        renderItem={handleRenderItem}
+                    />
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -140,6 +152,7 @@ class TimetableScreen extends Component {
     }
     constructor(props) {
         super(props);
+        console.log("TimetableScreen.js:151 says:", this.props.route.params.fullTimetable);
         let now = new Date();
         let day = (now.getDay() + 6) % 7
         let dayName = now.toLocaleDateString(undefined, { weekday: "long" })
@@ -149,22 +162,39 @@ class TimetableScreen extends Component {
     updateTimetable = () => {
         getDayAndFull(this.state.day, this.state.now)
             .then(([timetable, fullTimetable]) => {
-                this.state.willUpdate = true
-                this.setState({ fullTimetable })
+                this.state.willUpdate = true;
+                this.props.navigation.setOptions({
+                    title: "test",
+                    animationsEnabled: false
+                })
+                this.props.navigation.dispatch(StackActions.replace("Timetable", {
+                    fullTimetable
+                }))
+                // this.props.navigation.push("Timetable", {
+                //     fullTimetable
+                // })
+                console.log("TimetableScreen.js:169 says:", "heehoo");
+                // this.setState({ fullTimetable })
             }, _ => {
                 console.log("f")
             })
     }
     componentDidMount = () => {
-        this.updateTimetable()
+        if (!this.props.route.params.fullTimetable) {
+            this.updateTimetable()
+        }
     }
     onRefresh = () => {
         this.setState({ day: this.state.day })
     }
     handleReturnToMain = () => {
-        this.props.changeScreen("main")
+        // this.props.changeScreen("main")
     }
-    handleIncreaseDay = () => {
+    handleIncreaseDay = ({ vx, vy }) => {
+        if (Math.abs(vx - vy) < 0.1) {
+            console.log(vx, vy)
+            return
+        }
         let day = (this.state.day != 6) ? this.state.day + 1 : 6;
         let dayName = days[day];
         this.setState({
@@ -173,7 +203,17 @@ class TimetableScreen extends Component {
             now: undefined
         })
     }
-    handleDecreaseDay = () => {
+    handleDecreaseDay = ({ vx, vy, x0 }) => {
+        if (Math.abs(vx) / Math.abs(vy) < 4) {
+            console.log(vx, vy)
+            return
+        }
+
+        if (x0 < 30) {
+            this.handleReturnToMain()
+            return
+        }
+
         let day = this.state.day != 0 ? this.state.day - 1 : 0;
         let dayName = days[day];
         this.setState({
@@ -185,31 +225,31 @@ class TimetableScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.topBar}>
-                    <TopBarBackButton
-                        onPress={this.handleReturnToMain}
-                    />
-                    <TopBarHeading>Timetable – {this.state.dayName}</TopBarHeading>
-                </View>
                 <SafeAreaView>
-                    <DaySelector
-                        day={this.state.day}
-                        onNext={this.handleIncreaseDay}
-                        onPrevious={this.handleDecreaseDay}
-                    />
-                    <ScrollView style={{ minHeight: "100%" }}>
+                    <ScrollView scrollEnabled={false}>
                         <RefreshControl onRefresh={this.onRefresh} />
-                        <GestureRecognizer
-                            onSwipeLeft={this.handleIncreaseDay}
-                            onSwipeRight={this.handleDecreaseDay}
-                            style={{ minHeight: "100%", marginBottom: 150 }}
+                        <NavigationContainer
+                            independent={true}
+                            ref={DaysTabsRef}
+                            style={{ minHeight: "100%" }}
                         >
-                            <TimetableSubScreen
-                                day={this.state.day}
-                                timetable={(this.state.fullTimetable || [])[this.state.day]}
-                            />
-                        </GestureRecognizer>
+                            <DaysTabs.Navigator
+                                style={{ minHeight: "100%" }}
+                            >
+                                {
+                                    days.map((day, index) => (
+                                        <DaysTabs.Screen
+                                            name={day}
+                                            style={{ minHeight: "100%" }}
+                                            component={TimetableSubScreen}
+                                            initialParams={{ day: index, timetable: (this.props.route.params.fullTimetable || [])[index] }}
+                                        />
+                                    ))
+                                }
+                            </DaysTabs.Navigator>
+                        </NavigationContainer>
                     </ScrollView>
+
                 </SafeAreaView >
             </View>
         );

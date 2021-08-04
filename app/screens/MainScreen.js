@@ -13,13 +13,17 @@ class MainScreen extends Component {
         super(props)
     }
     onRefresh = () => {
-        console.log("MainScreen.js:13 says hello");
         this.setState({})
+    }
+    componentDidMount = () => {
+        console.log("MainScreen.js:19 says:", this);
+        setTimeout(_ => {
+            this.props.navigation.navigate("Timetable")
+        }, 5000)
     }
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.topBar}></View>
                 <SafeAreaView>
                     <ScrollView style={{ minHeight: "100%" }}>
                         <RefreshControl onRefresh={this.onRefresh} />
@@ -30,7 +34,6 @@ class MainScreen extends Component {
                             <DueWorkRow changeScreen={this.props.changeScreen} />
                         </View>
                     </ScrollView>
-
                 </SafeAreaView >
             </View>
         );
