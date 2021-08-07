@@ -85,7 +85,7 @@ class TimetableRow extends Component {
                     (this.state.timetable.length || !this.state.isFilled)
                         ? (
                             <Pressable onPress={this.handleScreenToTimetable}>
-                                <SectionComponent title="timetable">
+                                <SectionComponent title="timetable" navigatorName="Timetable">
                                     <LoaderComponent
                                         state={
                                             !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity

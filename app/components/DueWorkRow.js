@@ -14,7 +14,7 @@ class DueWorkRow extends Component {
     }
     render() {
         return (
-            <SectionComponent title="due work">
+            <SectionComponent title="due work" navigatorName="Due Work">
                 <LoaderComponent
                     state={
                         "loading"

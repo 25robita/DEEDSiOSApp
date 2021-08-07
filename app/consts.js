@@ -5,6 +5,7 @@ const customColours = {
     darkBlue: "#041e42",
     harshBlue: "#0066b0",
     grey: "#9a9a9a",
+    lightGrey: "#ddd",
     foreground: "#242424",
     lightBlue: "#e5f4ff",
     highlightGold: "#daaa00",
@@ -13,19 +14,10 @@ const customColours = {
 
 const styles = StyleSheet.create({
     topBar: {
-        // height: "13%",
-        // width: "100%",
         backgroundColor: customColours.darkBlue,
-        // zIndex: 1000,
-        // display: "flex",
-        // justifyContent: "flex-end",
-        // padding: 20,
-        // alignItems: "center"
     },
     topBarHeading: {
         color: "white",
-        // fontWeight: "700",
-        // fontSize: 16
     },
     container: {
         backgroundColor: customColours.backgroundColor,

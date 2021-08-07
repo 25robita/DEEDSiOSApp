@@ -94,7 +94,7 @@ class CalendarRow extends Component {
     }
     render() {
         return (
-            <SectionComponent title="calendar">
+            <SectionComponent title="calendar" navigateName="Calendar">
                 <LoaderComponent
                     state={
                         !(this.state.calendar || this.state.failed) || this.state.showActivity

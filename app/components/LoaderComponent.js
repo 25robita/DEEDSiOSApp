@@ -1,20 +1,20 @@
 import React from 'react';
 import { ActivityIndicator, ShadowPropTypesIOS, Text, View } from 'react-native';
 import { styles } from '../consts';
-import { ContentText } from './TextComponents';
+import { ContentText, Meta } from './TextComponents';
 
 
 function LoaderComponent(props) {
     return (
-        <View>
+        <View style={props.style}>
             {
                 (props.state == "loading")
-                    ? <ActivityIndicator style={styles.loader} />
+                    ? <ActivityIndicator style={[styles.loader, props.loaderStyle]} />
                     : null
             }
             {
                 (props.state == "failed")
-                    ? <Meta style={[styles.failedLoad]}>
+                    ? <Meta style={[styles.failedLoad, props.loaderStyle]}>
                         {props.failText}
                     </Meta>
                     : null

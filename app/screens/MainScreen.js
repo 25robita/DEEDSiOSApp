@@ -3,7 +3,7 @@ import React from 'react';
 import { styles } from "../consts"
 import TimetableRow from '../components/TimetableRow';
 import CalendarRow from '../components/CalendarRow';
-import NewsRow from '../components/NewsRow';
+import NewsList from '../components/NewsRow';
 import DueWorkRow from '../components/DueWorkRow';
 import { Component } from 'react/cjs/react.production.min';
 
@@ -18,23 +18,23 @@ class MainScreen extends Component {
     componentDidMount = () => {
         console.log("MainScreen.js:19 says:", this);
         setTimeout(_ => {
-            this.props.navigation.navigate("Timetable")
-        }, 5000)
+            this.props.navigation.navigate("Barcode", { id: 18334 })
+        }, 1000)
     }
     render() {
         return (
             <View style={styles.container}>
-                <SafeAreaView>
-                    <ScrollView style={{ minHeight: "100%" }}>
-                        <RefreshControl onRefresh={this.onRefresh} />
+                <ScrollView style={{ minHeight: "100%" }}>
+                    <RefreshControl onRefresh={this.onRefresh} />
+                    <SafeAreaView>
                         <View style={{ padding: '5%', marginBottom: "20%" }}>
-                            <TimetableRow changeScreen={this.props.changeScreen} />
-                            <CalendarRow changeScreen={this.props.changeScreen} />
-                            <NewsRow changeScreen={this.props.changeScreen} />
-                            <DueWorkRow changeScreen={this.props.changeScreen} />
+                            <TimetableRow />
+                            <CalendarRow />
+                            <NewsList number={3} />
+                            <DueWorkRow />
                         </View>
-                    </ScrollView>
-                </SafeAreaView >
+                    </SafeAreaView >
+                </ScrollView>
             </View>
         );
     }

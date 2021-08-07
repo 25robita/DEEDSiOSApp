@@ -6,7 +6,7 @@ import { SectionHeading } from "./TextComponents";
 function SectionComponent(props) {
     return (
         <View style={[styles.section]}>
-            <SectionHeading style={props.titleStyle}>{props.title}</SectionHeading>
+            <SectionHeading navigatorName={props.navigatorName} style={props.titleStyle}>{props.title}</SectionHeading>
             {props.children}
         </View>
     )

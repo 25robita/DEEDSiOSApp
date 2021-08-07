@@ -7,6 +7,8 @@ import IconComponent from './IconComponent';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
+import { dispatch, navigate } from '../RootNavigation';
+import { CommonActions } from '@react-navigation/native';
 
 class NewsItem extends Component {
     constructor(props) {
@@ -14,7 +16,10 @@ class NewsItem extends Component {
         this.link = "https://deeds.cgs.vic.edu.au" + props.data._links.self.href
     }
     handlePress = () => {
-        Linking.openURL(this.link)
+        navigate("News")
+        navigate("News Item", {
+            data: this.props.data
+        })
     }
     render() {
         return (
@@ -30,13 +35,20 @@ class NewsItem extends Component {
                         <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
                     </View>
                     <ContentText>{this.props.data.blurb}</ContentText>
+                    {
+                        this.props.data.attachments
+                            ? <Meta style={{ marginTop: 5 }}>
+                                {this.props.data.attachments} {(this.props.data.attachments == 1) ? "attachment" : "attachments"}
+                            </Meta>
+                            : null
+                    }
                 </View>
             </Pressable>
         )
     }
 }
 
-class NewsRow extends Component {
+class NewsList extends Component {
     state = {
         feed: false,
         isEmpty: false,
@@ -70,7 +82,7 @@ class NewsRow extends Component {
         fetchJSONResource("/news/lists/feed")
             .then(data => {
                 this.setState({
-                    feed: data.slice(0, 3), // maxlength 3
+                    feed: data.slice(0, this.props.number), // maxlength 3
                     showActivity: false
                 })
             })
@@ -88,24 +100,22 @@ class NewsRow extends Component {
             <View>
                 {
                     (this.state.feed || !this.state.isEmpty)
-                        ? <SectionComponent title="news">
-                            <LoaderComponent
-                                state={
-                                    !(this.state.feed || this.state.isEmpty) || this.state.showActivity
-                                        ? "loading"
-                                        : (this.state.isEmpty ? "failed" : "loaded")}
-                                failText="Unable to load the news at the moment"
-                            >
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={this.state.feed}
-                                    keyExtractor={this.keyExtractor}
-                                    renderItem={this.handleRenderNewsItem}
-                                    style={{ overflow: "visible" }}
-                                />
-                            </LoaderComponent>
-
-                        </SectionComponent>
+                        ?
+                        <LoaderComponent
+                            state={
+                                !(this.state.feed || this.state.isEmpty) || this.state.showActivity
+                                    ? "loading"
+                                    : (this.state.isEmpty ? "failed" : "loaded")}
+                            failText="Unable to load the news at the moment"
+                        >
+                            <FlatList
+                                scrollEnabled={false}
+                                data={this.state.feed}
+                                keyExtractor={this.keyExtractor}
+                                renderItem={this.handleRenderNewsItem}
+                                style={{ overflow: "visible" }}
+                            />
+                        </LoaderComponent>
                         : null
                 }
             </View>
@@ -114,4 +124,10 @@ class NewsRow extends Component {
 
 }
 
-export default NewsRow;
+export { NewsList };
+
+export default function NewsRow() {
+    return <SectionComponent title="news" navigatorName="News">
+        <NewsList number={3} />
+    </SectionComponent>
+}

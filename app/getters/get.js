@@ -59,7 +59,12 @@ function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are 
 function fetchHTMLResource(resourcePath) {
     return new Promise((resolve, reject) => {
         fetchResource(resourcePath)
-            .then(r => r.text(), reject)
+            .then(r => {
+                if (Math.floor(r.status / 100) == 4) {
+                    throw Error()
+                }
+                return r.text()
+            }, reject)
             .then(t => resolve(parse(t)), reject)
     })
 }

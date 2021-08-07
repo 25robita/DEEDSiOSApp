@@ -11,6 +11,10 @@ import WaitingScreen from './app/screens/WaitingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { customColours, styles } from './app/consts';
 import { MainNavigationReference, navigate } from './app/RootNavigation';
+import NewsItemScreen from './app/screens/NewsItemScreen';
+import NewsScreen from './app/screens/NewsScreen';
+import UserProfileScreen from './app/screens/UserProfile';
+import BarcodeScreen from './app/screens/BarcodeScreen';
 
 const MainStack = createStackNavigator();
 
@@ -78,6 +82,30 @@ class App extends Component {
                     <MainStack.Screen
                         name="Timetable"
                         component={TimetableScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="News"
+                        component={NewsScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="User"
+                        component={UserProfileScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="News Item"
+                        component={NewsItemScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="Barcode"
+                        component={BarcodeScreen}
                         options={navigatorOptions}
                         initialParams={{}}
                     />

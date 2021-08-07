@@ -1,8 +1,3 @@
-[
-    "0,,1,,,",
-    "8-0841-4,ffe0cc,0,1,A34 Mr Andrew Kingham,Form"
-]
-
 export function stringifyArray(arr) {
     return arr.map(s => String(s || "").replace(",", "")).join(",");
 }
