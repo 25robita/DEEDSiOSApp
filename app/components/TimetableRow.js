@@ -6,26 +6,31 @@ import { ContentText, Meta, SectionHeading } from './TextComponents';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
-import { navigate } from '../RootNavigation';
+import { navigate, openURL } from '../RootNavigation';
 
 function TimetableSubject(props) {
     return (
         props.data ?
-            <View style={[timetableStyles.row, styles.shadow]}>
-                <View style={[timetableStyles.cell, timetableStyles.header, (props.data.empty) ? timetableStyles.longCell : {}]}>
-                    <ContentText style={[styles.heading]}>{props.data.period}</ContentText>
-                    <TimeComponent time={props.data.time} />
+            <Pressable onPress={_ => {
+                let url = `/homepage/code/` + props.data.code;
+                props.data.empty ? null : openURL(url)
+            }}>
+                <View style={[timetableStyles.row, styles.shadow]}>
+                    <View style={[timetableStyles.cell, timetableStyles.header, (props.data.empty) ? timetableStyles.longCell : {}]}>
+                        <ContentText style={[styles.heading]}>{props.data.period}</ContentText>
+                        <TimeComponent time={props.data.time} />
+                    </View>
+                    {
+                        (props.data.empty)
+                            ? null
+                            : <View style={[timetableStyles.cell, { backgroundColor: props.data.color }]}>
+                                <ContentText style={[((props.data.isLinked) ? styles.link : {}), timetableStyles.subjectText, timetableStyles.subjectName]}>{props.data.name}</ContentText>
+                                <Meta style={[timetableStyles.subjectText]}>{props.data.code}</Meta>
+                                <ContentText style={[timetableStyles.subjectText]}>{props.data.location}</ContentText>
+                            </View>
+                    }
                 </View>
-                {
-                    (props.data.empty)
-                        ? null
-                        : <View style={[timetableStyles.cell, { backgroundColor: props.data.color }]}>
-                            <ContentText style={[((props.data.isLinked) ? styles.link : {}), timetableStyles.subjectText, timetableStyles.subjectName]}>{props.data.name}</ContentText>
-                            <Meta style={[timetableStyles.subjectText]}>{props.data.code}</Meta>
-                            <ContentText style={[timetableStyles.subjectText]}>{props.data.location}</ContentText>
-                        </View>
-                }
-            </View>
+            </Pressable>
             : null
     );
 }
@@ -43,7 +48,6 @@ class TimetableRow extends Component {
         }
     }
     componentDidMount = () => {
-        console.log("TimetableRow.js:38 says hello");
         this.state.willUpdate = true // won't trigger event
         getNowOnwards()
             .then(timetable => {
@@ -74,8 +78,6 @@ class TimetableRow extends Component {
 
     handleScreenToTimetable = () => {
         navigate("Timetable");
-        // this.props.navigation.navigate("Timetable")
-        // this.props.changeScreen("timetable")
     }
 
     render(props) {

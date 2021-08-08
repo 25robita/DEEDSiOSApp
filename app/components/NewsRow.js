@@ -7,18 +7,18 @@ import IconComponent from './IconComponent';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
-import { dispatch, navigate } from '../RootNavigation';
+import { dispatch, getCurrentRoute, navigate, push } from '../RootNavigation';
 import { CommonActions } from '@react-navigation/native';
+import { renderHTMLText } from '../renderHTML';
 
 class NewsItem extends Component {
     constructor(props) {
         super(props)
-        this.link = "https://deeds.cgs.vic.edu.au" + props.data._links.self.href
     }
     handlePress = () => {
-        navigate("News")
-        navigate("News Item", {
-            data: this.props.data
+        (this.props.url || (getCurrentRoute().name == "News")) ? null : push("News");
+        push("News Item", {
+            id: this.props.data.id
         })
     }
     render() {
@@ -34,7 +34,11 @@ class NewsItem extends Component {
                         <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname}  </ContentText></Meta>
                         <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
                     </View>
-                    <ContentText>{this.props.data.blurb}</ContentText>
+                    {
+                        this.props.data.blurb
+                            ? <ContentText>{this.props.data.blurb}</ContentText>
+                            : <View>{renderHTMLText(this.props.data.body)}</View>
+                    }
                     {
                         this.props.data.attachments
                             ? <Meta style={{ marginTop: 5 }}>
@@ -60,10 +64,11 @@ class NewsList extends Component {
         super(props)
     }
     componentDidMount() {
-        fetchJSONResource("/news/lists/feed")
+        fetchJSONResource(this.props.url || "/news/lists/feed")
             .then(data => {
                 this.setState({
-                    feed: data.slice(0, 3) // maxlength 3
+                    feed: data.slice(0, this.props.number), // maxlength 3
+                    showActivity: false
                 })
             })
     }
@@ -79,7 +84,7 @@ class NewsList extends Component {
         this.state.willUpdateCh2 = true
         this.setState({ showActivity: true })
         this.state.willUpdate = true
-        fetchJSONResource("/news/lists/feed")
+        fetchJSONResource(this.props.url || "/news/lists/feed")
             .then(data => {
                 this.setState({
                     feed: data.slice(0, this.props.number), // maxlength 3

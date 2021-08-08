@@ -2,7 +2,7 @@ import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { Text, TextInput, View, Animated, Image, Pressable, Linking } from 'react-native';
 import { Easing, useDerivedValue } from 'react-native-reanimated';
-import { customColours, loginStyles, styles } from '../consts';
+import { loginStyles, styles } from '../consts';
 import { ContentText } from './TextComponents';
 
 const logoImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EBCDEA4_deeds-logo-with-crest_copy.jpg" }

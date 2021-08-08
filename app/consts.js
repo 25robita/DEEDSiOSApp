@@ -1,16 +1,6 @@
 import { StyleSheet } from "react-native";
-
-const customColours = {
-    backgroundColor: "#ededed",
-    darkBlue: "#041e42",
-    harshBlue: "#0066b0",
-    grey: "#9a9a9a",
-    lightGrey: "#ddd",
-    foreground: "#242424",
-    lightBlue: "#e5f4ff",
-    highlightGold: "#daaa00",
-    white: "#ffffff"
-} // add dark mode and stuff
+import { customColours } from "./colours";
+// add dark mode and stuff
 
 const styles = StyleSheet.create({
     topBar: {
@@ -201,7 +191,7 @@ const loginStyles = StyleSheet.create({
 
 const newsStyles = StyleSheet.create({
     newsItem: {
-        backgroundColor: "white",
+        backgroundColor: customColours.contentBackground,
         padding: 20,
         marginBottom: 20
     },
@@ -428,7 +418,10 @@ const icons = {
     "clear": "",
     "sunny": "",
     "wiki": "",
-    "masonry-Component_Homepage_WikiController": ""
+    "masonry-Component_Homepage_WikiController": "",
+    "barcode": "",
+    "up-arrow": "",
+    "down-arrow": "",
 }
 
 export { icons, newsStyles, customColours, styles, timetableStyles, loginStyles }

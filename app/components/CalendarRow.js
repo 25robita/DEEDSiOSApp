@@ -56,7 +56,7 @@ class CalendarRow extends Component {
 
         return <View style={{
             width: "100%",
-            backgroundColor: "white",
+            backgroundColor: customColours.contentBackground,
             marginBottom: 1,
             // height: 30,
             padding: 5,

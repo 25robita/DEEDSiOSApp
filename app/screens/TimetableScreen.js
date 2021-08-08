@@ -6,7 +6,8 @@ import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
 import { TimetableSubject } from '../components/TimetableRow';
 import { TopBarBackButton, TopBarHeading } from '../components/TopBar';
-import { customColours, styles } from '../consts';
+import { styles } from '../consts';
+import { customColours } from '../colours';
 import { getDayAndFull } from '../getters/timetable';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { dispatch, navigate } from '../RootNavigation';
@@ -39,82 +40,6 @@ var handleRenderItem = ({ item }) => {
         </View>
     )
 }
-
-// class DaySelector extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {};
-//     }
-//     render() {
-//         return (
-//             <View
-//                 style={{
-//                     display: "flex",
-//                     flexDirection: "row",
-//                     justifyContent: "center",
-//                     alignItems: "center",
-//                     top: 8,
-//                     borderBottomColor: customColours.grey + "50",
-//                     borderBottomWidth: 2,
-//                     zIndex: 1002,
-//                     backgroundColor: customColours.backgroundColor
-//                 }}
-//             >
-//                 <Pressable onPress={this.props.onPrevious} hitSltop={50}>
-//                     <IconComponent style={{
-//                         fontSize: 20,
-//                         // bottom: 10
-//                     }} name="previous" />
-//                 </Pressable>
-//                 <View
-//                     style={{
-//                         display: "flex",
-//                         alignItems: "center",
-//                         justifyContent: "center",
-//                         marginHorizontal: 40
-//                     }}
-//                 >
-//                     <ContentText
-//                         style={{
-//                             fontWeight: "600",
-//                             fontSize: 16
-//                         }}
-//                     >{days[this.props.day]}</ContentText>
-//                     <FlatList
-//                         horizontal={true}
-//                         data={["•", "•", "•", "•", "•", "•", "•"]}
-//                         contentContainerStyle={{
-//                             display: "flex",
-//                             alignItems: "center"
-//                         }}
-//                         renderItem={
-//                             ({ item, index }) => {
-//                                 return (
-//                                     <Meta
-//                                         style={{
-//                                             fontSize: 35 - (Math.abs(this.props.day - index) * 4),
-//                                             padding: 0,
-//                                             margin: 0
-//                                         }}
-//                                     >
-//                                         {item}
-//                                     </Meta>
-//                                 )
-//                             }
-//                         }
-//                         keyExtractor={handleKeyExtraction}
-//                     />
-//                 </View>
-//                 <Pressable onPress={this.props.onNext} hitSltop={50}>
-//                     <IconComponent style={{
-//                         fontSize: 20,
-//                         // bottom: 10
-//                     }} name="next" />
-//                 </Pressable>
-//             </View>
-//         );
-//     }
-// }
 
 class TimetableSubScreen extends Component {
     constructor(props) {

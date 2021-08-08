@@ -3,9 +3,10 @@ import { FlatList, Image, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import LoaderComponent from "../components/LoaderComponent";
 import { ContentText } from "../components/TextComponents";
-import { customColours } from "../consts";
+import { customColours } from "../colours";
 import { fetchHTMLResource } from "../getters/get";
 import { openURL } from "../RootNavigation";
+import { getItemAsync } from "expo-secure-store";
 
 class Table extends Component {
     constructor(props) {
@@ -61,11 +62,28 @@ class Table extends Component {
 class UserProfileScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { failed: false, loaded: false, profileData: {}, fullName: "" }
+        this.state = { failed: false, loaded: false, profileData: {}, fullName: "", id: undefined }
     }
     componentDidMount = () => {
+        console.log("UserProfile.js:68 says:", this.state.id);
         if (this.props.route && this.props.route.params.id != undefined) {
-            fetchHTMLResource(`/search/user/${this.props.route.params.id}`)
+            console.log("UserProfile.js:69 says:", this.props.route.params.id);
+            this.setState({ id: this.props.route.params.id })
+        }
+        else {
+            getItemAsync("userMeta")
+                .then(dataString => {
+                    let data = JSON.parse(dataString)
+                    console.log("UserProfile.js:77 says:", data);
+                    if (!this.state.id)
+                        this.setState({ id: data.schoolboxUser.id })
+                })
+        }
+    }
+    componentDidUpdate = () => {
+        console.log("UserProfile.js:84 says:", this.state.id);
+        if (this.state.id != undefined && !(this.state.loaded || this.state.failed)) {
+            fetchHTMLResource(`/search/user/${this.state.id}`)
                 .then(d => {
                     let profileList = d.querySelector(".profile") // may or may not work; also assumes in format dt, dd, dt, dd
                     let profile = profileList.querySelectorAll("dd, dt")
@@ -76,10 +94,10 @@ class UserProfileScreen extends Component {
                         let dataChildren = dd.childNodes.filter(i => i.nodeType == 1)
                         let isLink = dataChildren.length && dataChildren[0].tagName == "A";
                         let linkHref = isLink && dataChildren[0].attributes.href;
-                        profileData[dt.innerText.trim()] = {
+                        profileData[dt.text.trim()] = {
                             type: isLink ? (linkHref.startsWith("/mail") ? "email" : "link") : "string",
                             href: linkHref,
-                            text: dd.innerText.trim()
+                            text: dd.text.trim()
                         }
                     }
 
@@ -121,7 +139,7 @@ class UserProfileScreen extends Component {
                     console.log("UserProfile.js:122 says:", "hello");
                     this.setState({ failed: true })
                 })
-            fetchHTMLResource(`/eportfolio/${this.props.route.params.id}/profile`)
+            fetchHTMLResource(`/eportfolio/${this.state.id}/profile`)
                 .then(d => {
                     const houses = [
                         "Clifford",
@@ -159,9 +177,6 @@ class UserProfileScreen extends Component {
                 <LoaderComponent
                     loaderStyle={{
                         marginTop: 50,
-                        // transform: [{
-                        //     scale: 1.1
-                        // }]
                         fontSize: 16
                     }}
                     failText="No user was found"
@@ -184,11 +199,11 @@ class UserProfileScreen extends Component {
                                                 width: "100%"
                                             }}
                                             resizeMode='contain'
-                                            source={{ uri: `https://deeds.cgs.vic.edu.au/portrait.php?id=${this.props.route.params.id}&size=constrain200` }}
+                                            source={{ uri: `https://deeds.cgs.vic.edu.au/portrait.php?id=${this.state.id}&size=constrain200` }}
                                         />
                                         <View
                                             style={{
-                                                backgroundColor: "white",
+                                                backgroundColor: customColours.contentBackground,
                                                 padding: 20,
                                                 marginBottom: 20,
                                                 paddingBottom: 10,

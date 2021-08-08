@@ -29,7 +29,7 @@ function VerticalRule(props) {
 }
 
 function HTMLTextView(props) {
-    return <View style={[{ backgroundColor: "white", marginBottom: 50 }, props.style]}>
+    return <View style={[{ backgroundColor: customColours.contentBackground, marginBottom: 50 }, props.style]}>
         {renderHTMLText(props.children)}
     </View>
 }
@@ -40,8 +40,8 @@ class NewsItemScreen extends Component {
         this.state = { bodyDone: false, body: { article: { author: { fullName: "", _links: { profile: { href: "" } } }, title: "", body: "", featureImage: { _links: { image: { href: "" } } } } } };
     }
     componentDidMount = () => {
-        if (this.props.route.params.data._links.self.href) {
-            fetchJSONResource(this.props.route.params.data._links.self.href, { headers: { Accept: "application/json" } })
+        if (this.props.route.params.id) {
+            fetchJSONResource(`/news/${this.props.route.params.id}`, { headers: { Accept: "application/json" } })
                 .then(body => {
                     this.setState({ body, bodyDone: true })
                     title = "News Item – " + body.article.title
@@ -56,7 +56,7 @@ class NewsItemScreen extends Component {
     render() {
         return (
             <ScrollView style={{ minHeight: "100%", paddingTop: 20 }}>
-                <View style={{ backgroundColor: "white", marginBottom: 70 }}>
+                <View style={{ backgroundColor: customColours.contentBackground, marginBottom: 70 }}>
                     <LoaderComponent style={{ padding: 0 }} state={this.state.bodyDone ? "loaded" : "loading"}>
                         {this.state.body.article.featureImage ? <Image
                             source={{ uri: (this.state.body.article.featureImage._links.image.href.startsWith("https") ? "" : "https://deeds.cgs.vic.edu.au") + this.state.body.article.featureImage._links.image.href }}

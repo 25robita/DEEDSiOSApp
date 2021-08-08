@@ -2,20 +2,27 @@ import { NavigationContainer } from '@react-navigation/native';
 import { loadAsync } from 'expo-font';
 import { getItemAsync, setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { fetchResource } from './app/getters/get';
 import LoginScreen from './app/screens/LoginScreen';
 import MainScreen from './app/screens/MainScreen';
 import TimetableScreen from './app/screens/TimetableScreen';
 import WaitingScreen from './app/screens/WaitingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
-import { customColours, styles } from './app/consts';
+import { styles } from './app/consts';
+import { customColours } from './app/colours';
 import { MainNavigationReference, navigate } from './app/RootNavigation';
 import NewsItemScreen from './app/screens/NewsItemScreen';
 import NewsScreen from './app/screens/NewsScreen';
 import UserProfileScreen from './app/screens/UserProfile';
 import BarcodeScreen from './app/screens/BarcodeScreen';
-
+import IconComponent from './app/components/IconComponent';
+import { ContentText } from './app/components/TextComponents';
+import HomepageScreen from './app/screens/HomepageScreen';
+import NavigationScreen from './app/screens/NavigationScreen';
+import SubjectsScreen from './app/screens/SubjectsScreen';
+import GroupsScreen from './app/screens/GroupsScreen';
+import LinksScreen from './app/screens/LinksScreen'
 const MainStack = createStackNavigator();
 
 const navigatorOptions = {
@@ -28,6 +35,56 @@ const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
     headerLeft: _ => null,
     gestureEnabled: false,
     animationEnabled: false,
+})
+
+const navigatorOptionsHideBackBarcode = Object.assign({}, navigatorOptionsHideBack, {
+    headerRight: _ => {
+        return <Pressable onPress={_ => {
+            getItemAsync("userMeta")
+                .then(userMeta => {
+                    navigate("Barcode", { id: JSON.parse(userMeta).schoolboxUser.externalId })
+                })
+        }}>
+            <View style={{
+                marginRight: 20,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}>
+                <ContentText style={{
+                    color: 'white',
+                    fontSize: 20
+                }}>[</ContentText>
+                <IconComponent name="barcode" style={{
+                    fontSize: 12,
+                    paddingTop: 2.5,
+                    color: 'white'
+                }} />
+                <ContentText style={{
+                    color: 'white',
+                    fontSize: 20
+                }}>]</ContentText>
+            </View>
+        </Pressable>
+    }
+})
+
+const navigatorOptionsHideBackBarcodeNavipage = Object.assign({}, navigatorOptionsHideBackBarcode, {
+    headerLeft: _ => {
+        return <View style={{
+            marginLeft: 20
+        }}>
+            <Pressable hitSlop={50} onPress={_ => navigate("Navigation")}>
+                <IconComponent
+                    name="tiles"
+                    style={{
+                        fontSize: 20,
+                        color: 'white'
+                    }}
+                />
+            </Pressable>
+        </View>
+    }
 })
 
 const hideHeaders = {
@@ -75,13 +132,45 @@ class App extends Component {
                     <MainStack.Screen
                         name="Home"
                         component={MainScreen}
-                        options={Object.assign({}, navigatorOptionsHideBack, {
+                        options={Object.assign({}, navigatorOptionsHideBackBarcodeNavipage, {
                             title: ""
                         })}
                     />
                     <MainStack.Screen
+                        name="Navigation"
+                        component={NavigationScreen}
+                        options={Object.assign({}, navigatorOptions, {
+                            presentation: 'modal',
+                            headerLeft: _ => null
+                        })}
+                    />
+                    <MainStack.Screen
+                        name="Homepage"
+                        component={HomepageScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
                         name="Timetable"
                         component={TimetableScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="Subjects"
+                        component={SubjectsScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="Groups"
+                        component={GroupsScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="Links"
+                        component={LinksScreen}
                         options={navigatorOptions}
                         initialParams={{}}
                     />

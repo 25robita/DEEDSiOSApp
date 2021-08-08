@@ -2,8 +2,9 @@ import parse from "node-html-parser";
 import React, { Component } from "react";
 import { FlatList, Image, Linking, Pressable, View } from "react-native";
 import { ContentText } from "./components/TextComponents";
-import { customColours } from "./consts";
+import { customColours } from "./colours";
 import { openURL } from "./RootNavigation";
+import WebView from "react-native-webview";
 
 function HTMLSpan(props) {
     return <ContentText {...props} style={props.style}>
@@ -22,6 +23,7 @@ class HTMLAnchor extends Component {
         super(props)
     }
     onPress = () => {
+        console.log("renderHTML.js:25 says:", this.props.href);
         openURL(this.props.href)
     }
     render() {/*<Pressable  style={{ display: "inline" }}>*/
@@ -58,11 +60,18 @@ class HTMLUnorderedList extends Component {
 function HTMLImage(props) {
     let uri = (!props.src.startsWith("https") ? "https://deeds.cgs.vic.edu.au" : "") + props.src
     console.log("renderHTML.js:60 says:", uri);
-    return <Image
-        resizeMode='contain'
-        style={[{ width: 300, height: 300 }, ...props.style]} // good enough
-        source={{ uri }}
-    ></Image>
+    return <View style={{
+        width: "100%",
+        display: 'flex',
+        alignItems: "center",
+        paddingHorizontal: 100
+    }}>
+        <Image
+            resizeMode='contain'
+            style={[{ width: 300, height: 300, paddingHorizontal: 100 }, ...props.style]} // good enough
+            source={{ uri }}
+        />
+    </View>
 }
 
 function parseStyle(style) {
@@ -80,16 +89,60 @@ function parseStyle(style) {
     return outputStyle
 }
 
+class HTMLWebView extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+    onLoad = (syntheticEvent) => {
+        console.log("renderHTML.js:98 says:", syntheticEvent.nativeEvent.title);
+        let title = syntheticEvent.nativeEvent.title;
+        title = (title.length > 30)
+            ? title.slice(0, 27) + "..."
+            : title
+        this.setState({ title })
+    }
+    render() {
+        return <View>
+            <View
+                style={{
+                    backgroundColor: customColours.lightBlue,
+                    padding: 10
+                }}
+            >
+                <ContentText
+                    style={{
+                        fontSize: 20
+                    }}
+                >{this.state.title}</ContentText>
+            </View>
+            <WebView
+                style={{ backgroundColor: 'pink', width: 400, height: 500 }}
+                containerStyle={{ backgroundColor: 'pink' }}
+                source={{ uri: this.props.uri }}
+                originWhitelist={['*']}
+                onLoad={this.onLoad}
+                contentMode='desktop'
+            />
+        </View>
+    }
+}
+
 function renderHTMLElement(elem, style) {
-    console.log("renderHTML.js:7 says:", JSON.stringify(elem.attributes));
+    // console.log("renderHTML.js:7 says:", JSON.stringify(elem.attributes));
+    let elemAttributes = elem.attributes
     let styles = [...style];
     (elem.attributes && elem.attributes.style)
         ? styles.push(parseStyle(elem.attributes.style))
         : null
+    // if (elem.nodeType == 3) { idk what to do here
+    //     return <HTMLSpan style={styles}>{elem.text}</HTMLSpan>
+    // }
     switch (elem.tagName) {
         case "P":
             return <HTMLParagraph style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLParagraph>
         case "STRONG":
+        case "B":
             styles.push({ fontWeight: "700" })
             return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
         case "SPAN":
@@ -101,6 +154,9 @@ function renderHTMLElement(elem, style) {
         case "IMG":
             return <HTMLImage style={style} src={elem.attributes.src}></HTMLImage>
         default:
+            if (elem.outerHTML && elem.outerHTML.includes('data-oembed-url')) {
+                return <HTMLWebView uri={elem.outerHTML.matchAll(/data-oembed-url="([^"]*)"/g).next().value[1]} />
+            }
             return <View style={styles}>{elem.childNodes.map(i => renderHTMLElement(i, styles))}</View>
     }
 }

@@ -18,7 +18,7 @@ class MainScreen extends Component {
     componentDidMount = () => {
         console.log("MainScreen.js:19 says:", this);
         setTimeout(_ => {
-            this.props.navigation.navigate("Barcode", { id: 18334 })
+            this.props.navigation.navigate("Homepage", { code: "8-0860-F" })
         }, 1000)
     }
     render() {
