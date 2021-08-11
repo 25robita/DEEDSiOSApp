@@ -9,23 +9,20 @@ function LoaderComponent(props) {
         <View style={props.style}>
             {
                 (props.state == "loading")
-                    ? <ActivityIndicator
-                        style={[styles.loader, props.loaderStyle]}
-                        size={props.size}
-                    />
-                    : null
+                && <ActivityIndicator
+                    style={[styles.loader, props.loaderStyle]}
+                    size={props.size}
+                />
             }
             {
                 (props.state == "failed")
-                    ? <Meta style={[styles.failedLoad, props.loaderStyle]}>
-                        {props.failText}
-                    </Meta>
-                    : null
+                && <Meta style={[styles.failedLoad, props.loaderStyle]}>
+                    {props.failText}
+                </Meta>
             }
             {
                 props.state == "loaded"
-                    ? props.children
-                    : null
+                && props.children
             }
         </View>
 

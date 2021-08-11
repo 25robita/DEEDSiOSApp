@@ -25,14 +25,40 @@ class NewsItem extends Component {
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
                 <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white" }]}>
-                    <ContentText style={[newsStyles.newsTitle]}>{this.props.data.sticky ? (<ContentText><IconComponent name="pin" style={{ fontSize: 16, marginLeft: 10 }} />  </ContentText>) : null}{this.props.data.title}</ContentText>
+                    <ContentText style={[newsStyles.newsTitle]}>
+                        {
+                            this.props.data.sticky
+                            &&
+                            (
+                                <ContentText>
+                                    <IconComponent name="pin" style={{
+                                        fontSize: 16,
+                                        marginLeft: 10
+                                    }}
+                                    />
+                                </ContentText>
+                            )
+                        }{
+                            this.props.data.title
+                        }
+                    </ContentText>
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "center"
                     }}>
-                        <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname || this.props.data.author.fullName}  </ContentText></Meta>
-                        <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
+                        <Meta>
+                            By <ContentText style={[{
+                                color: customColours.harshBlue
+                            }]}>{
+                                    this.props.data.author.fullname || this.props.data.author.fullName
+                                }
+                            </ContentText>
+                        </Meta>
+                        <TimeComponent
+                            date={true}
+                            time={this.props.data.publishAt.relativeTime}
+                        />
                     </View>
                     {
                         this.props.data.blurb
@@ -41,10 +67,9 @@ class NewsItem extends Component {
                     }
                     {
                         this.props.data.attachments
-                            ? <Meta style={{ marginTop: 5 }}>
-                                {this.props.data.attachments} {(this.props.data.attachments == 1) ? "attachment" : "attachments"}
-                            </Meta>
-                            : null
+                        && <Meta style={{ marginTop: 5 }}>
+                            {this.props.data.attachments} {(this.props.data.attachments == 1) ? "attachment" : "attachments"}
+                        </Meta>
                     }
                 </View>
             </TouchableOpacity>
@@ -106,23 +131,22 @@ class NewsList extends Component {
             <View>
                 {
                     (this.state.feed || !this.state.isEmpty)
-                        ?
-                        <LoaderComponent
-                            state={
-                                !(this.state.feed || this.state.isEmpty) || this.state.showActivity
-                                    ? "loading"
-                                    : (this.state.isEmpty ? "failed" : "loaded")}
-                            failText="No news could be found at the moment"
-                        >
-                            <FlatList
-                                scrollEnabled={false}
-                                data={this.state.feed}
-                                keyExtractor={this.keyExtractor}
-                                renderItem={this.handleRenderNewsItem}
-                                style={{ overflow: "visible" }}
-                            />
-                        </LoaderComponent>
-                        : null
+                    &&
+                    <LoaderComponent
+                        state={
+                            !(this.state.feed || this.state.isEmpty) || this.state.showActivity
+                                ? "loading"
+                                : (this.state.isEmpty ? "failed" : "loaded")}
+                        failText="No news could be found at the moment"
+                    >
+                        <FlatList
+                            scrollEnabled={false}
+                            data={this.state.feed}
+                            keyExtractor={this.keyExtractor}
+                            renderItem={this.handleRenderNewsItem}
+                            style={{ overflow: "visible" }}
+                        />
+                    </LoaderComponent>
                 }
             </View>
         );

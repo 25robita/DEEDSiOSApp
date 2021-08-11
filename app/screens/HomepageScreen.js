@@ -104,10 +104,9 @@ class SchoolboxNewsList extends Component {
         >
             {
                 this.state.url
-                    ? <NewsList
-                        url={this.state.url}
-                    />
-                    : null
+                && <NewsList
+                    url={this.state.url}
+                />
             }
         </SchoolboxComponent>
 
@@ -205,8 +204,7 @@ function SchoolboxTiles(props) {
                             activeOpacity={tileHref ? 0.5 : 1}
                             onPress={_ => {
                                 tileHref
-                                    ? openURL(tileHref)
-                                    : null
+                                    && openURL(tileHref)
                             }}
                         >
                             <ImageBackground
@@ -622,19 +620,18 @@ class HomepageScreen extends Component {
                             >
                                 {
                                     (index != this.state.breadcrumbs.length - 1)
-                                        ? <IconComponent
-                                            name="next"
-                                            style={{
-                                                color: customColours.white,
-                                                position: 'absolute',
-                                                alignSelf: 'center',
-                                                right: -3,
-                                                transform: [{
-                                                    scaleY: 3
-                                                }]
-                                            }}
-                                        />
-                                        : null
+                                    && <IconComponent
+                                        name="next"
+                                        style={{
+                                            color: customColours.white,
+                                            position: 'absolute',
+                                            alignSelf: 'center',
+                                            right: -3,
+                                            transform: [{
+                                                scaleY: 3
+                                            }]
+                                        }}
+                                    />
                                 }
                                 <ContentText
                                     onPress={_ => openURL(item.href)}

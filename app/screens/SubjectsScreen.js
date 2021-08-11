@@ -37,11 +37,10 @@ class SubjectsScreen extends Component {
                 >
                     {
                         this.state.loaded
-                            ? <LinksList
-                                icon="teacher"
-                                data={this.state.items}
-                            />
-                            : null
+                        && <LinksList
+                            icon="teacher"
+                            data={this.state.items}
+                        />
                     }
                 </LoaderComponent>
             </View>
