@@ -1,6 +1,6 @@
 import { CommonActions, createNavigationContainerRef, createNavigatorFactory, NavigationContainer, StackActions } from '@react-navigation/native';
 import React, { Component } from 'react';
-import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Pressable, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
@@ -80,12 +80,12 @@ function DaySelector({ state, descriptors, navigation, position }) {
                 backgroundColor: customColours.backgroundColor
             }}
         >
-            <Pressable hitSltop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index - 1]) : null}>
+            <TouchableOpacity activeOpacity={0.5} hitSlop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index - 1]) : null}>
                 <IconComponent style={{
                     fontSize: 20,
                     // bottom: 10
                 }} name="previous" />
-            </Pressable>
+            </TouchableOpacity>
             <View
                 style={{
                     display: "flex",
@@ -128,11 +128,11 @@ function DaySelector({ state, descriptors, navigation, position }) {
                     keyExtractor={handleKeyExtraction}
                 />
             </View>
-            <Pressable hitSltop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index + 1]) : null}>
+            <TouchableOpacity activeOpacity={0.5} hitSlop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index + 1]) : null}>
                 <IconComponent style={{
                     fontSize: 20,
                 }} name="next" />
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }

@@ -9,7 +9,10 @@ function LoaderComponent(props) {
         <View style={props.style}>
             {
                 (props.state == "loading")
-                    ? <ActivityIndicator style={[styles.loader, props.loaderStyle]} />
+                    ? <ActivityIndicator
+                        style={[styles.loader, props.loaderStyle]}
+                        size={props.size}
+                    />
                     : null
             }
             {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Pressable } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { styles } from '../consts';
 import IconComponent from './IconComponent';
 import { ContentText } from './TextComponents';
@@ -16,7 +16,7 @@ class TopBarBackButton extends Component {
     }
     render() {
         return (
-            <Pressable
+            <TouchableOpacity activeOpacity={0.5}
                 onPress={this.props.onPress}
                 style={[
                     {
@@ -25,7 +25,7 @@ class TopBarBackButton extends Component {
                         bottom: "25%",
                     }
                 ]}
-                hitSlop={50}
+                hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }}
             >
                 <IconComponent
                     style={[
@@ -37,7 +37,7 @@ class TopBarBackButton extends Component {
                     ]}
                     name="previous"
                 />
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 }

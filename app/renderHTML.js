@@ -1,10 +1,11 @@
 import parse from "node-html-parser";
 import React, { Component } from "react";
-import { FlatList, Image, Linking, Pressable, View } from "react-native";
+import { FlatList, Image, Linking, TouchableOpacity, View } from "react-native";
 import { ContentText } from "./components/TextComponents";
 import { customColours } from "./colours";
 import { openURL } from "./RootNavigation";
 import WebView from "react-native-webview";
+import IconComponent from "./components/IconComponent";
 
 function HTMLSpan(props) {
     return <ContentText {...props} style={props.style}>
@@ -26,11 +27,11 @@ class HTMLAnchor extends Component {
         console.log("renderHTML.js:25 says:", this.props.href);
         openURL(this.props.href)
     }
-    render() {/*<Pressable  style={{ display: "inline" }}>*/
+    render() {/*<TouchableOpacity activeOpacity={0.5}  style={{ display: "inline" }}>*/
         return <HTMLSpan onPress={this.onPress} style={[{ color: customColours.harshBlue }, ...this.props.style]}>
             {this.props.children}
         </HTMLSpan>
-        // </Pressable>
+        // </TouchableOpacity>
     }
 }
 
@@ -43,9 +44,22 @@ class HTMLUnorderedList extends Component {
     }
     renderItem = ({ item }) => {
         if (item.tagName == "LI") {
-            return <HTMLSpan style={this.props.style}><HTMLSpan style={{ fontWeight: "700" }}>•</HTMLSpan> {item.text}</HTMLSpan>
+            return <View style={{
+                flexDirection: 'row',
+                marginBottom: 5
+            }}>
+                <HTMLSpan style={{ fontWeight: "700", paddingHorizontal: 10 }}>•</HTMLSpan>
+                <View>
+                    {
+                        item.nodeType == 1
+                            ? renderHTMLElement(item, this.props.style)
+                            : <HTMLSpan style={this.props.style}>
+                                {item.text}
+                            </HTMLSpan>
+                    }
+                </View>
+            </View>
         }
-        // return item.nodeType == 1 ? renderHTMLElement(item) : <HTMLSpan style={this.props.style}>{item.text}</HTMLSpan>
     }
     render() {
         return <FlatList
@@ -74,21 +88,6 @@ function HTMLImage(props) {
     </View>
 }
 
-function parseStyle(style) {
-    let properties = {
-        "text-align": "textAlign",
-        "color": "color"
-    }
-    let outputStyle = {}
-    let _, property, value;
-    for ([_, property, value] of style.matchAll(/(\w+)\s*:\s*([^;]*);/g)) {
-        if (properties[property]) {
-            outputStyle[properties[property]] = value;
-        }
-    }
-    return outputStyle
-}
-
 class HTMLWebView extends Component {
     constructor(props) {
         super(props)
@@ -102,12 +101,18 @@ class HTMLWebView extends Component {
             : title
         this.setState({ title })
     }
+    onOpenInBrowser = () => {
+        openURL(this.props.uri)
+    }
     render() {
         return <View>
             <View
                 style={{
                     backgroundColor: customColours.lightBlue,
-                    padding: 10
+                    padding: 10,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}
             >
                 <ContentText
@@ -115,6 +120,18 @@ class HTMLWebView extends Component {
                         fontSize: 20
                     }}
                 >{this.state.title}</ContentText>
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={this.onOpenInBrowser}
+                >
+                    <IconComponent id=''
+                        style={{
+                            color: customColours.grey,
+                            fontSize: 16
+                        }}
+                    />
+                </TouchableOpacity>
+
             </View>
             <WebView
                 style={{ backgroundColor: 'pink', width: 400, height: 500 }}
@@ -122,16 +139,51 @@ class HTMLWebView extends Component {
                 source={{ uri: this.props.uri }}
                 originWhitelist={['*']}
                 onLoad={this.onLoad}
-                contentMode='desktop'
+                contentMode={this.props.uri.includes("docs.google") ? "desktop" : "mobile"}
             />
         </View>
     }
+}
+
+function SocialStreamAttatchment(props) {
+    return <View>
+
+    </View>
+}
+
+function parseStyle(style) {
+    let properties = {
+        "text-align": "textAlign",
+        "color": "color",
+        "background-color": "backgroundColor"
+    }
+    let outputStyle = {}
+    let _, property, value;
+    for ([_, property, value] of style.matchAll(/([\w-]+)\s*:\s*([^;]*);/g)) {
+        if (properties[property]) {
+            outputStyle[properties[property]] = value;
+        }
+    }
+    return outputStyle
+}
+
+
+function getLastStyleDecleration(styles, property, fallback) {
+    let value = fallback
+    Array.from(styles).forEach(style => {
+        console.log("renderHTML.js:153 says:", style);
+        if (style[property]) {
+            value = style[property]
+        }
+    })
+    return value
 }
 
 function renderHTMLElement(elem, style) {
     // console.log("renderHTML.js:7 says:", JSON.stringify(elem.attributes));
     let elemAttributes = elem.attributes
     let styles = [...style];
+    let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);
     (elem.attributes && elem.attributes.style)
         ? styles.push(parseStyle(elem.attributes.style))
         : null
@@ -145,6 +197,69 @@ function renderHTMLElement(elem, style) {
         case "B":
             styles.push({ fontWeight: "700" })
             return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+        case "EM":
+        case "I":
+            styles.push({ fontStyle: 'italic' })
+            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+        case "U":
+            styles.push({ textDecorationLine: 'underline' })
+            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+        case "S":
+            styles.push({ textDecorationLine: "line-through" })
+            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+        case "SUB":
+            styles.push({
+                fontSize: fontSize / 1.5,
+            })
+            return <View
+                style={{
+                    // justifyContent: 'baseline',
+                    alignItems: 'flex-end',
+                    // backgroundColor: 'pink',
+                    flexDirection: 'row',
+                    transform: [{
+                        translateY: fontSize / 2.5
+                    }]
+                }}
+            >
+                <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            </View>
+        case "SUP":
+            fontSize = getLastStyleDecleration(styles, 'fontSize', 16)
+            styles.push({
+                fontSize: fontSize / 1.5,
+            })
+            return <View
+                style={{
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    height: fontSize
+                }}
+            >
+                <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            </View>
+        case "BLOCKQUOTE":
+            styles.push({ fontStyle: 'italic', color: customColours.blockquoteForeground })
+            return <View
+                style={{
+                    width: '100%',
+                    backgroundColor: customColours.blockquoteBackground,
+                    borderColor: customColours.blockquoteBorder,
+                    borderLeftWidth: 5,
+                    paddingLeft: 20,
+                    marginBottom: 10
+                }}
+            >
+                <HTMLSpan style={styles}>
+                    {elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}
+                </HTMLSpan>
+            </View>
+        case "H1":
+            styles.push({ fontSize: 20 })
+            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+        case "H2":
+            styles.push({ fontSize: 18 })
+            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
         case "SPAN":
             return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
         case "A":
@@ -154,6 +269,20 @@ function renderHTMLElement(elem, style) {
         case "IMG":
             return <HTMLImage style={style} src={elem.attributes.src}></HTMLImage>
         default:
+            if (elem.outerHTML && elem.outerHTML.includes("socialstream-attatchment")) {
+                let urlElem = elem.querySelector("a")
+                let url = urlElem && urlElem.attributes.src
+                let text = urlElem.text.trim()
+
+                let imgElem = elem.querySelector("img")
+                let mimeTypeRegex = imgElem && imgElem.attributes.src.matchAll(/\/([\w-]+)\..*/g).next().value
+                let mimeType = mimeTypeRegex && mimeTypeRegex[1].replace("-", '/')
+                return <SocialStreamAttatchment
+                    url={url}
+                    text={text}
+                    mimeType={mimeType}
+                />
+            }
             if (elem.outerHTML && elem.outerHTML.includes('data-oembed-url')) {
                 return <HTMLWebView uri={elem.outerHTML.matchAll(/data-oembed-url="([^"]*)"/g).next().value[1]} />
             }

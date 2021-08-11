@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, View, Text, ActivityIndicator, Linking, Pressable } from 'react-native';
+import { FlatList, View, Text, ActivityIndicator, Linking, TouchableOpacity } from 'react-native';
 import { customColours, newsStyles, styles } from '../consts';
 import { fetchJSONResource } from '../getters/get';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
@@ -16,14 +16,14 @@ class NewsItem extends Component {
         super(props)
     }
     handlePress = () => {
-        (this.props.url || (getCurrentRoute().name == "News")) ? null : push("News");
+        (['News', 'Homepage'].includes(getCurrentRoute().name)) ? null : push("News");
         push("News Item", {
             id: this.props.data.id
         })
     }
     render() {
         return (
-            <Pressable onPress={this.handlePress}>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
                 <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white" }]}>
                     <ContentText style={[newsStyles.newsTitle]}>{this.props.data.sticky ? (<ContentText><IconComponent name="pin" style={{ fontSize: 16, marginLeft: 10 }} />  </ContentText>) : null}{this.props.data.title}</ContentText>
                     <View style={{
@@ -31,7 +31,7 @@ class NewsItem extends Component {
                         flexDirection: 'row',
                         justifyContent: "center"
                     }}>
-                        <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname}  </ContentText></Meta>
+                        <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname || this.props.data.author.fullName}  </ContentText></Meta>
                         <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
                     </View>
                     {
@@ -47,7 +47,7 @@ class NewsItem extends Component {
                             : null
                     }
                 </View>
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 }
@@ -88,7 +88,8 @@ class NewsList extends Component {
             .then(data => {
                 this.setState({
                     feed: data.slice(0, this.props.number), // maxlength 3
-                    showActivity: false
+                    showActivity: false,
+                    isEmpty: !Boolean(data.length)
                 })
             })
     }
@@ -111,7 +112,7 @@ class NewsList extends Component {
                                 !(this.state.feed || this.state.isEmpty) || this.state.showActivity
                                     ? "loading"
                                     : (this.state.isEmpty ? "failed" : "loaded")}
-                            failText="Unable to load the news at the moment"
+                            failText="No news could be found at the moment"
                         >
                             <FlatList
                                 scrollEnabled={false}

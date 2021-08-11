@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, Text, View } from 'react-native';
 import { styles, timetableStyles } from "../consts"
 import { getNowOnwards } from '../getters/timetable';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
@@ -11,7 +11,7 @@ import { navigate, openURL } from '../RootNavigation';
 function TimetableSubject(props) {
     return (
         props.data ?
-            <Pressable onPress={_ => {
+            <TouchableOpacity activeOpacity={0.5} onPress={_ => {
                 let url = `/homepage/code/` + props.data.code;
                 props.data.empty ? null : openURL(url)
             }}>
@@ -30,7 +30,7 @@ function TimetableSubject(props) {
                             </View>
                     }
                 </View>
-            </Pressable>
+            </TouchableOpacity>
             : null
     );
 }
@@ -86,7 +86,7 @@ class TimetableRow extends Component {
                 {
                     (this.state.timetable.length || !this.state.isFilled)
                         ? (
-                            <Pressable onPress={this.handleScreenToTimetable}>
+                            <TouchableOpacity activeOpacity={0.5} onPress={this.handleScreenToTimetable}>
                                 <SectionComponent title="timetable" navigatorName="Timetable">
                                     <LoaderComponent
                                         state={
@@ -102,7 +102,7 @@ class TimetableRow extends Component {
                                         <TimetableSubject data={this.state.timetable[1]} />
                                     </LoaderComponent>
                                 </SectionComponent>
-                            </Pressable>
+                            </TouchableOpacity>
                         )
                         : null
                 }
