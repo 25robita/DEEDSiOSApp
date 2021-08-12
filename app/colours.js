@@ -9,8 +9,5 @@ export const customColours = {
     componentTitleBar: "#e5eff7",
     highlightGold: "#daaa00",
     white: "#ffffff",
-    contentBackground: "#ffffff",
-    blockquoteBackground: '#f6f6f6',
-    blockquoteForeground: '#6f6f6f',
-    blockquoteBorder: '#aaa',
+    contentBackground: "#ffffff"
 }

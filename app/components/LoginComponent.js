@@ -1,6 +1,6 @@
 import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
-import { Text, TextInput, View, Animated, Image, TouchableOpacity, Linking } from 'react-native';
+import { Text, TextInput, View, Animated, Image, Pressable, Linking } from 'react-native';
 import { Easing, useDerivedValue } from 'react-native-reanimated';
 import { loginStyles, styles } from '../consts';
 import { ContentText } from './TextComponents';
@@ -64,11 +64,38 @@ class LoginComponent extends Component {
     }
     render() {
         return (
-            <Animated.View style={[loginStyles.halfContainer, { transform: [{ translateY: this.state.moveAnim }] }]}>
-                <Image source={logoImage} resizeMode={'contain'} style={{ width: "100%", height: "40%", alignSelf: "center" }}></Image>
-                <ContentText style={[loginStyles.text, loginStyles.loginHeader, { marginBottom: (this.state.errorMessage ? 25 : 50) }]}>Please enter your username and password</ContentText>
+            <Animated.View
+                style={[
+                    loginStyles.halfContainer,
+                    {
+                        transform: [{
+                            translateY: this.state.moveAnim
+                        }]
+                    }
+                ]}
+            >
+                <Image
+                    source={logoImage}
+                    resizeMode={'contain'}
+                    style={{
+                        width: "100%",
+                        height: "40%",
+                        alignSelf: "center"
+                    }}
+                />
+                <ContentText
+                    style={[
+                        loginStyles.text,
+                        loginStyles.loginHeader,
+                        {
+                            marginBottom: (this.state.errorMessage ? 25 : 50)
+                        }
+                    ]}
+                >
+                    Please enter your username and password
+                </ContentText>
                 {
-                    this.state.errorMessage
+                    Boolean(this.state.errorMessage)
                     && <View style={[loginStyles.errorContainer]}>
                         <ContentText style={loginStyles.error}>{this.state.errorMessage}</ContentText>
                     </View>
@@ -91,21 +118,21 @@ class LoginComponent extends Component {
                         secureTextEntry={true}
                         placeholder="Password"
                         placeholderTextColor={"#5b5b5b"}
-                    ></TextInput>
+                    />
                     <View style={loginStyles.buttonsContainer}>
                         <View style={loginStyles.iForgotContainer}>
-                            <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserUsername}>
+                            <Pressable onPress={this.handleOpenBrowserUsername}>
                                 <ContentText style={loginStyles.iForgot}>I forgot my username</ContentText>
-                            </TouchableOpacity>
-                            <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserPassword}>
+                            </Pressable>
+                            <Pressable onPress={this.handleOpenBrowserPassword}>
                                 <ContentText style={loginStyles.iForgot}>I forgot my password</ContentText>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
-                        <TouchableOpacity activeOpacity={0.5} onPress={this.onLogin}>
+                        <Pressable onPress={this.onLogin}>
                             <View style={loginStyles.submitButton}>
                                 <ContentText style={loginStyles.submitText}>Sign In</ContentText>
                             </View>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
             </Animated.View >

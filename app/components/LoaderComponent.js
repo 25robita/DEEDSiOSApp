@@ -9,10 +9,15 @@ function LoaderComponent(props) {
         <View style={props.style}>
             {
                 (props.state == "loading")
+<<<<<<< HEAD
                 && <ActivityIndicator
                     style={[styles.loader, props.loaderStyle]}
                     size={props.size}
                 />
+=======
+                    ? <ActivityIndicator style={[styles.loader, props.loaderStyle]} />
+                    : null
+>>>>>>> parent of 9aae16e (Various things)
             }
             {
                 (props.state == "failed")

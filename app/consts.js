@@ -422,7 +422,6 @@ const icons = {
     "barcode": "",
     "up-arrow": "",
     "down-arrow": "",
-    "external-link": ""
 }
 
 export { icons, newsStyles, customColours, styles, timetableStyles, loginStyles }

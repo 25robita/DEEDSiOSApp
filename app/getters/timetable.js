@@ -4,6 +4,7 @@ function getTimetable() {
     return new Promise((resolve, reject) => {
         fetchHTMLResource("/timetable")
             .then(d => {
+                console.log("timetable.js:7 says:", "hewwo");
                 var getTimetableHeaderName = (th) => th.childNodes[0].textContent.trim()
 
                 var data = {}
@@ -158,6 +159,7 @@ function getDayAndFull(day, now) {
     return new Promise((resolve, reject) => {
         getTimetable()
             .then(longTimetable => {
+                console.log("timetable.js:161 says:", "hello");
                 let timetable = longTimetable.map(item =>
                     condenseTimetable(item)
                 )
@@ -177,7 +179,10 @@ function getDayAndFull(day, now) {
                 }
                 timetable[day] = today
                 resolve([undefined, timetable, longTimetable])
-            }, reject)
+            }, _ => {
+                console.log("timetable.js:182 says:", "hi");
+                reject()
+            })
     })
 }
 

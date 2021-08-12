@@ -1,7 +1,8 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
+import SquareGrid from 'react-native-square-grid';
 import { ContentText } from "../components/TextComponents";
 import IconComponent from "../components/IconComponent";
 import { dispatch, navigate } from "../RootNavigation";
@@ -95,7 +96,7 @@ class NavigationScreen extends Component {
             color: customColours.darkBlue,
             fontSize: 18
         }
-        return <TouchableOpacity activeOpacity={0.5}
+        return <Pressable
             onPress={_ => {
                 dispatch(StackActions.replace(link.name, link.params));
             }}
@@ -127,7 +128,7 @@ class NavigationScreen extends Component {
                     {name}
                 </ContentText>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     }
 
     render() {

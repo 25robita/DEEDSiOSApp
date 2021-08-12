@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
@@ -15,7 +15,7 @@ class LinksList extends Component {
         super(props);
     }
     renderItem = ({ item }) => {
-        return <TouchableOpacity activeOpacity={0.5}
+        return <Pressable
             onPress={_ => {
                 openURL(item.href)
             }}
@@ -46,7 +46,7 @@ class LinksList extends Component {
                     }}
                 >{item.text}</ContentText>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     }
     keyExtractor(a, b) {
         return a + b

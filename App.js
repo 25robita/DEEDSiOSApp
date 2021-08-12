@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { loadAsync } from 'expo-font';
 import { getItemAsync, setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { fetchResource } from './app/getters/get';
 import LoginScreen from './app/screens/LoginScreen';
 import MainScreen from './app/screens/MainScreen';
@@ -25,13 +25,6 @@ import GroupsScreen from './app/screens/GroupsScreen';
 import LinksScreen from './app/screens/LinksScreen'
 const MainStack = createStackNavigator();
 
-const headerButtonHitslop = {
-    top: 25,
-    left: 25,
-    right: 25,
-    bottom: 10
-}
-
 const navigatorOptions = {
     headerStyle: [styles.topBar],
     headerTitleStyle: [styles.topBarHeading],
@@ -46,14 +39,12 @@ const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
 
 const navigatorOptionsHideBackBarcode = Object.assign({}, navigatorOptionsHideBack, {
     headerRight: _ => {
-        return <TouchableOpacity activeOpacity={0.5}
-            hitSlop={headerButtonHitslop}
-            onPress={_ => {
-                getItemAsync("userMeta")
-                    .then(userMeta => {
-                        navigate("Barcode", { id: JSON.parse(userMeta).schoolboxUser.externalId })
-                    })
-            }}>
+        return <Pressable onPress={_ => {
+            getItemAsync("userMeta")
+                .then(userMeta => {
+                    navigate("Barcode", { id: JSON.parse(userMeta).schoolboxUser.externalId })
+                })
+        }}>
             <View style={{
                 marginRight: 20,
                 display: 'flex',
@@ -74,7 +65,7 @@ const navigatorOptionsHideBackBarcode = Object.assign({}, navigatorOptionsHideBa
                     fontSize: 20
                 }}>]</ContentText>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     }
 })
 
@@ -83,7 +74,7 @@ const navigatorOptionsHideBackBarcodeNavipage = Object.assign({}, navigatorOptio
         return <View style={{
             marginLeft: 20
         }}>
-            <TouchableOpacity activeOpacity={0.5} hitSlop={headerButtonHitslop} onPress={_ => navigate("Navigation")}>
+            <Pressable hitSlop={50} onPress={_ => navigate("Navigation")}>
                 <IconComponent
                     name="tiles"
                     style={{
@@ -91,7 +82,7 @@ const navigatorOptionsHideBackBarcodeNavipage = Object.assign({}, navigatorOptio
                         color: 'white'
                     }}
                 />
-            </TouchableOpacity>
+            </Pressable>
         </View>
     }
 })

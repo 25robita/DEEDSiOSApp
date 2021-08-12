@@ -27,14 +27,8 @@ export function getCurrentRoute() {
     }
 }
 
-export function openURL(url, parse = true) {
-    if (!parse) {
-        if (!url.startsWith("https")) {
-            url = "https://deeds.cgs.vic.edu.au" + url
-        }
-        Linking.openURL(url)
-    }
-    else if (url.startsWith("/") || url.startsWith("https://deeds.cgs.vic.edu.au")) {
+export function openURL(url) {
+    if (url.startsWith("/") || url.startsWith("https://deeds.cgs.vic.edu.au")) {
         url = url.replace("https://deeds.cgs.vic.edu.au", '')
         if (url.startsWith("/search/user/")) {
             push("User", { id: url.match(/\d+/g)[0] });
@@ -50,15 +44,13 @@ export function openURL(url, parse = true) {
             push("Homepage", { code: url.split("/")[3] })
         }
         else {
+
             Linking.openURL("https://deeds.cgs.vic.edu.au" + url) // open deeds page
         }
     }
     else {
-        if (url.startsWith('http')) {
-            Linking.openURL(url)
-            return
-        }
-        Linking.openURL('https://deeds.cgs.vic.edu.au/' + url)
+        Linking.openURL(url)
+        return
     }
 
 }
