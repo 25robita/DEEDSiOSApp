@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Component } from 'react/cjs/react.production.min';
 import { styles } from '../consts';
@@ -37,7 +37,7 @@ class SectionHeading extends Component {
     }
     render() {
         return (
-            <Pressable onPress={this.navigate}>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.navigate}>
                 <View style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -49,7 +49,7 @@ class SectionHeading extends Component {
                     </ContentText>
                     <IconComponent name="next" style={{ fontSize: 16 }} />
                 </View>
-            </Pressable>
+            </TouchableOpacity>
 
         )
     }

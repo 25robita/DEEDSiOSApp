@@ -1,6 +1,6 @@
 import { CommonActions, createNavigationContainerRef, createNavigatorFactory, NavigationContainer, StackActions } from '@react-navigation/native';
 import React, { Component } from 'react';
-import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Pressable, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
@@ -64,23 +64,6 @@ class TimetableSubScreen extends Component {
     }
 }
 
-<<<<<<< HEAD
-class DaySelectorComponent extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
-    onIncreaseDay = () => {
-        days[this.props.state.index]
-            && this.props.navigation.navigate(days[this.props.state.index + 1])
-    }
-    onDecreaseDay = () => {
-        days[this.props.state.index]
-            && this.props.navigation.navigate(days[this.props.state.index - 1])
-    }
-    render() {
-        return (
-=======
 function DaySelector({ state, descriptors, navigation, position }) {
     console.log("TimetableScreen.js:142 says:", typeof position);
     return (
@@ -97,111 +80,74 @@ function DaySelector({ state, descriptors, navigation, position }) {
                 backgroundColor: customColours.backgroundColor
             }}
         >
-            <Pressable hitSltop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index - 1]) : null}>
+            <TouchableOpacity
+                activeOpacity={0.5}
+                hitSlop={50}
+                onPress={_ => // TODO: Turn into function component
+                    days[state.index]
+                    && navigation.navigate(days[state.index - 1])
+                }
+            >
                 <IconComponent style={{
                     fontSize: 20,
                     // bottom: 10
                 }} name="previous" />
-            </Pressable>
->>>>>>> parent of 9aae16e (Various things)
+            </TouchableOpacity>
             <View
                 style={{
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
                     alignItems: "center",
-                    top: 8,
-                    borderBottomColor: customColours.grey + "50",
-                    borderBottomWidth: 2,
-                    zIndex: 1,
-                    backgroundColor: customColours.backgroundColor
+                    justifyContent: "center",
+                    marginHorizontal: 40
                 }}
             >
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    hitSlop={50}
-                    onPress={onDecreaseDay}
-                >
-                    <IconComponent style={{
-                        fontSize: 20
-                    }} name="previous" />
-                </TouchableOpacity>
-                <View
+                <ContentText
+                    animated={true}
                     style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginHorizontal: 40
+                        fontWeight: "600",
+                        fontSize: 16
                     }}
-                >
-                    <ContentText
-                        animated={true}
-                        style={{
-                            fontWeight: "600",
-                            fontSize: 16
-                        }}
-                    >{days[state.index]}</ContentText>
-                    <FlatList
-                        horizontal={true}
-                        data={["•", "•", "•", "•", "•", "•", "•"]}
-                        contentContainerStyle={{
-                            display: "flex",
-                            alignItems: "center"
-                        }}
-                        renderItem={
-                            ({ item, index }) => {
-                                return (
-                                    <Meta
-                                        style={{
-                                            transform: [{
-                                                scale:
-                                                    2 /
-                                                    ((((Math.abs(state.index - index) / state.routeNames.length)) + .5) * 3)
-                                            }],
-                                            fontSize: 25,
-                                            padding: 0,
-                                            margin: 0
-                                        }}
-                                    >
-                                        {item}
-                                    </Meta>
-                                )
-                            }
+                >{days[state.index]}</ContentText>
+                <FlatList
+                    horizontal={true}
+                    data={["•", "•", "•", "•", "•", "•", "•"]}
+                    contentContainerStyle={{
+                        display: "flex",
+                        alignItems: "center"
+                    }}
+                    renderItem={
+                        ({ item, index }) => {
+                            return (
+                                <Meta
+                                    style={{
+                                        // textDecorationLine: (index == state.index) ? "underline" : undefined,
+                                        transform: [{ scale: 2 / ((((Math.abs(state.index - index) / state.routeNames.length)) + .5) * 3) }],
+                                        fontSize: 25,
+                                        padding: 0,
+                                        margin: 0
+                                    }}
+                                >
+                                    {item}
+                                </Meta>
+                            )
                         }
-                        keyExtractor={handleKeyExtraction}
-                    />
-                </View>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    hitSlop={50}
-                    onPress={onIncreaseDay}
-                >
-                    <IconComponent
-                        name="next"
-                        style={{
-                            fontSize: 20,
-                        }}
-                    />
-                </TouchableOpacity>
+                    }
+                    keyExtractor={handleKeyExtraction}
+                />
             </View>
-<<<<<<< HEAD
-        )
-    }
-}
-
-function DaySelector(props) {
-    return <DaySelector
-        {...props}
-    />
-=======
-            <Pressable hitSltop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index + 1]) : null}>
+            <TouchableOpacity
+                activeOpacity={0.5}
+                hitSlop={50}
+                onPress={_ =>
+                    days[state.index] && navigation.navigate(days[state.index + 1])
+                }
+            >
                 <IconComponent style={{
                     fontSize: 20,
                 }} name="next" />
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
->>>>>>> parent of 9aae16e (Various things)
 }
 
 class TimetableScreen extends Component {
@@ -220,16 +166,15 @@ class TimetableScreen extends Component {
         this.state = { day, now, dayName };
     }
     updateTimetable = () => {
-        console.log("TimetableScreen.js:188 says:", "hello");
+        // console.log("TimetableScreen.js:164 says:", "hello");
         getDayAndFull(this.state.day, this.state.now)
-            .then(([timetable, fullTimetable]) => {
-                console.log("TimetableScreen.js:190 says:", "hello");
+            .then(([timetable, fullTimetable, uncondensedTimetable]) => {
                 this.state.willUpdate = true;
+                let x;
                 this.setState({ fullTimetable })
             }, _ => {
                 console.log("f")
             })
-        console.log("TimetableScreen.js:197 says:", "goodbye");
     }
     componentDidMount = () => {
         if (!this.props.route.params.timetable) {
@@ -241,6 +186,11 @@ class TimetableScreen extends Component {
             })
         }
     }
+    componentDidUpdate = () => {
+        if (this.state.fullTimetable) {
+            // console.log("TimetableScreen.js:201 says:", this.state.fullTimetable);
+        }
+    }
     onRefresh = () => {
         this.setState({ day: this.state.day })
     }
@@ -250,15 +200,9 @@ class TimetableScreen extends Component {
                 <SafeAreaView style={{ minHeight: "100%" }}>
                     <ScrollView scrollEnabled={false} style={{ minHeight: "100%" }}>
                         <RefreshControl onRefresh={this.onRefresh} />
-                        <LoaderComponent
-                            state={
-                                this.state.fullTimetable
-                                    ? "loaded"
-                                    : "loading"
-                            }
-                        >
-                            {
-                                Boolean(this.state.fullTimetable) &&
+                        {
+
+                            this.state.fullTimetable ?
                                 <NavigationContainer
                                     independent={true}
                                     ref={DaysTabsRef}
@@ -282,9 +226,8 @@ class TimetableScreen extends Component {
                                         }
                                     </DaysTabs.Navigator>
                                 </NavigationContainer>
-                                // : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
-                            }
-                        </LoaderComponent>
+                                : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
+                        }
                     </ScrollView>
 
                 </SafeAreaView >

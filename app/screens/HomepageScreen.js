@@ -1,10 +1,13 @@
 import React from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity, ScrollView, Text, View, Linking, ImageBackground, RefreshControl, Image, Pressable } from "react-native";
+import Collapsible from "react-native-collapsible";
+import WebView from "react-native-webview";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
 import IconComponent from "../components/IconComponent";
+import LoaderComponent from "../components/LoaderComponent";
 import { NewsList } from "../components/NewsRow";
-import { ContentText } from "../components/TextComponents";
+import { ContentText, Meta } from "../components/TextComponents";
 import { styles } from "../consts";
 import { fetchHTMLResource, fetchJSONResource } from "../getters/get";
 import { renderHTMLText } from "../renderHTML";
@@ -15,26 +18,35 @@ class SchoolboxComponent extends Component {
         super(props)
         this.state = { collapsed: false }
     }
+    componentDidMount = () => {
+        if ((this.props.collapsed || false) != this.state.collapsed && this.props.title) {
+            this.setState({ collapsed: true })
+        }
+    }
     collapseToggle = () => {
-        this.setState({
-            collapsed: !this.state.collapsed
-        })
+        this.props.url
+            ? openURL(this.props.url, false)
+            : this.setState({
+                collapsed: !this.state.collapsed
+            })
     }
     render() {
         return <View style={[{
             display: "flex",
             flexDirection: "column",
             margin: 10,
+            overflow: 'hidden'
         }, styles.shadow, this.props.style]}>
             <View
                 style={{
                     backgroundColor: customColours.componentTitleBar,
                     paddingHorizontal: 10,
                     paddingVertical: 7,
-                    display: "flex",
+                    display: (this.props.title || !this.props.children) ? 'flex' : "none",
                     justifyContent: "space-between",
                     flexDirection: "row",
-                    alignItems: "center"
+                    alignItems: "center",
+                    zIndex: 2
                 }}
             >
                 <ContentText
@@ -42,41 +54,34 @@ class SchoolboxComponent extends Component {
                         fontSize: 18,
                         // fontWeight: "500"
                     }}
-                >{this.props.title}</ContentText>
+                >{this.props.title || "No title"}</ContentText>
 
-                <Pressable hitSlop={15} onPress={this.collapseToggle}>
-                    <IconComponent name={this.state.collapsed ? "down-arrow" : "up-arrow"} style={{
-                        color: customColours.grey,
-                        fontSize: 16
-                    }} />
-                </Pressable>
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                    onPress={this.collapseToggle}
+                >
+                    <IconComponent
+                        name={
+                            this.props.children
+                                ? (this.state.collapsed ? "down-arrow" : "up-arrow")
+                                : "external-link"
+                        }
+                        style={{
+                            color: customColours.grey,
+                            fontSize: 16
+                        }} />
+                </TouchableOpacity>
 
             </View>
-<<<<<<< HEAD
-            <Collapsible
-                collapsed={this.state.collapsed}
-            >
-                <View
-                    style={[
-                        {
-                            backgroundColor: customColours.contentBackground,
-                            padding: (this.props.children && !this.props.noTitle) ? 20 : 0
-                        },
-                        this.props.contentStyle
-                    ]}
-                >
-                    {this.props.children || null}
+            <Collapsible collapsed={this.state.collapsed}>
+                <View style={[{
+                    backgroundColor: customColours.contentBackground,
+                    padding: (this.props.children && !this.props.noTitle) ? 20 : 0
+                }, this.props.contentStyle]}>
+                    {this.props.children}
                 </View>
             </Collapsible>
-=======
-            <View style={[{
-                display: this.state.collapsed ? "none" : undefined,
-                backgroundColor: customColours.contentBackground,
-                padding: 20,
-            }, this.props.contentStyle]}>
-                {this.props.children}
-            </View>
->>>>>>> parent of 9aae16e (Various things)
         </View>
     }
 }
@@ -92,7 +97,11 @@ class SchoolboxNewsList extends Component {
         })
     }
     render() {
-        return <SchoolboxComponent title={this.props.title} contentStyle={{ backgroundColor: customColours.contentBackground }}>
+        return <SchoolboxComponent
+            collapsed={this.props.collapsed}
+            title={this.props.title}
+            contentStyle={{ backgroundColor: customColours.contentBackground }}
+        >
             {
                 this.state.url
                 && <NewsList
@@ -105,14 +114,13 @@ class SchoolboxNewsList extends Component {
 }
 
 function SchoolboxTextBox(props) {
-    return <SchoolboxComponent title={props.title}>
+    return <SchoolboxComponent collapsed={props.collapsed} title={props.title}>
         <ContentText>
             {renderHTMLText(props.content)}
         </ContentText>
     </SchoolboxComponent>
 }
 
-<<<<<<< HEAD
 function SchoolboxLTI(props) {
     return <SchoolboxComponent
         collapsed={props.collapsed}
@@ -453,17 +461,22 @@ class SchoolboxSocialStream extends Component {
     }
 }
 
-=======
->>>>>>> parent of 9aae16e (Various things)
 class HomepageScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { components: [], name: "", breadcrumbs: [] };
+        this.state = { components: [], name: "", breadcrumbs: [], url: "" };
     }
     componentDidMount() {
-        let url = `/homepage/${this.props.route.params.code ? "code/" : ""}${this.props.route.params.code || this.props.route.params.id}`;
-        console.log("HomepageScreen.js:14 says:", url);
-        fetchHTMLResource(url)
+        let url = `/homepage/${this.props.route.params.code ? "code/" : ""}${this.props.route.params.code || this.props.route.params.id}/?readonly=1`;
+        this.state.url = url;
+        this.loadComponents()
+    }
+    loadComponents = () => {
+        this.state.components = []
+        this.state.breadcrumbs = []
+
+        this.setState({ name: '', })
+        fetchHTMLResource(this.state.url)
             .then(d => {
                 let pageTitle = d.querySelector("#content h1").text;
                 let maxLength = 27;
@@ -471,6 +484,8 @@ class HomepageScreen extends Component {
                 pageTitle = (pageTitle.length > maxLength)
                     ? pageTitle.slice(0, maxLength - 3) + "..."
                     : pageTitle
+
+                this.props.navigation.setOptions({ title: pageTitle })
                 let breadcrumbs = d.querySelectorAll(".breadcrumb li a")
                 if (breadcrumbs.length) {
                     breadcrumbs = breadcrumbs.map(item => {
@@ -481,17 +496,93 @@ class HomepageScreen extends Component {
                     })
                 }
                 this.setState({ breadcrumbs })
-                this.props.navigation.setOptions({ title: pageTitle })
-                d.querySelectorAll("[class*=Component_Homepage_Controller]").map(i => {
-                    let title = i.querySelector(".component-titlebar h2 span").innerHTML;
+
+                let homepageId = this.props.route.params.id || d.querySelector("#component-layout").attributes.class.match(/\d+/g);
+
+                d.querySelectorAll(".component-container").map(i => {
+                    let titleNode = i.querySelector(".component-titlebar h2");
+                    let title = titleNode && titleNode.text
+                        .trim()
+                        .replaceAll("Updates", "Social Stream"); // this is strange but ok
+                    let cid = i.id.match(/\d+/g);
+                    let isCollapsed = i.querySelector("[data-collapse-state]").attributes['data-collapse-state'] == 'collapsed';
                     if (i.classList.contains("Schoolbox_Resource_Textbox_Component_Homepage_Controller")) // here you support new components
+                    {
+                        let textBoxBody = i.querySelector("[id^=textBoxBody]");
                         this.state.components.push((
-                            <SchoolboxTextBox title={title} content={i.querySelector("[id^=textBoxBody]").innerHTML}></SchoolboxTextBox>
+                            <SchoolboxTextBox
+                                collapsed={isCollapsed}
+                                title={title}
+                                content={textBoxBody && textBoxBody.innerHTML}
+                            />
                         ))
-                    if (i.classList.contains("Schoolbox_Comms_News_Component_Homepage_Controller")) {
-                        console.log("HomepageScreen.js:108 says:", 'hi');
+                    }
+                    else if (i.classList.contains("Component_Homepage_BreadcrumbController")) { } // do nothing as they are automatically rendered up there somewhere ^
+                    else if (i.classList.contains("Schoolbox_Tile_Component_HomepageTileController")) {
+                        let tileWidthRegex = i.querySelector("style").text.matchAll(/width\s*:\s*(\d+\.?\d{0,2}).*([%])\s*;/g).next().value;
+                        let tileWidth = tileWidthRegex ? (tileWidthRegex[1] + tileWidthRegex[2]) : '100%'
                         this.state.components.push((
-                            <SchoolboxNewsList title={title} cid={i.id.match(/\d+/g)} homepage={this.props.route.params.id || d.querySelector("#component-layout").attributes.class.match(/\d+/g)} />
+                            <SchoolboxTiles
+                                collapsed={isCollapsed}
+                                title={title}
+                                tiles={i.querySelectorAll("li[data-tile]")}
+                                styles={i.querySelectorAll("ul style")}
+                                tileWidth={tileWidth}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Component_Homepage_SocialStreamController")) {
+                        this.state.components.push((
+                            <SchoolboxSocialStream
+                                collapsed={isCollapsed}
+                                title={title}
+                                homepage={homepageId}
+                                cid={cid}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Schoolbox_Comms_News_Component_Homepage_Controller")) {
+                        this.state.components.push((
+                            <SchoolboxNewsList
+                                title={title}
+                                cid={cid}
+                                homepage={homepageId}
+                                collapsed={isCollapsed}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Schoolbox_LTI_Component_Homepage_Controller")) {
+                        let url = i.querySelector("iframe").attributes.src;
+                        if (url.startsWith("/")) {
+                            url = "https://deeds.cgs.vic.edu.au" + url
+                        }
+                        this.state.components.push((
+                            <SchoolboxLTI
+                                collapsed={isCollapsed}
+                                title={title}
+                                url={url}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Component_Homepage_ClickviewController")) {
+                        let url = i.querySelector("iframe").attributes.src;
+                        url = url.startsWith("//") ? "https:" + url : url
+                        this.state.components.push((
+                            <SchoolboxLTI // its the same thing ill just use this
+                                collapsed={isCollapsed}
+                                title={title}
+                                url={url}
+                            />
+                        ))
+                    }
+                    else {
+                        let newTitle = "No Title – " + Array.from(i.classList._set).filter(j => j != "component-container")[0].replaceAll(/_|Schoolbox|Component|Homepage|Controller/g, '') //if no title
+
+                        this.state.components.push((
+                            <SchoolboxComponent
+                                title={title || newTitle}
+                                url={`/homepage/${homepageId}#${i.attributes.id}`}
+                            />
                         ))
                     }
                 })
@@ -501,12 +592,18 @@ class HomepageScreen extends Component {
     render() {
         return (
             <ScrollView>
+                <RefreshControl
+                    size="large"
+                    onRefresh={this.loadComponents}
+                />
                 <ContentText
                     style={{
                         fontSize: 20,
                         margin: 10
                     }}
-                >{this.state.name}</ContentText>
+                >
+                    {this.state.name}
+                </ContentText>
                 <View style={{
                     flexDirection: 'row',
                     flexWrap: 'wrap'
@@ -548,7 +645,17 @@ class HomepageScreen extends Component {
                     }
                 </View>
                 <View>
-                    {this.state.components}
+                    <LoaderComponent
+                        state={this.state.components.length ? "loaded" : "loading"}
+                        size="large"
+                        loaderStyle={{
+                            transform: [{
+                                scale: 0.8
+                            }]
+                        }}
+                    >
+                        {this.state.components}
+                    </LoaderComponent>
                 </View>
             </ScrollView>
         );

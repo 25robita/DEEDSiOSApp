@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, View, Text, ActivityIndicator, Linking, Pressable } from 'react-native';
+import { FlatList, View, Text, ActivityIndicator, Linking, TouchableOpacity } from 'react-native';
 import { customColours, newsStyles, styles } from '../consts';
 import { fetchJSONResource } from '../getters/get';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
@@ -16,64 +16,41 @@ class NewsItem extends Component {
         super(props)
     }
     handlePress = () => {
-        (this.props.url || (getCurrentRoute().name == "News")) ? null : push("News");
+        (['News', 'Homepage'].includes(getCurrentRoute().name)) ? null : push("News");
         push("News Item", {
             id: this.props.data.id
         })
     }
     render() {
         return (
-<<<<<<< HEAD
             <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
-                <View
-                    style={[
-                        newsStyles.newsItem,
-                        styles.shadow,
+                <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white" }]}>
+                    <ContentText style={[newsStyles.newsTitle]}>
                         {
-                            backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white"
-                        }
-                    ]}
-                >
-                    <ContentText
-                        style={[newsStyles.newsTitle]}
-                    >
-                        {
-                            Boolean(this.props.data.sticky)
+                            this.props.data.sticky
                             &&
                             (
                                 <ContentText>
-                                    <IconComponent
-                                        name="pin"
-                                        style={{
-                                            fontSize: 16,
-                                            marginLeft: 10
-                                        }}
+                                    <IconComponent name="pin" style={{
+                                        fontSize: 16,
+                                        marginLeft: 10
+                                    }}
                                     />
                                 </ContentText>
                             )
-                        }
-                        {
+                        }{
                             this.props.data.title
                         }
                     </ContentText>
-=======
-            <Pressable onPress={this.handlePress}>
-                <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white" }]}>
-                    <ContentText style={[newsStyles.newsTitle]}>{this.props.data.sticky ? (<ContentText><IconComponent name="pin" style={{ fontSize: 16, marginLeft: 10 }} />  </ContentText>) : null}{this.props.data.title}</ContentText>
->>>>>>> parent of 9aae16e (Various things)
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "center"
                     }}>
-<<<<<<< HEAD
                         <Meta>
-                            By <ContentText
-                                style={[{
-                                    color: customColours.harshBlue
-                                }]}
-                            >
-                                {
+                            By <ContentText style={[{
+                                color: customColours.harshBlue
+                            }]}>{
                                     this.props.data.author.fullname || this.props.data.author.fullName
                                 }
                             </ContentText>
@@ -82,10 +59,6 @@ class NewsItem extends Component {
                             date={true}
                             time={this.props.data.publishAt.relativeTime}
                         />
-=======
-                        <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname}  </ContentText></Meta>
-                        <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
->>>>>>> parent of 9aae16e (Various things)
                     </View>
                     {
                         this.props.data.blurb
@@ -93,13 +66,13 @@ class NewsItem extends Component {
                             : <View>{renderHTMLText(this.props.data.body)}</View>
                     }
                     {
-                        Boolean(this.props.data.attachments)
+                        this.props.data.attachments
                         && <Meta style={{ marginTop: 5 }}>
                             {this.props.data.attachments} {(this.props.data.attachments == 1) ? "attachment" : "attachments"}
                         </Meta>
                     }
                 </View>
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 }
@@ -140,7 +113,8 @@ class NewsList extends Component {
             .then(data => {
                 this.setState({
                     feed: data.slice(0, this.props.number), // maxlength 3
-                    showActivity: false
+                    showActivity: false,
+                    isEmpty: !Boolean(data.length)
                 })
             })
     }
@@ -157,7 +131,6 @@ class NewsList extends Component {
             <View>
                 {
                     (this.state.feed || !this.state.isEmpty)
-<<<<<<< HEAD
                     &&
                     <LoaderComponent
                         state={
@@ -174,25 +147,6 @@ class NewsList extends Component {
                             style={{ overflow: "visible" }}
                         />
                     </LoaderComponent>
-=======
-                        ?
-                        <LoaderComponent
-                            state={
-                                !(this.state.feed || this.state.isEmpty) || this.state.showActivity
-                                    ? "loading"
-                                    : (this.state.isEmpty ? "failed" : "loaded")}
-                            failText="Unable to load the news at the moment"
-                        >
-                            <FlatList
-                                scrollEnabled={false}
-                                data={this.state.feed}
-                                keyExtractor={this.keyExtractor}
-                                renderItem={this.handleRenderNewsItem}
-                                style={{ overflow: "visible" }}
-                            />
-                        </LoaderComponent>
-                        : null
->>>>>>> parent of 9aae16e (Various things)
                 }
             </View>
         );
