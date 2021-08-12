@@ -184,9 +184,9 @@ function renderHTMLElement(elem, style) {
     let elemAttributes = elem.attributes
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);
-    elem.attributes
-        && elem.attributes.style
-        && styles.push(parseStyle(elem.attributes.style))
+    (elem.attributes && elem.attributes.style)
+        ? styles.push(parseStyle(elem.attributes.style))
+        : null
     // if (elem.nodeType == 3) { idk what to do here
     //     return <HTMLSpan style={styles}>{elem.text}</HTMLSpan>
     // }

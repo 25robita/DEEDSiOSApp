@@ -27,16 +27,16 @@ function getCalendar() {
                             ).push(eventData)
                         }
                         var sectionListData = [
-                            (day1Events.length && {
+                            (day1Events.length ? {
                                 title: startToday.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }),
                                 data: day1Events,
                                 isFirst: true
-                            }),
-                            (day2Events.length && {
+                            } : null),
+                            (day2Events.length ? {
                                 title: (startToday.setDate(days[1]), startToday).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }),
                                 data: day2Events,
                                 isFirst: false
-                            }),
+                            } : null),
                         ]
                         resolve(sectionListData)
                     }, _ => {

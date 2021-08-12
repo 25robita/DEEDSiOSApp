@@ -80,14 +80,7 @@ function DaySelector({ state, descriptors, navigation, position }) {
                 backgroundColor: customColours.backgroundColor
             }}
         >
-            <TouchableOpacity
-                activeOpacity={0.5}
-                hitSlop={50}
-                onPress={_ => // TODO: Turn into function component
-                    days[state.index]
-                    && navigation.navigate(days[state.index - 1])
-                }
-            >
+            <TouchableOpacity activeOpacity={0.5} hitSlop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index - 1]) : null}>
                 <IconComponent style={{
                     fontSize: 20,
                     // bottom: 10
@@ -135,13 +128,7 @@ function DaySelector({ state, descriptors, navigation, position }) {
                     keyExtractor={handleKeyExtraction}
                 />
             </View>
-            <TouchableOpacity
-                activeOpacity={0.5}
-                hitSlop={50}
-                onPress={_ =>
-                    days[state.index] && navigation.navigate(days[state.index + 1])
-                }
-            >
+            <TouchableOpacity activeOpacity={0.5} hitSlop={50} onPress={_ => days[state.index] ? navigation.navigate(days[state.index + 1]) : null}>
                 <IconComponent style={{
                     fontSize: 20,
                 }} name="next" />

@@ -37,10 +37,11 @@ class LinksScreen extends Component {
                 >
                     {
                         this.state.loaded
-                        && <LinksList
-                            icon="link"
-                            data={this.state.items}
-                        />
+                            ? <LinksList
+                                icon="link"
+                                data={this.state.items}
+                            />
+                            : null
                     }
                 </LoaderComponent>
             </View>

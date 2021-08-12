@@ -37,10 +37,11 @@ class GroupsScreen extends Component {
                 >
                     {
                         this.state.loaded
-                        && <LinksList
-                            icon='group'
-                            data={this.state.items}
-                        />
+                            ? <LinksList
+                                icon='group'
+                                data={this.state.items}
+                            />
+                            : null
                     }
                 </LoaderComponent>
             </View>

@@ -123,7 +123,8 @@ class UserProfileScreen extends Component {
                     let fullName = d.querySelector("#content h1").innerText.trim()
 
                     fullName
-                        && this.props.navigation.setOptions({ title: `Profile – ${fullName}` })
+                        ? this.props.navigation.setOptions({ title: `Profile – ${fullName}` })
+                        : null
 
                     this.setState({
                         profileData: Object.assign(
@@ -183,39 +184,40 @@ class UserProfileScreen extends Component {
                 >
                     {
                         this.state.loaded
-                        && (
-                            <ScrollView>
-                                <View style={{ paddingVertical: 15 }}>
-                                    <ContentText
-                                        style={{
-                                            fontSize: 30,
-                                            marginHorizontal: 10
-                                        }}
-                                    >{this.state.fullName}</ContentText>
-                                    <Image
-                                        style={{
-                                            height: 500,
-                                            width: "100%"
-                                        }}
-                                        resizeMode='contain'
-                                        source={{ uri: `https://deeds.cgs.vic.edu.au/portrait.php?id=${this.state.id}&size=constrain200` }}
-                                    />
-                                    <View
-                                        style={{
-                                            backgroundColor: customColours.contentBackground,
-                                            padding: 20,
-                                            marginBottom: 20,
-                                            paddingBottom: 10,
-                                        }}
-                                    >
-                                        <Table
-                                            data={Object.entries(this.state.profileData)}
-                                        ></Table>
-                                    </View>
+                            ? (
+                                <ScrollView>
+                                    <View style={{ paddingVertical: 15 }}>
+                                        <ContentText
+                                            style={{
+                                                fontSize: 30,
+                                                marginHorizontal: 10
+                                            }}
+                                        >{this.state.fullName}</ContentText>
+                                        <Image
+                                            style={{
+                                                height: 500,
+                                                width: "100%"
+                                            }}
+                                            resizeMode='contain'
+                                            source={{ uri: `https://deeds.cgs.vic.edu.au/portrait.php?id=${this.state.id}&size=constrain200` }}
+                                        />
+                                        <View
+                                            style={{
+                                                backgroundColor: customColours.contentBackground,
+                                                padding: 20,
+                                                marginBottom: 20,
+                                                paddingBottom: 10,
+                                            }}
+                                        >
+                                            <Table
+                                                data={Object.entries(this.state.profileData)}
+                                            ></Table>
+                                        </View>
 
-                                </View>
-                            </ScrollView>
-                        )
+                                    </View>
+                                </ScrollView>
+                            )
+                            : null
                     }
                 </LoaderComponent>
             </View >

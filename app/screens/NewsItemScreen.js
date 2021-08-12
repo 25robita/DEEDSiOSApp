@@ -58,11 +58,11 @@ class NewsItemScreen extends Component {
             <ScrollView style={{ minHeight: "100%", paddingTop: 20 }}>
                 <View style={{ backgroundColor: customColours.contentBackground, marginBottom: 70 }}>
                     <LoaderComponent style={{ padding: 0 }} state={this.state.bodyDone ? "loaded" : "loading"}>
-                        {this.state.body.article.featureImage && <Image
+                        {this.state.body.article.featureImage ? <Image
                             source={{ uri: (this.state.body.article.featureImage._links.image.href.startsWith("https") ? "" : "https://deeds.cgs.vic.edu.au") + this.state.body.article.featureImage._links.image.href }}
                             style={{ width: "100%", height: 250 }}
                             resizeMode='cover'
-                        />}
+                        /> : null}
                         <View style={{ paddingHorizontal: 15, paddingTop: 15, paddingBottom: 10 }}>
                             <ContentText style={{ fontWeight: "500", fontSize: 25 }}>{this.state.body.article.title}</ContentText>
                             <Meta>

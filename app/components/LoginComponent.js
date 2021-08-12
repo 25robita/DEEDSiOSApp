@@ -69,9 +69,10 @@ class LoginComponent extends Component {
                 <ContentText style={[loginStyles.text, loginStyles.loginHeader, { marginBottom: (this.state.errorMessage ? 25 : 50) }]}>Please enter your username and password</ContentText>
                 {
                     this.state.errorMessage
-                    && <View style={[loginStyles.errorContainer]}>
-                        <ContentText style={loginStyles.error}>{this.state.errorMessage}</ContentText>
-                    </View>
+                        ? <View style={[loginStyles.errorContainer]}>
+                            <ContentText style={loginStyles.error}>{this.state.errorMessage}</ContentText>
+                        </View>
+                        : null
                 }
                 <View style={loginStyles.inputView}>
                     <TextInput

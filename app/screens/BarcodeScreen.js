@@ -44,23 +44,24 @@ class BarcodeScreen extends Component {
                 </View>
                 {
                     this.state.svgData.length
-                    && <View style={{ height: "25%" }}>
-                        {
-                            lastItem = this.state.svgData[this.state.svgData.length - 1],
-                            width = lastItem[1] - - lastItem[0],
-                            console.log("BarcodeScreen.js:43 says:", lastItem),
-                            this.state.svgData.map(i =>
-                                <View style={{
-                                    backgroundColor: fillColor,
-                                    height: '100%',
-                                    width: Math.round((Number(i[1]) / width) * 100) + "%",
-                                    position: "absolute",
-                                    top: 0,
-                                    left: Math.round((Number(i[0]) / width) * 100) + "%"
-                                }}></View>
-                            )
-                        }
-                    </View>
+                        ? <View style={{ height: "25%" }}>
+                            {
+                                lastItem = this.state.svgData[this.state.svgData.length - 1],
+                                width = lastItem[1] - - lastItem[0],
+                                console.log("BarcodeScreen.js:43 says:", lastItem),
+                                this.state.svgData.map(i =>
+                                    <View style={{
+                                        backgroundColor: fillColor,
+                                        height: '100%',
+                                        width: Math.round((Number(i[1]) / width) * 100) + "%",
+                                        position: "absolute",
+                                        top: 0,
+                                        left: Math.round((Number(i[0]) / width) * 100) + "%"
+                                    }}></View>
+                                )
+                            }
+                        </View>
+                        : null
                 }
             </View>
         );
