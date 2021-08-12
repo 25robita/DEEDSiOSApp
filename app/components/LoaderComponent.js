@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, ShadowPropTypesIOS, Text, View } from 'react-native';
-import { styles } from '../consts';
+import { styles } from '../styles';
 import { ContentText, Meta } from './TextComponents';
 
 

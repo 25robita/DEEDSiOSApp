@@ -2,7 +2,7 @@ import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { ImageBackground, SafeAreaView, Text, TextInput, View } from 'react-native';
 import LoginComponent from '../components/LoginComponent';
-import { loginStyles, styles } from '../consts';
+import { loginStyles, styles } from '../styles';
 import { fetchHTMLResource } from '../getters/get';
 
 const backgroundImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EABB6EF_190220CGS-339.jpg" };

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
 import React from 'react';
-import { styles } from "../consts"
+import { styles } from "../styles"
 import TimetableRow from '../components/TimetableRow';
 import CalendarRow from '../components/CalendarRow';
 import NewsList from '../components/NewsRow';

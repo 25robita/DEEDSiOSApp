@@ -1,5 +1,8 @@
 import { StyleSheet } from "react-native";
 import { customColours } from "./colours";
+
+export const serviceURL = 'https://deeds.cgs.vic.edu.au';
+
 // add dark mode and stuff
 
 const styles = StyleSheet.create({

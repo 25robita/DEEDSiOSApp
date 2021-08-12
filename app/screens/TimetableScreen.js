@@ -6,7 +6,7 @@ import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
 import { TimetableSubject } from '../components/TimetableRow';
 import { TopBarBackButton, TopBarHeading } from '../components/TopBar';
-import { styles } from '../consts';
+import { styles } from '../styles';
 import { customColours } from '../colours';
 import { getDayAndFull } from '../getters/timetable';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

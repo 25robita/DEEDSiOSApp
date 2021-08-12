@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { styles } from "../consts";
+import { styles } from "../styles";
 import { SectionHeading } from "./TextComponents";
 
 function SectionComponent(props) {

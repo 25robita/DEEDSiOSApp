@@ -6,7 +6,7 @@ import { customColours } from "../colours";
 import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import { ContentText } from "../components/TextComponents";
-import { styles } from "../consts";
+import { styles } from "../styles";
 import { fetchHTMLResource } from "../getters/get";
 import { openURL } from "../RootNavigation";
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from '../consts';
+import { styles } from '../styles';
 import { Meta } from './TextComponents';
 import IconComponent from './IconComponent';
 

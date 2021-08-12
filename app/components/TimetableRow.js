@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, TouchableOpacity, Text, View } from 'react-native';
-import { styles, timetableStyles } from "../consts"
+import { styles, timetableStyles } from "../styles"
 import { getNowOnwards } from '../getters/timetable';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
 import LoaderComponent from './LoaderComponent';

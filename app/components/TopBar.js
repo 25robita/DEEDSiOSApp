@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { styles } from '../consts';
+import { styles } from '../styles';
 import IconComponent from './IconComponent';
 import { ContentText } from './TextComponents';
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { icons, styles } from '../consts';
+import { styles } from '../styles';
+import { icons } from '../consts';
 import { ContentText } from './TextComponents';
 
 

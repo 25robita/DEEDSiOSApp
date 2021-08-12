@@ -8,7 +8,7 @@ import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import { NewsList } from "../components/NewsRow";
 import { ContentText, Meta } from "../components/TextComponents";
-import { styles } from "../consts";
+import { styles } from "../styles";
 import { fetchHTMLResource, fetchJSONResource } from "../getters/get";
 import { renderHTMLText } from "../renderHTML";
 import { openURL } from "../RootNavigation";

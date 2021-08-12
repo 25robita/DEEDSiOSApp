@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Component } from 'react/cjs/react.production.min';
-import { styles } from '../consts';
+import { styles } from '../styles';
 import { navigate } from '../RootNavigation';
 import IconComponent from './IconComponent';
 

@@ -9,7 +9,7 @@ import MainScreen from './app/screens/MainScreen';
 import TimetableScreen from './app/screens/TimetableScreen';
 import WaitingScreen from './app/screens/WaitingScreen';
 import { createStackNavigator } from '@react-navigation/stack';
-import { styles } from './app/consts';
+import { styles } from './app/styles';
 import { customColours } from './app/colours';
 import { MainNavigationReference, navigate } from './app/RootNavigation';
 import NewsItemScreen from './app/screens/NewsItemScreen';

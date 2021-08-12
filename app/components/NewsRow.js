@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FlatList, View, Text, ActivityIndicator, Linking, TouchableOpacity } from 'react-native';
-import { customColours, newsStyles, styles } from '../consts';
+import { newsStyles, styles } from '../styles';
 import { fetchJSONResource } from '../getters/get';
 import { ContentText, Meta, SectionHeading } from './TextComponents';
 import IconComponent from './IconComponent';
@@ -10,6 +10,8 @@ import SectionComponent from './SectionComponent';
 import { dispatch, getCurrentRoute, navigate, push } from '../RootNavigation';
 import { CommonActions } from '@react-navigation/native';
 import { renderHTMLText } from '../renderHTML';
+import { customColours } from '../colours';
+
 
 class NewsItem extends Component {
     constructor(props) {
