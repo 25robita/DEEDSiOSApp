@@ -4,6 +4,7 @@ import { Component } from "react/cjs/react.production.min";
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
+import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 
 class SubjectsScreen extends Component {
@@ -12,6 +13,7 @@ class SubjectsScreen extends Component {
         this.state = { items: [], loaded: false, failed: false };
     }
     componentDidMount = () => {
+        this.setState({ items: [], loaded: false })
         fetchHTMLResource("/")
             .then(d => {
                 let items = d
@@ -30,7 +32,9 @@ class SubjectsScreen extends Component {
     }
     render() {
         return (
-            <View>
+            <ScrollingScreenTemplate
+                onRefresh={this.componentDidMount}
+            >
                 <LoaderComponent
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
                     failText="Unable to load your classes"
@@ -44,7 +48,7 @@ class SubjectsScreen extends Component {
                             : null
                     }
                 </LoaderComponent>
-            </View>
+            </ScrollingScreenTemplate>
         );
     }
 }

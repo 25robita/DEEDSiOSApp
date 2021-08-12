@@ -6,6 +6,7 @@ import CalendarRow from '../components/CalendarRow';
 import NewsList from '../components/NewsRow';
 import DueWorkRow from '../components/DueWorkRow';
 import { Component } from 'react/cjs/react.production.min';
+import ScrollingScreenTemplate from './ScrollingScreenTemplate';
 
 class MainScreen extends Component {
     state = {}
@@ -16,25 +17,23 @@ class MainScreen extends Component {
         this.setState({})
     }
     componentDidMount = () => {
-        console.log("MainScreen.js:19 says:", this);
         setTimeout(_ => {
-            this.props.navigation.navigate("Homepage", { code: "8-0860-F" })
+            // this.props.navigation.navigate("Homepage", { code: "8-0860-F" })
         }, 1000)
     }
     render() {
         return (
             <View style={styles.container}>
-                <ScrollView style={{ minHeight: "100%" }}>
-                    <RefreshControl onRefresh={this.onRefresh} />
-                    <SafeAreaView>
-                        <View style={{ padding: '5%', marginBottom: "20%" }}>
-                            <TimetableRow />
-                            <CalendarRow />
-                            <NewsList number={3} />
-                            <DueWorkRow />
-                        </View>
-                    </SafeAreaView >
-                </ScrollView>
+                <ScrollingScreenTemplate
+                    onRefresh={this.onRefresh}
+                >
+                    <View style={{ padding: '5%', marginBottom: "20%" }}>
+                        <TimetableRow />
+                        <CalendarRow />
+                        <NewsList number={3} />
+                        <DueWorkRow />
+                    </View>
+                </ScrollingScreenTemplate>
             </View>
         );
     }
@@ -42,3 +41,6 @@ class MainScreen extends Component {
 }
 
 export default MainScreen;
+
+
+// TODO: turn components into a FlatList

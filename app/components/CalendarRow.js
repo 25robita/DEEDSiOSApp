@@ -84,11 +84,11 @@ class CalendarRow extends Component {
     }
     handleRenderCalendarHeader({ section: { title, isFirst } }) {
         return (
-            <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: "#f8f8f8" }}>
+            <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: customColours.calendarHeaderBackground }}>
                 <ContentText style={[{
                     margin: 8,
                     fontWeight: "800",
-                    color: customColours.harshBlue
+                    color: customColours.link
                 }]}>{title}</ContentText>
             </View>
         )
@@ -105,14 +105,15 @@ class CalendarRow extends Component {
                                 : "loaded"
                     }
                     failText="Unable to load the calendar at the moment"
+                    style={{ backgroundColor: customColours.calendarIndentBackground || customColours.contentBackground }}
                 >
                     <View style={[styles.shadow, {
-                        borderColor: "white",
-                        borderBottomWidth: 20,
+                        borderColor: customColours.calendarBackground,
+                        borderBottomWidth: 7,
                         borderRightWidth: 7,
 
                         borderLeftWidth: 0,
-                        backgroundColor: "#f0f0f0"
+                        backgroundColor: customColours.calendarBackground
                     }]}>
                         <SectionList
                             scrollEnabled={false}
@@ -122,7 +123,7 @@ class CalendarRow extends Component {
                             keyExtractor={this.handleExtractKey}
                             style={[{
                                 borderLeftWidth: 9,
-                                borderColor: "white"
+                                borderColor: customColours.calendarIndentBackground || customColours.contentBackground
                             }]}
                         />
                     </View>

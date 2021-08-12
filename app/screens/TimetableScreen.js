@@ -47,10 +47,9 @@ class TimetableSubScreen extends Component {
     }
 
     render() {
-        // console.log("TimetableScreen.js:123 says:", this.props.route.params.timetable);
         return (
-            <ScrollView style={{ minHeight: "100%" }}>
-                <View style={{ padding: '5%', /*marginBottom: "20%",*/ flex: 1, minHeight: "100%", backgroundColor: customColours.backgroundColor }}>
+            <ScrollView style={{ minHeight: "100%", backgroundColor: customColours.background }}>
+                <View style={{ padding: '5%', /*marginBottom: "20%",*/ flex: 1, minHeight: "100%", backgroundColor: customColours.background }}>
                     <FlatList
                         scrollEnabled={false}
                         style={{ overflow: "visible", height: "100%", flexGrow: 1 }}
@@ -65,7 +64,6 @@ class TimetableSubScreen extends Component {
 }
 
 function DaySelector({ state, descriptors, navigation, position }) {
-    console.log("TimetableScreen.js:142 says:", typeof position);
     return (
         <View
             style={{
@@ -74,10 +72,10 @@ function DaySelector({ state, descriptors, navigation, position }) {
                 justifyContent: "center",
                 alignItems: "center",
                 top: 8,
-                borderBottomColor: customColours.grey + "50",
+                borderBottomColor: customColours.neutralHighContrast + "50",
                 borderBottomWidth: 2,
                 zIndex: 1,
-                backgroundColor: customColours.backgroundColor
+                backgroundColor: customColours.background
             }}
         >
             <TouchableOpacity
@@ -198,40 +196,34 @@ class TimetableScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <SafeAreaView style={{ minHeight: "100%" }}>
-                    <ScrollView scrollEnabled={false} style={{ minHeight: "100%" }}>
-                        <RefreshControl onRefresh={this.onRefresh} />
-                        {
+                {
 
-                            this.state.fullTimetable ?
-                                <NavigationContainer
-                                    independent={true}
-                                    ref={DaysTabsRef}
-                                    style={{ minHeight: "100%" }}
-                                >
-                                    <DaysTabs.Navigator
-                                        style={{ minHeight: "100%" }}
-                                        tabBar={DaySelector}
-                                    >
-                                        {
-                                            days.map((day, index) => {
-                                                return <DaysTabs.Screen
-                                                    name={day}
-                                                    style={{ minHeight: "100%", backgroundColor: "black" }}
-                                                    component={TimetableSubScreen}
-                                                    initialParams={{ day: index, timetable: (this.state.fullTimetable || [])[index] }}
-                                                    key={index}
-                                                />
-                                            }
-                                            )
-                                        }
-                                    </DaysTabs.Navigator>
-                                </NavigationContainer>
-                                : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
-                        }
-                    </ScrollView>
-
-                </SafeAreaView >
+                    this.state.fullTimetable ?
+                        <NavigationContainer
+                            independent={true}
+                            ref={DaysTabsRef}
+                            style={{ minHeight: "100%" }}
+                        >
+                            <DaysTabs.Navigator
+                                style={{ minHeight: "100%" }}
+                                tabBar={DaySelector}
+                            >
+                                {
+                                    days.map((day, index) => {
+                                        return <DaysTabs.Screen
+                                            name={day}
+                                            style={{ minHeight: "100%", backgroundColor: "black" }}
+                                            component={TimetableSubScreen}
+                                            initialParams={{ day: index, timetable: (this.state.fullTimetable || [])[index] }}
+                                            key={index}
+                                        />
+                                    }
+                                    )
+                                }
+                            </DaysTabs.Navigator>
+                        </NavigationContainer>
+                        : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
+                }
             </View>
         );
     }

@@ -6,6 +6,7 @@ import { customColours } from "./colours";
 import { openURL } from "./RootNavigation";
 import WebView from "react-native-webview";
 import IconComponent from "./components/IconComponent";
+import { serviceURL } from "./consts";
 
 function HTMLSpan(props) {
     return <ContentText {...props} style={props.style}>
@@ -24,11 +25,10 @@ class HTMLAnchor extends Component {
         super(props)
     }
     onPress = () => {
-        console.log("renderHTML.js:25 says:", this.props.href);
         openURL(this.props.href)
     }
     render() {/*<TouchableOpacity activeOpacity={0.5}  style={{ display: "inline" }}>*/
-        return <HTMLSpan onPress={this.onPress} style={[{ color: customColours.harshBlue }, ...this.props.style]}>
+        return <HTMLSpan onPress={this.onPress} style={[{ color: customColours.link }, ...this.props.style]}>
             {this.props.children}
         </HTMLSpan>
         // </TouchableOpacity>
@@ -72,8 +72,7 @@ class HTMLUnorderedList extends Component {
 }
 
 function HTMLImage(props) {
-    let uri = (!props.src.startsWith("https") ? "https://deeds.cgs.vic.edu.au" : "") + props.src
-    console.log("renderHTML.js:60 says:", uri);
+    let uri = (!props.src.startsWith("https") ? serviceURL : "") + props.src
     return <View style={{
         width: "100%",
         display: 'flex',
@@ -94,7 +93,6 @@ class HTMLWebView extends Component {
         this.state = {}
     }
     onLoad = (syntheticEvent) => {
-        console.log("renderHTML.js:98 says:", syntheticEvent.nativeEvent.title);
         let title = syntheticEvent.nativeEvent.title;
         title = (title.length > 30)
             ? title.slice(0, 27) + "..."
@@ -108,7 +106,7 @@ class HTMLWebView extends Component {
         return <View>
             <View
                 style={{
-                    backgroundColor: customColours.lightBlue,
+                    backgroundColor: customColours.themeSeconday,
                     padding: 10,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -126,7 +124,7 @@ class HTMLWebView extends Component {
                 >
                     <IconComponent id=''
                         style={{
-                            color: customColours.grey,
+                            color: customColours.neutralHighContrast,
                             fontSize: 16
                         }}
                     />
@@ -134,8 +132,10 @@ class HTMLWebView extends Component {
 
             </View>
             <WebView
-                style={{ backgroundColor: 'pink', width: 400, height: 500 }}
-                containerStyle={{ backgroundColor: 'pink' }}
+                style={{
+                    width: 400,
+                    height: 500
+                }}
                 source={{ uri: this.props.uri }}
                 originWhitelist={['*']}
                 onLoad={this.onLoad}
@@ -171,7 +171,6 @@ function parseStyle(style) {
 function getLastStyleDecleration(styles, property, fallback) {
     let value = fallback
     Array.from(styles).forEach(style => {
-        console.log("renderHTML.js:153 says:", style);
         if (style[property]) {
             value = style[property]
         }
@@ -180,7 +179,6 @@ function getLastStyleDecleration(styles, property, fallback) {
 }
 
 function renderHTMLElement(elem, style) {
-    // console.log("renderHTML.js:7 says:", JSON.stringify(elem.attributes));
     let elemAttributes = elem.attributes
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);

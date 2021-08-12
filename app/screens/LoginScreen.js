@@ -54,7 +54,11 @@ class LoginScreen extends Component {
                 <View style={[styles.topBar, { height: "10%" }]}></View>
                 <ImageBackground
                     source={backgroundImage}
-                    style={{ width: "100%", height: "100%" }}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        overflow: 'hidden'
+                    }}
                 >
                     <SafeAreaView style={[loginStyles.mainContainer, { opacity: 0.92 }]}>
                         <LoginComponent

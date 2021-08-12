@@ -3,37 +3,37 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     topBar: {
-        backgroundColor: customColours.darkBlue,
+        backgroundColor: customColours.headerBackground || customColours.themePrimary,
     },
     topBarHeading: {
-        color: "white",
+        color: customColours.headerForeground,
     },
     container: {
-        backgroundColor: customColours.backgroundColor,
+        backgroundColor: customColours.background,
         height: "100%"
     },
     section: {
-        marginBottom: 10
+        marginBottom: 10,
     },
     sectionHeading: {
         marginBottom: 13
     },
     heading: {
-        color: customColours.grey,
+        color: customColours.neutralHighContrast,
         textTransform: "uppercase",
         fontSize: 16,
         fontWeight: "500",
         marginBottom: 7
     },
     meta: {
-        color: customColours.grey,
+        color: customColours.neutralHighContrast,
         fontStyle: "italic"
     },
     text: {
         color: customColours.foreground
     },
     link: {
-        color: customColours.harshBlue,
+        color: customColours.link,
     },
     loader: {
         marginTop: 20,
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
         fontFamily: "schoolbox",
         marginTop: 5,
         marginBottom: 4,
-        color: customColours.grey
+        color: customColours.neutralHighContrast
     },
     shadow: {
         shadowRadius: 5,
@@ -64,7 +64,8 @@ export const styles = StyleSheet.create({
 export const timetableStyles = StyleSheet.create({
     row: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        backgroundColor: customColours.contentBackground
     },
     cell: {
         padding: "5%",
@@ -78,10 +79,10 @@ export const timetableStyles = StyleSheet.create({
         // shadowOpacity: 0.5
     },
     nowCellHeader: {
-        backgroundColor: customColours.lightBlue,
+        backgroundColor: customColours.themeSeconday,
     },
     header: {
-        backgroundColor: "#fff"
+        backgroundColor: customColours.timetableContentBackground || customColours.contentBackground,
     },
     subjectText: {
         textAlign: "right",
@@ -102,7 +103,7 @@ export const loginStyles = StyleSheet.create({
     halfContainer: {
         width: "90%%",
         alignSelf: "center",
-        backgroundColor: "#ffffff",
+        backgroundColor: customColours.loginContentBackground || customColours.contentBackground,
         borderRadius: 10,
         padding: "10%",
         paddingBottom: 0,
@@ -110,7 +111,7 @@ export const loginStyles = StyleSheet.create({
     },
     text: {
         textAlign: "center",
-        color: "#5b5b5b"
+        color: customColours.loginText
         // marginRight: 10
     },
     inputView: {
@@ -122,9 +123,10 @@ export const loginStyles = StyleSheet.create({
         width: "100%",
         fontSize: 16,
         padding: 10,
-        backgroundColor: "#e0e0e0",
+        backgroundColor: customColours.loginInputBackground,
         borderRadius: 3,
-        fontWeight: "700"
+        fontWeight: "700",
+        color: customColours.foreground
     },
     usernameInput: {
         marginBottom: 14
@@ -135,7 +137,7 @@ export const loginStyles = StyleSheet.create({
         fontSize: 17
     },
     error: {
-        color: "red",
+        color: customColours.loginErrorForeground,
         textAlign: "center",
         fontWeight: "700",
         // margin: 25
@@ -143,14 +145,14 @@ export const loginStyles = StyleSheet.create({
     errorContainer: {
         padding: 20,
         overflow: "visible",
-        backgroundColor: "#ffaaaa",
+        backgroundColor: customColours.loginErrorBackground,
         marginBottom: 25,
         borderRadius: 10,
         borderWidth: 2,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        borderColor: "red",
+        borderColor: customColours.loginErrorBorder,
         opacity: .7
     },
     buttonsContainer: {
@@ -161,7 +163,7 @@ export const loginStyles = StyleSheet.create({
     },
     submitButton: {
         padding: 20,
-        backgroundColor: "#5598fe",
+        backgroundColor: customColours.loginSubmitButtonBackground,
         width: "100%",
         borderRadius: 5,
         margin: 7,
@@ -171,11 +173,11 @@ export const loginStyles = StyleSheet.create({
     },
     submitText: {
         fontWeight: "800",
-        color: "white",
+        color: customColours.loginSubmitButtonForeground,
         alignSelf: "center"
     },
-    iForgot: {
-        color: "#5598fe",
+    iForgot: { // apple ceo now has dementia
+        color: customColours.loginIForgotMyForeground,
         fontWeight: "700",
     },
     iForgotContainer: {
@@ -196,7 +198,7 @@ export const newsStyles = StyleSheet.create({
     },
     newsTitle: {
         fontWeight: "600",
-        color: customColours.harshBlue,
+        color: customColours.link,
         fontSize: 16
     }
 })

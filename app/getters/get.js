@@ -1,9 +1,10 @@
 import { parse } from "node-html-parser"
 import { getItemAsync } from 'expo-secure-store'
+import { serviceURL } from "../consts"
 
 function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are correct
     return new Promise((resolve, reject) => {
-        fetch("https://deeds.cgs.vic.edu.au" + resourcePath, masterOptions)
+        fetch(serviceURL + resourcePath, masterOptions)
             .then(r => {
                 if (r.url.includes("loginuserpass")) {
                     getItemAsync("u")
@@ -38,7 +39,7 @@ function fetchResource(resourcePath, masterOptions = {}) { // assumes creds are 
                         var d = parse(t)
                         var SAMLResponseInpt = d.querySelector("input[name=SAMLResponse]")
                         var SAMLResponse = SAMLResponseInpt.attributes.value
-                        fetch("https://deeds.cgs.vic.edu.au/saml/consume.php", Object.assign({}, masterOptions, {
+                        fetch(serviceURL + "/saml/consume.php", Object.assign({}, masterOptions, {
                             method: "POST",
                             body: Object.entries({
                                 SAMLResponse,

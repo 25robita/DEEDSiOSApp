@@ -20,7 +20,7 @@ class BarcodeScreen extends Component {
 
         JsBarcode(svgNode, this.props.route.params.id, {
             xmlDocument: document,
-            lineColor: customColours.darkBlue,
+            lineColor: customColours.themePrimary,
             height: 100,
             width: 4,
             margin: 0,
@@ -36,9 +36,9 @@ class BarcodeScreen extends Component {
     render() {
         let lastItem,
             width,
-            fillColor = customColours.darkBlue;
+            fillColor = customColours.barcodeColor || customColours.themePrimary;
         return (
-            <View style={{ height: "100%", paddingHorizontal: 10, display: "flex", justifyContent: "flex-end" }}>
+            <View style={{ height: "100%", paddingHorizontal: 10, display: "flex", justifyContent: "flex-end", backgroundColor: customColours.background }}>
                 <View>
                     {renderHTMLText(barcodeExplanation.replaceAll("{STUDENT_ID}", this.props.route.params.id))}
                 </View>
@@ -48,7 +48,6 @@ class BarcodeScreen extends Component {
                             {
                                 lastItem = this.state.svgData[this.state.svgData.length - 1],
                                 width = lastItem[1] - - lastItem[0],
-                                console.log("BarcodeScreen.js:43 says:", lastItem),
                                 this.state.svgData.map(i =>
                                     <View style={{
                                         backgroundColor: fillColor,

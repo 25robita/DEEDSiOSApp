@@ -35,7 +35,7 @@ const headerButtonHitslop = {
 const navigatorOptions = {
     headerStyle: [styles.topBar],
     headerTitleStyle: [styles.topBarHeading],
-    headerTintColor: customColours.white
+    headerTintColor: customColours.headerForeground
 }
 
 const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
@@ -61,16 +61,16 @@ const navigatorOptionsHideBackBarcode = Object.assign({}, navigatorOptionsHideBa
                 alignItems: 'center'
             }}>
                 <ContentText style={{
-                    color: 'white',
+                    color: customColours.headerForeground,
                     fontSize: 20
                 }}>[</ContentText>
                 <IconComponent name="barcode" style={{
                     fontSize: 12,
                     paddingTop: 2.5,
-                    color: 'white'
+                    color: customColours.headerForeground
                 }} />
                 <ContentText style={{
-                    color: 'white',
+                    color: customColours.headerForeground,
                     fontSize: 20
                 }}>]</ContentText>
             </View>
@@ -88,7 +88,7 @@ const navigatorOptionsHideBackBarcodeNavipage = Object.assign({}, navigatorOptio
                     name="tiles"
                     style={{
                         fontSize: 20,
-                        color: 'white'
+                        color: customColours.headerForeground
                     }}
                 />
             </TouchableOpacity>

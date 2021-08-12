@@ -88,11 +88,11 @@ class NavigationScreen extends Component {
 
     renderItem = ({ icon, link, name }) => {
         let iconStyle = {
-            color: customColours.darkBlue,
+            color: customColours.navigation || customColours.themePrimary,
             fontSize: 50
         }
         let textStyle = {
-            color: customColours.darkBlue,
+            color: customColours.navigation || customColours.themePrimary,
             fontSize: 18
         }
         return <TouchableOpacity activeOpacity={0.5}
@@ -105,7 +105,7 @@ class NavigationScreen extends Component {
         >
             <View
                 style={{
-                    borderColor: customColours.darkBlue,
+                    borderColor: customColours.navigation || customColours.themePrimary,
                     borderRadius: 10,
                     borderWidth: 3,
                     height: '100%',
@@ -134,9 +134,10 @@ class NavigationScreen extends Component {
         return (
             <View
                 style={{
+                    paddingTop: 20,
                     display: 'flex',
                     height: '100%',
-                    backgroundColor: customColours.backgroundColor,
+                    backgroundColor: customColours.background,
                     paddingBottom: 20
                 }}
             >

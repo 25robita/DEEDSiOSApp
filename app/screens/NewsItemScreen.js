@@ -6,7 +6,9 @@ import { renderHTMLText } from "../renderHTML";
 import { ScrollView } from "react-native-gesture-handler";
 import LoaderComponent from "../components/LoaderComponent";
 import { openURL } from "../RootNavigation";
-import { customColours } from "../consts";
+import { serviceURL } from "../consts";
+import { customColours } from "../colours";
+import ContentScreenTemplate from "./ContentScreenTemplate";
 
 function VerticalRule(props) {
     return <View style={{
@@ -18,7 +20,7 @@ function VerticalRule(props) {
             style={[
                 {
                     borderBottomWidth: 1,
-                    borderBottomColor: customColours.lightGrey,
+                    borderBottomColor: customColours.neutralLowContrast,
                     marginVertical: 15,
                     width: "90%",
 
@@ -37,10 +39,11 @@ function HTMLTextView(props) {
 class NewsItemScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { bodyDone: false, body: { article: { author: { fullName: "", _links: { profile: { href: "" } } }, title: "", body: "", featureImage: { _links: { image: { href: "" } } } } } };
+        this.state = { bodyDone: false, body: { article: { author: { fullName: "", _links: { profile: { href: "" } } }, title: "", featureImage: { _links: { image: { href: "" } } } } } };
     }
     componentDidMount = () => {
         if (this.props.route.params.id) {
+            this.setState({ body: { article: { author: { fullName: "", _links: { profile: { href: "" } } } } }, bodyDone: false, featureImage: { _links: { image: { href: "" } } } })
             fetchJSONResource(`/news/${this.props.route.params.id}`, { headers: { Accept: "application/json" } })
                 .then(body => {
                     this.setState({ body, bodyDone: true })
@@ -55,25 +58,27 @@ class NewsItemScreen extends Component {
     }
     render() {
         return (
-            <ScrollView style={{ minHeight: "100%", paddingTop: 20 }}>
+            <ContentScreenTemplate
+                onRefresh={this.componentDidMount}
+            >
                 <View style={{ backgroundColor: customColours.contentBackground, marginBottom: 70 }}>
                     <LoaderComponent style={{ padding: 0 }} state={this.state.bodyDone ? "loaded" : "loading"}>
                         {this.state.body.article.featureImage ? <Image
-                            source={{ uri: (this.state.body.article.featureImage._links.image.href.startsWith("https") ? "" : "https://deeds.cgs.vic.edu.au") + this.state.body.article.featureImage._links.image.href }}
+                            source={{ uri: (this.state.body.article.featureImage._links.image.href.startsWith("https") ? "" : serviceURL) + this.state.body.article.featureImage._links.image.href }}
                             style={{ width: "100%", height: 250 }}
                             resizeMode='cover'
                         /> : null}
                         <View style={{ paddingHorizontal: 15, paddingTop: 15, paddingBottom: 10 }}>
                             <ContentText style={{ fontWeight: "500", fontSize: 25 }}>{this.state.body.article.title}</ContentText>
                             <Meta>
-                                By <Meta onPress={_ => openURL(this.state.body.article.author._links.profile.href)} style={{ color: customColours.harshBlue }}>{this.state.body.article.author.fullName}</Meta>
+                                By <Meta onPress={_ => openURL(this.state.body.article.author._links.profile.href)} style={{ color: customColours.link }}>{this.state.body.article.author.fullName}</Meta>
                             </Meta>
                             <VerticalRule></VerticalRule>
                             <HTMLTextView style={{ paddingHorizontal: 5, paddingTop: 5, marginBottom: 0 }}>{this.state.body.article.body}</HTMLTextView>
                         </View>
                     </LoaderComponent>
                 </View>
-            </ScrollView>
+            </ContentScreenTemplate>
         );
     }
 }

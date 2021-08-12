@@ -1,5 +1,6 @@
 import { createNavigationContainerRef, StackActions } from '@react-navigation/native';
 import { Linking } from 'react-native';
+import { serviceURL } from './consts';
 
 export const MainNavigationReference = createNavigationContainerRef()
 
@@ -30,12 +31,12 @@ export function getCurrentRoute() {
 export function openURL(url, parse = true) {
     if (!parse) {
         if (!url.startsWith("https")) {
-            url = "https://deeds.cgs.vic.edu.au" + url
+            url = serviceURL + url
         }
         Linking.openURL(url)
     }
-    else if (url.startsWith("/") || url.startsWith("https://deeds.cgs.vic.edu.au")) {
-        url = url.replace("https://deeds.cgs.vic.edu.au", '')
+    else if (url.startsWith("/") || url.startsWith(serviceURL)) {
+        url = url.replace(serviceURL, '')
         if (url.startsWith("/search/user/")) {
             push("User", { id: url.match(/\d+/g)[0] });
             return;
@@ -50,7 +51,7 @@ export function openURL(url, parse = true) {
             push("Homepage", { code: url.split("/")[3] })
         }
         else {
-            Linking.openURL("https://deeds.cgs.vic.edu.au" + url) // open deeds page
+            Linking.openURL(serviceURL + url) // open deeds page
         }
     }
     else {
@@ -58,7 +59,7 @@ export function openURL(url, parse = true) {
             Linking.openURL(url)
             return
         }
-        Linking.openURL('https://deeds.cgs.vic.edu.au/' + url)
+        Linking.openURL(serviceURL + url)
     }
 
 }

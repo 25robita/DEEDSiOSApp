@@ -12,6 +12,7 @@ import { styles } from "../styles";
 import { fetchHTMLResource, fetchJSONResource } from "../getters/get";
 import { renderHTMLText } from "../renderHTML";
 import { openURL } from "../RootNavigation";
+import { serviceURL } from "../consts";
 
 class SchoolboxComponent extends Component {
     constructor(props) {
@@ -68,7 +69,7 @@ class SchoolboxComponent extends Component {
                                 : "external-link"
                         }
                         style={{
-                            color: customColours.grey,
+                            color: customColours.neutralHighContrast,
                             fontSize: 16
                         }} />
                 </TouchableOpacity>
@@ -216,7 +217,7 @@ function SchoolboxTiles(props) {
                                     justifyContent
                                 }}
                                 resizeMode="contain"
-                                source={{ url: "https://deeds.cgs.vic.edu.au" + backgroundImageUrl }}
+                                source={{ url: serviceURL + backgroundImageUrl }}
                             >
                                 <ContentText
                                     style={{
@@ -249,9 +250,9 @@ class SchoolboxSocialStream_Post extends Component {
     render() {
         return <View
             style={{
-                borderTopColor: customColours.lightGrey,
+                borderTopColor: customColours.neutralLowContrast,
                 borderTopWidth: this.props.index ? 1 : 0, // only on all but first
-                backgroundColor: this.props.layer ? '#fafafa' : 'transparent'
+                backgroundColor: this.props.layer ? customColours.homepageSocialStream : 'transparent'
             }}
         >
             <View
@@ -269,7 +270,7 @@ class SchoolboxSocialStream_Post extends Component {
                             width: 50,
                             height: 50,
                         }}
-                        source={{ uri: "https://deeds.cgs.vic.edu.au" + this.props.authorImageURL }}
+                        source={{ uri: serviceURL + this.props.authorImageURL }}
                     />
                 </TouchableOpacity>
                 <View
@@ -288,7 +289,7 @@ class SchoolboxSocialStream_Post extends Component {
 
                         <ContentText
                             style={{
-                                color: customColours.harshBlue,
+                                color: customColours.link,
                                 fontSize: 14,
                                 marginRight: 10 // force it to go on a newline if too close
                             }}
@@ -315,7 +316,7 @@ class SchoolboxSocialStream_Post extends Component {
             <View
                 style={{
                     borderLeftWidth: 10,
-                    borderLeftColor: customColours.grey,
+                    borderLeftColor: customColours.neutralHighContrast,
                     marginLeft: this.props.layer == 1 ? 15 : 0
                 }}
             >
@@ -387,7 +388,7 @@ class SchoolboxSocialStream extends Component {
         //                     width: 50,
         //                     height: 50,
         //                 }}
-        //                 source={{ uri: "https://deeds.cgs.vic.edu.au" + authorImageURL }}
+        //                 source={{ uri: serviceURL + authorImageURL }}
         //             />
         //         </TouchableOpacity>
         //         <View
@@ -556,7 +557,7 @@ class HomepageScreen extends Component {
                     else if (i.classList.contains("Schoolbox_LTI_Component_Homepage_Controller")) {
                         let url = i.querySelector("iframe").attributes.src;
                         if (url.startsWith("/")) {
-                            url = "https://deeds.cgs.vic.edu.au" + url
+                            url = serviceURL + url
                         }
                         this.state.components.push((
                             <SchoolboxLTI
@@ -593,7 +594,11 @@ class HomepageScreen extends Component {
     }
     render() {
         return (
-            <ScrollView>
+            <ScrollView
+                style={{
+                    backgroundColor: customColours.background
+                }}
+            >
                 <RefreshControl
                     size="large"
                     onRefresh={this.loadComponents}
@@ -614,7 +619,7 @@ class HomepageScreen extends Component {
                         this.state.breadcrumbs.map((item, index) => {
                             return <View
                                 style={{
-                                    backgroundColor: customColours.lightBlue,
+                                    backgroundColor: customColours.themeSeconday,
                                     padding: 5,
                                     flexDirection: 'row',
                                     overflow: 'hidden'
@@ -623,14 +628,17 @@ class HomepageScreen extends Component {
                                 {
                                     (index != this.state.breadcrumbs.length - 1)
                                         ? <IconComponent
-                                            name="next"
+                                            id=">"
                                             style={{
-                                                color: customColours.white,
+                                                color: customColours.background,
                                                 position: 'absolute',
                                                 alignSelf: 'center',
-                                                right: -3,
+                                                right: 0,
+                                                top: -2,
                                                 transform: [{
-                                                    scaleY: 3
+                                                    scaleY: 5.5
+                                                }, {
+                                                    translateX: 1
                                                 }]
                                             }}
                                         />
@@ -639,7 +647,7 @@ class HomepageScreen extends Component {
                                 <ContentText
                                     onPress={_ => openURL(item.href)}
                                     style={{
-                                        color: customColours.harshBlue,
+                                        color: customColours.link,
                                     }}
                                 >{item.text}</ContentText>
                             </View>
@@ -664,5 +672,6 @@ class HomepageScreen extends Component {
         );
     }
 }
-
+// TODO: Move Schoolbox Componenets to own file
+// TODO: turn component list into flatlist
 export default HomepageScreen;

@@ -2,6 +2,7 @@ import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { Text, TextInput, View, Animated, Image, TouchableOpacity, Linking } from 'react-native';
 import { Easing, useDerivedValue } from 'react-native-reanimated';
+import { customColours } from '../colours';
 import { loginStyles, styles } from '../styles';
 import { ContentText } from './TextComponents';
 
@@ -81,7 +82,7 @@ class LoginComponent extends Component {
                         onBlur={this.onBlur}
                         style={[loginStyles.input, loginStyles.usernameInput]}
                         placeholder="Username"
-                        placeholderTextColor={"#5b5b5b"}
+                        placeholderTextColor={customColours.loginText}
                         value={this.state.username}
                     />
                     <TextInput
@@ -91,7 +92,7 @@ class LoginComponent extends Component {
                         style={[loginStyles.input, loginStyles.passwordInput]}
                         secureTextEntry={true}
                         placeholder="Password"
-                        placeholderTextColor={"#5b5b5b"}
+                        placeholderTextColor={customColours.loginText}
                     ></TextInput>
                     <View style={loginStyles.buttonsContainer}>
                         <View style={loginStyles.iForgotContainer}>

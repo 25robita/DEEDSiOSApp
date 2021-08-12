@@ -34,14 +34,14 @@ class LinksList extends Component {
                 <IconComponent
                     name={this.props.icon || "link"}
                     style={{
-                        color: customColours.harshBlue,
+                        color: customColours.link,
                         fontSize: 20,
                         marginRight: 15
                     }}
                 />
                 <ContentText
                     style={{
-                        color: customColours.harshBlue,
+                        color: customColours.link,
                         fontSize: 16
                     }}
                 >{item.text}</ContentText>
@@ -53,25 +53,23 @@ class LinksList extends Component {
     }
     render() {
         return (
-            <ScrollView>
-                <View
+            <View
+                style={{
+                    padding: 20,
+                    overflow: "visible"
+                }}
+            >
+                <FlatList
+                    scrollEnabled={false}
                     style={{
-                        padding: 20,
-                        overflow: "visible"
+                        overflow: 'visible'
                     }}
-                >
-                    <FlatList
-                        scrollEnabled={false}
-                        style={{
-                            overflow: 'visible'
-                        }}
-                        data={this.props.data}
-                        renderItem={this.renderItem}
-                        keyExtractor={this.keyExtractor}
-                    />
+                    data={this.props.data}
+                    renderItem={this.renderItem}
+                    keyExtractor={this.keyExtractor}
+                />
 
-                </View >
-            </ScrollView>
+            </View >
         );
     }
 }

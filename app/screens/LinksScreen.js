@@ -1,9 +1,12 @@
 import React from "react";
-import { View } from "react-native";
+import { RefreshControl, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
+import { customColours } from "../colours";
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
+import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 
 class LinksScreen extends Component {
@@ -12,6 +15,7 @@ class LinksScreen extends Component {
         this.state = { items: [], loaded: false, failed: false };
     }
     componentDidMount = () => {
+        this.setState({ items: [], loaded: false })
         fetchHTMLResource("/")
             .then(d => {
                 let items = d
@@ -30,7 +34,9 @@ class LinksScreen extends Component {
     }
     render() {
         return (
-            <View>
+            <ScrollingScreenTemplate
+                onRefresh={this.componentDidMount}
+            >
                 <LoaderComponent
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
                     failText="Unable to load your classes"
@@ -44,7 +50,7 @@ class LinksScreen extends Component {
                             : null
                     }
                 </LoaderComponent>
-            </View>
+            </ScrollingScreenTemplate>
         );
     }
 }

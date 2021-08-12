@@ -26,14 +26,14 @@ class NewsItem extends Component {
     render() {
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
-                <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? customColours.lightBlue : "white" }]}>
+                <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? (customColours.newsItemPinnedBackground || customColours.themeSeconday) : (customColours.newsItemBackground || customColours.contentBackground) }]}>
                     <ContentText style={[newsStyles.newsTitle]}>{this.props.data.sticky ? (<ContentText><IconComponent name="pin" style={{ fontSize: 16, marginLeft: 10 }} />  </ContentText>) : null}{this.props.data.title}</ContentText>
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "center"
                     }}>
-                        <Meta>By <ContentText style={[{ color: customColours.harshBlue }]}>{this.props.data.author.fullname || this.props.data.author.fullName}  </ContentText></Meta>
+                        <Meta>By <ContentText style={[{ color: customColours.link }]}>{this.props.data.author.fullname || this.props.data.author.fullName}  </ContentText></Meta>
                         <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
                     </View>
                     {
@@ -64,6 +64,11 @@ class NewsList extends Component {
     }
     constructor(props) {
         super(props)
+        this.props.addRefreshListener
+            && this.props.addRefreshListener(_ => {
+                console.log("NewsRow.js:69 says:", "hello");
+                this.setState({}) // update
+            })
     }
     componentDidMount() {
         fetchJSONResource(this.props.url || "/news/lists/feed")
