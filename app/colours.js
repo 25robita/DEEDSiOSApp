@@ -63,7 +63,7 @@ export const coloursLight = {
 export const coloursDark = {
     // theme colours (theme~)
     themePrimary: "#041e42",
-    themeSeconday: "#e5f4ff",
+    themeSeconday: "#232B37",
     themeTertiary: "#daaa00",
 
     // other important colours
@@ -96,9 +96,9 @@ export const coloursDark = {
     headerBackground: "", // optional, defaults to themePrimary
 
     // Blockquote Colours (blockquote~)
-    blockquoteBackground: '#f6f6f6',
-    blockquoteForeground: '#6f6f6f',
-    blockquoteBorder: '#aaa',
+    blockquoteBackground: '#323235',
+    blockquoteForeground: '#f6f6f6',
+    blockquoteBorder: '#888',
 
     // News Item Colours (newsItem~)
     newsItemBackground: "", // defaults to contentBackground
@@ -117,7 +117,7 @@ export const coloursDark = {
 
     // Homepage Colours (homepage~)
     // Social Stream Colours (homepageSocialStream~)
-    homepageSocialStream: "#fafafa",
+    homepageSocialStream: "#2f2f34",
 }
 
 export const customColours = darkMode ? coloursDark : coloursLight;

@@ -3,7 +3,7 @@
 
 export const serviceURL = 'https://deeds.cgs.vic.edu.au';
 
-export const darkMode = 0;
+export const darkMode = true;
 
 // add dark mode and stuff
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, ScrollView, Text, View, Linking, ImageBackground, RefreshControl, Image, Pressable } from "react-native";
+import { TouchableOpacity, ScrollView, Text, View, Linking, ImageBackground, RefreshControl, Image, Pressable, FlatList } from "react-native";
 import Collapsible from "react-native-collapsible";
 import WebView from "react-native-webview";
 import { Component } from "react/cjs/react.production.min";
@@ -116,7 +116,10 @@ class SchoolboxNewsList extends Component {
 }
 
 function SchoolboxTextBox(props) {
-    return <SchoolboxComponent collapsed={props.collapsed} title={props.title}>
+    return <SchoolboxComponent
+        collapsed={props.collapsed}
+        title={props.title}
+    >
         <ContentText>
             {renderHTMLText(props.content)}
         </ContentText>
@@ -265,6 +268,7 @@ class SchoolboxSocialStream_Post extends Component {
                     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                     onPress={this.onProfilePress}
                 >
+
                     <Image
                         style={{
                             width: 50,
@@ -365,77 +369,6 @@ class SchoolboxSocialStream extends Component {
             layer={layer}
             renderPost={this.renderPost}
         />
-
-        // return <View
-        //     style={{
-        //         borderTopColor: customColours.lightGrey,
-        //         borderTopWidth: index ? 1 : 0, // only on all but first
-        //         backgroundColor: layer ? '#fafafa' : 'transparent'
-        //     }}
-        // >
-        //     <View
-        //         style={{
-        //             flexDirection: 'row',
-        //             alignItems: 'center'
-        //         }}
-        //     >
-        //         <TouchableOpacity
-        //             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        //             onLoad={ }
-        //         >
-        //             <Image
-        //                 style={{
-        //                     width: 50,
-        //                     height: 50,
-        //                 }}
-        //                 source={{ uri: serviceURL + authorImageURL }}
-        //             />
-        //         </TouchableOpacity>
-        //         <View
-        //             style={{
-        //                 flexDirection: 'row',
-        //                 justifyContent: 'space-between',
-        //                 flex: 1,
-        //                 flexWrap: 'wrap', // incase stuff is too long
-        //                 paddingHorizontal: 20
-        //             }}
-        //         >
-        //             <ContentText
-        //                 style={{
-        //                     color: customColours.harshBlue,
-        //                     fontSize: 14,
-        //                     marginRight: 10 // force it to go on a newline if too close
-        //                 }}
-        //             >
-        //                 {postAuthor}
-        //             </ContentText>
-        //             <Meta>
-        //                 {postMetaText}
-        //             </Meta>
-        //         </View>
-        //     </View>
-        //     <View
-        //         style={{
-        //             paddingLeft: 70,
-        //             paddingRight: 10
-        //         }}
-        //     >
-        //         <ContentText>
-        //             {renderHTMLText(postContentHTML)}
-        //         </ContentText>
-
-        //     </View>
-        //     <View
-        //         style={{
-        //             borderLeftWidth: 10,
-        //             borderLeftColor: customColours.grey,
-        //             marginLeft: layer == 1 ? 15 : 0
-        //         }}
-        //     >
-        //         {postReplies && postReplies.map(this.renderPost.bind(null, layer + 1))}
-        //     </View>
-        // </View>
-
     }
     componentDidMount = () => {
         if (this.props.cid && this.props.homepage) {
@@ -460,6 +393,83 @@ class SchoolboxSocialStream extends Component {
             <View>
                 {this.state.threads}
             </View>
+        </SchoolboxComponent>
+    }
+}
+
+class SchoolboxLinks_Link extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    onPress = () => {
+        openURL(this.props.url)
+    }
+
+    render() {
+        return <TouchableOpacity
+            onPress={this.onPress}
+            activeOpacity={0.5}
+            style={{
+                padding: 10,
+                borderBottomColor: customColours.neutralLowContrast,
+                borderBottomWidth: this.props.isLast ? 0 : 1,
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}
+        >
+            <IconComponent
+                name={(this.props.type == "file") ? "document" : "link"}
+                style={{
+                    marginRight: 10,
+                    fontSize: 20
+                }}
+            />
+            <ContentText
+                style={{
+                    color: customColours.link
+                }}
+            >
+                {this.props.text}
+            </ContentText>
+        </TouchableOpacity>
+    }
+}
+
+class SchoolboxLinks extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    renderListItem = ({ item: { url, text, isLast } }) => {
+        return <SchoolboxLinks_Link
+            type={this.props.type}
+            url={url}
+            text={text.trim ? text.trim() : ""}
+            isLast={isLast}
+        />
+    }
+
+    keyExtractor(a, b) {
+        return a + b
+    }
+
+    render() {
+        return <SchoolboxComponent
+            collapsed={this.props.collapsed}
+            title={this.props.title}
+            noTitle={!Boolean(this.props.title)}
+            contentStyle={{
+                padding: 0
+            }}
+        >
+            <FlatList
+                renderItem={this.renderListItem}
+                keyExtractor={this.keyExtractor}
+                data={this.props.links}
+            />
         </SchoolboxComponent>
     }
 }
@@ -578,11 +588,51 @@ class HomepageScreen extends Component {
                             />
                         ))
                     }
+                    else if (i.classList.contains("Component_Homepage_LinkListController")) {
+                        let links = i.querySelectorAll(".list-item a[data-plugin]").map((i, index, arr) => ({ //may need better selector
+                            url: i.attributes.href,
+                            text: i.text,
+                            isLast: index == arr.length - 1
+                        }))
+                        console.log("HomepageScreen.js:577 says:", links);
+                        this.state.components.push((
+                            <SchoolboxLinks
+                                title={title}
+                                collapsed={isCollapsed}
+                                links={links}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Component_Homepage_FileListController")) {
+                        let links = i.querySelectorAll(".list-item a[data-plugin]").map((i, index, arr) => ({ //may need better selector
+                            url: i.attributes.href,
+                            text: i.text,
+                            isLast: index == arr.length - 1
+                        }))
+                        console.log("HomepageScreen.js:577 says:", links);
+                        this.state.components.push((
+                            <SchoolboxLinks
+                                type="file"
+                                title={title}
+                                collapsed={isCollapsed}
+                                links={links}
+                            />
+                        ))
+                    }
                     else {
                         let newTitle = "No Title – " + Array.from(i.classList._set).filter(j => j != "component-container")[0].replaceAll(/_|Schoolbox|Component|Homepage|Controller/g, '') //if no title
 
                         this.state.components.push((
                             <SchoolboxComponent
+                                style={{
+                                    padding: 0
+                                }}
+                                containerStyle={{
+                                    padding: 0
+                                }}
+                                contentStyle={{
+                                    margin: 0
+                                }}
                                 title={title || newTitle}
                                 url={`/homepage/${homepageId}#${i.attributes.id}`}
                             />

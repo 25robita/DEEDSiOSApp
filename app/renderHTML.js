@@ -46,18 +46,20 @@ class HTMLUnorderedList extends Component {
         if (item.tagName == "LI") {
             return <View style={{
                 flexDirection: 'row',
-                marginBottom: 5
+                marginBottom: 5,
+
             }}>
-                <HTMLSpan style={{ fontWeight: "700", paddingHorizontal: 10 }}>•</HTMLSpan>
-                <View>
-                    {
-                        item.nodeType == 1
-                            ? renderHTMLElement(item, this.props.style)
-                            : <HTMLSpan style={this.props.style}>
-                                {item.text}
-                            </HTMLSpan>
-                    }
-                </View>
+                <HTMLSpan style={{ fontWeight: "700", marginHorizontal: 10 }}>•</HTMLSpan>
+                {/* <View> */}
+                <HTMLSpan
+                    style={{
+                        flex: 1,
+                        flexWrap: 'wrap'
+                    }}
+                >
+                    {item.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, this.props.style) : i.text))}
+                </HTMLSpan>
+                {/* </View> */}
             </View>
         }
     }
@@ -90,9 +92,17 @@ function HTMLImage(props) {
 class HTMLWebView extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            uri: props.uri
+                && (
+                    props.uri.startsWith("//")
+                        ? "https:" + props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
+                        : props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
+                )
+        }
     }
     onLoad = (syntheticEvent) => {
+        console.log("renderHTML.js:98 says:", syntheticEvent.nativeEvent);
         let title = syntheticEvent.nativeEvent.title;
         title = (title.length > 30)
             ? title.slice(0, 27) + "..."
@@ -100,7 +110,7 @@ class HTMLWebView extends Component {
         this.setState({ title })
     }
     onOpenInBrowser = () => {
-        openURL(this.props.uri)
+        openURL(this.state.uri)
     }
     render() {
         return <View>
@@ -136,19 +146,58 @@ class HTMLWebView extends Component {
                     width: 400,
                     height: 500
                 }}
-                source={{ uri: this.props.uri }}
+                source={{ uri: this.state.uri }}
                 originWhitelist={['*']}
                 onLoad={this.onLoad}
-                contentMode={this.props.uri.includes("docs.google") ? "desktop" : "mobile"}
+                contentMode={this.state.uri.includes("docs.google") ? "desktop" : "mobile"}
             />
         </View>
     }
 }
 
-function SocialStreamAttatchment(props) {
-    return <View>
-
-    </View>
+class SocialStreamAttatchment extends Component {
+    constructor(props) {
+        super(props)
+    }
+    onPress = () => {
+        openURL(this.props.url)
+    }
+    render() {
+        return <View>
+            <TouchableOpacity
+                onPress={this.onPress}
+                activeOpacity={0.5}
+                style={{
+                    padding: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}
+            >
+                <IconComponent
+                    style={{
+                        fontSize: 20,
+                        marginRight: 10
+                    }}
+                    name="document"
+                />
+                {/* <Image
+                    style={{
+                        width: 25,
+                        height: 25,
+                        marginRight: 10
+                    }}
+                    source={{ uri: this.props.imageURI }}
+                /> */}
+                <ContentText
+                    style={{
+                        color: customColours.link
+                    }}
+                >
+                    {this.props.text}
+                </ContentText>
+            </TouchableOpacity>
+        </View>
+    }
 }
 
 function parseStyle(style) {
@@ -267,18 +316,26 @@ function renderHTMLElement(elem, style) {
         case "IMG":
             return <HTMLImage style={style} src={elem.attributes.src}></HTMLImage>
         default:
-            if (elem.outerHTML && elem.outerHTML.includes("socialstream-attatchment")) {
+            if (elem.outerHTML && elem.classList.contains("socialstream-attachment")) {
+                if (elem.querySelector("iframe")) {
+                    return <HTMLWebView
+                        uri={elem.querySelector("iframe").attributes.src}
+                    />
+                }
                 let urlElem = elem.querySelector("a")
-                let url = urlElem && urlElem.attributes.src
-                let text = urlElem.text.trim()
+                let url = urlElem && urlElem.attributes.href
+                let text = urlElem && urlElem.text.trim()
 
                 let imgElem = elem.querySelector("img")
+                let imageURI = imgElem && imgElem.attributes.src
+                console.log("renderHTML.js:311 says:", serviceURL + imageURI);
                 let mimeTypeRegex = imgElem && imgElem.attributes.src.matchAll(/\/([\w-]+)\..*/g).next().value
                 let mimeType = mimeTypeRegex && mimeTypeRegex[1].replace("-", '/')
                 return <SocialStreamAttatchment
                     url={url}
                     text={text}
                     mimeType={mimeType}
+                    imageURI={serviceURL + imageURI}
                 />
             }
             if (elem.outerHTML && elem.outerHTML.includes('data-oembed-url')) {
