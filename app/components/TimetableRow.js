@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { styles, timetableStyles } from "../styles"
-import { getNowOnwards } from '../getters/timetable';
-import { ContentText, Meta } from './TextComponents';
-import LoaderComponent from './LoaderComponent';
-import TimeComponent from './TimeComponent';
-import SectionComponent from './SectionComponent';
-import { navigate, openURL } from '../RootNavigation';
 import { turnLightnessToTransparency } from '../colours';
+import { getNowOnwards } from '../getters/timetable';
 import { homepageTimetableFailTextLabel, homepageTimetableTitle } from '../lang';
+import { navigate, openURL } from '../RootNavigation';
+import { styles, timetableStyles } from "../styles";
+import LoaderComponent from './LoaderComponent';
+import SectionComponent from './SectionComponent';
+import { ContentText, Meta } from './TextComponents';
+import TimeComponent from './TimeComponent';
 
 class TimetableSubject extends Component {
     constructor(props) {
@@ -16,9 +16,9 @@ class TimetableSubject extends Component {
         this.state = {}
     }
 
-    onPress() {
-        let url = `/homepage/code/` + this.props.data.code;
-        this.props.data.empty || openURL(url)
+    onPress = () => {
+        let url = `/homepage/code/` + this.props?.data?.code;
+        this.props?.data?.empty || openURL(url)
     }
 
     render() {
