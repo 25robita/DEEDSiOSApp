@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { FlatList, View, TouchableOpacity } from 'react-native';
-import { newsStyles, styles } from '../styles';
+import { FlatList, TouchableOpacity, View } from 'react-native';
+import { customColours } from '../colours';
 import { fetchJSONResource } from '../getters/get';
-import { ContentText, Meta } from './TextComponents';
+import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } from '../lang';
+import { renderHTMLText } from '../renderHTML';
+import { getCurrentRoute, push } from '../RootNavigation';
+import { newsStyles, styles } from '../styles';
 import IconComponent from './IconComponent';
 import LoaderComponent from './LoaderComponent';
-import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
-import { getCurrentRoute, push } from '../RootNavigation';
-import { renderHTMLText } from '../renderHTML';
-import { customColours } from '../colours';
-import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } from '../lang';
+import { ContentText, Meta } from './TextComponents';
+import TimeComponent from './TimeComponent';
 import UserLinkComponent from './UserLinkComponent';
 
-function getRelativeTime(unix) {
+export function getRelativeTime(unix) {
+    if (!unix) return;
     let totalSeconds = (new Date() / 1000) - new Date(unix);
     let years = Math.floor(totalSeconds / 31_536_000); // divide by seconds in a year and floor
     if (years) return `${years} year${years == 1 ? '' : 's'} ago`;
