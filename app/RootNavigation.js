@@ -35,6 +35,9 @@ export function openURL(url, parse = true) {
         }
         Linking.openURL(url)
     }
+    else if (/^(\w+):/g.test(url) && !url.startsWith("http")) { // only catches weird urls
+        Linking.openURL(url)
+    }
     else if (url.startsWith("/") || url.startsWith(serviceURL)) {
         url = url.replace(serviceURL, '')
         if (url.startsWith("/search/user/")) {
