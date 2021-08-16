@@ -1,12 +1,12 @@
 import parse from "node-html-parser";
 import React, { Component } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
-import { ContentText } from "./components/TextComponents";
-import { customColours } from "./colours";
-import { openURL } from "./RootNavigation";
 import WebView from "react-native-webview";
+import { customColours } from "./colours";
 import IconComponent from "./components/IconComponent";
+import { ContentText } from "./components/TextComponents";
 import { serviceURL } from "./consts";
+import { openURL } from "./RootNavigation";
 
 function HTMLSpan(props) {
     return <ContentText
@@ -159,6 +159,7 @@ class HTMLWebView extends Component {
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={this.onOpenInBrowser}
+                    hitSlop={{ top: 10, bottom: 10, right: 10, left: 20 }}
                 >
                     <IconComponent id=''
                         style={{

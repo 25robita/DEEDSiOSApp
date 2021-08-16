@@ -62,7 +62,8 @@ class NewsItemScreen extends Component {
                         <View
                             style={{
                                 flexDirection: 'row',
-                                justifyContent: 'space-between'
+                                justifyContent: 'space-between',
+                                marginTop: 10
                             }}
                         >
                             <UserLinkComponent
