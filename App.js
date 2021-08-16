@@ -24,6 +24,7 @@ import SubjectsScreen from './app/screens/SubjectsScreen';
 import GroupsScreen from './app/screens/GroupsScreen';
 import LinksScreen from './app/screens/LinksScreen'
 import CalendarItemScreen from './app/screens/CalendarItemScreen';
+import { eventNavigationTitle, profileNavigationTitleInitial, timetableNavigationTitle } from './app/lang';
 const MainStack = createStackNavigator();
 
 const headerButtonHitslop = {
@@ -160,7 +161,7 @@ class App extends Component {
                     <MainStack.Screen
                         name="Timetable"
                         component={TimetableScreen}
-                        options={navigatorOptions}
+                        options={Object.assign({}, navigatorOptions, { title: timetableNavigationTitle })}
                         initialParams={{}}
                     />
                     <MainStack.Screen
@@ -190,7 +191,7 @@ class App extends Component {
                     <MainStack.Screen
                         name="User"
                         component={UserProfileScreen}
-                        options={navigatorOptions}
+                        options={Object.assign({}, navigatorOptions, { title: profileNavigationTitleInitial })}
                         initialParams={{}}
                     />
                     <MainStack.Screen
@@ -202,7 +203,7 @@ class App extends Component {
                     <MainStack.Screen
                         name="Calendar Item"
                         component={CalendarItemScreen}
-                        options={navigatorOptions}
+                        options={Object.assign({}, navigatorOptions, { title: eventNavigationTitle })}
                         initialParams={{}}
                     />
                     <MainStack.Screen

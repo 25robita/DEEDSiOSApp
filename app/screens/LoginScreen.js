@@ -1,9 +1,9 @@
-import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
+import { setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
-import { ImageBackground, SafeAreaView, Text, TextInput, View } from 'react-native';
+import { ImageBackground, SafeAreaView, View } from 'react-native';
 import LoginComponent from '../components/LoginComponent';
-import { loginStyles, styles } from '../styles';
 import { fetchHTMLResource } from '../getters/get';
+import { loginStyles, styles } from '../styles';
 
 const backgroundImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EABB6EF_190220CGS-339.jpg" };
 
@@ -50,8 +50,17 @@ class LoginScreen extends Component {
     }
     render() {
         return (
-            <View style={styles.container}>
-                <View style={[styles.topBar, { height: "10%" }]}></View>
+            <View
+                style={styles.container}
+            >
+                <View
+                    style={[
+                        styles.topBar,
+                        {
+                            height: "10%"
+                        }
+                    ]}
+                ></View>
                 <ImageBackground
                     source={backgroundImage}
                     style={{
@@ -60,7 +69,14 @@ class LoginScreen extends Component {
                         overflow: 'hidden'
                     }}
                 >
-                    <SafeAreaView style={[loginStyles.mainContainer, { opacity: 0.92 }]}>
+                    <SafeAreaView
+                        style={[
+                            loginStyles.mainContainer,
+                            {
+                                opacity: 0.92
+                            }
+                        ]}
+                    >
                         <LoginComponent
                             onSubmit={this.handleLogin}
                         />

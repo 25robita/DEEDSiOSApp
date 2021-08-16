@@ -1,9 +1,9 @@
 import React from "react";
-import { View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
+import { groupsFailTextLabel } from "../lang";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 
@@ -37,7 +37,7 @@ class GroupsScreen extends Component {
             >
                 <LoaderComponent
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
-                    failText="Unable to load your classes"
+                    failText={groupsFailTextLabel}
                 >
                     {
                         this.state.loaded

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Touchable, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { customColours } from "../colours";
 import { openURL } from "../RootNavigation";
 import { ContentText, Meta } from "./TextComponents";
@@ -10,7 +10,9 @@ class UserLinkComponent extends Component {
         this.state = {};
     }
     onPress = () => {
-        openURL(`/search/user/${this.props.id}`)
+        console.log("UserLinkComponent.js:13 says:", this.props.id);
+        (this.props.nonPressable || !this.props.id)
+            || openURL(`/search/user/${this.props.id}`)
     }
     render() {
         return (

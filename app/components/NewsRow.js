@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
-import { FlatList, View, Text, ActivityIndicator, Linking, TouchableOpacity } from 'react-native';
+import { FlatList, View, TouchableOpacity } from 'react-native';
 import { newsStyles, styles } from '../styles';
 import { fetchJSONResource } from '../getters/get';
-import { ContentText, Meta, SectionHeading } from './TextComponents';
+import { ContentText, Meta } from './TextComponents';
 import IconComponent from './IconComponent';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
-import { dispatch, getCurrentRoute, navigate, push } from '../RootNavigation';
-import { CommonActions } from '@react-navigation/native';
+import { getCurrentRoute, push } from '../RootNavigation';
 import { renderHTMLText } from '../renderHTML';
 import { customColours } from '../colours';
+import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } from '../lang';
+import UserLinkComponent from './UserLinkComponent';
 
+function getRelativeTime(unix) {
+    let totalSeconds = (new Date() / 1000) - new Date(unix);
+    let years = Math.floor(totalSeconds / 31_536_000); // divide by seconds in a year and floor
+    if (years) return `${years} year${years == 1 ? '' : 's'} ago`;
+    let months = Math.floor(totalSeconds / 2_628_000); // divide by seconds in a month
+    if (months) return `${months} month${months == 1 ? '' : 's'} ago`;
+    let weeks = Math.floor(totalSeconds / 604_800);// divide by seconds in a week
+    if (weeks) return `${weeks} week${weeks == 1 ? '' : 's'} ago`;
+    let days = Math.floor(totalSeconds / 86_400);
+    if (days) return `${days} day${days == 1 ? '' : 's'} ago`;
+    let hours = Math.floor(totalSeconds / 3_600);
+    if (hours) return `${hours} hour${hours == 1 ? '' : 's'} ago`;
+    let minutes = Math.floor(totalSeconds / 60);
+    if (minutes) return `${minutes} minute${minutes == 1 ? '' : 's'} ago`;
+    let seconds = Math.floor(totalSeconds);
+    return `${seconds} second${seconds == 1 ? '' : 's'} ago`;
+
+}
 
 class NewsItem extends Component {
     constructor(props) {
@@ -26,15 +45,58 @@ class NewsItem extends Component {
     render() {
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
-                <View style={[newsStyles.newsItem, styles.shadow, { backgroundColor: this.props.data.sticky ? (customColours.newsItemPinnedBackground || customColours.themeSeconday) : (customColours.newsItemBackground || customColours.contentBackground) }]}>
-                    <ContentText style={[newsStyles.newsTitle]}>{this.props.data.sticky ? (<ContentText><IconComponent name="pin" style={{ fontSize: 16, marginLeft: 10 }} />  </ContentText>) : null}{this.props.data.title}</ContentText>
+                <View
+                    style={[
+                        newsStyles.newsItem,
+                        styles.shadow,
+                        {
+                            backgroundColor: this.props.data.sticky
+                                ? (customColours.newsItemPinnedBackground || customColours.themeSeconday)
+                                : (customColours.newsItemBackground || customColours.contentBackground)
+                        }]
+                    }
+                >
+                    <ContentText
+                        style={[
+                            newsStyles.newsTitle
+                        ]}
+                    >
+                        {
+                            this.props.data.sticky
+                                ? (
+                                    <ContentText>
+                                        <IconComponent
+                                            name="pin"
+                                            style={{
+                                                fontSize: 16,
+                                                marginLeft: 10
+                                            }}
+                                        />  </ContentText>)
+                                : null
+                        }
+                        {this.props.data.title}
+                    </ContentText>
                     <View style={{
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: "center"
                     }}>
-                        <Meta>By <ContentText style={[{ color: customColours.link }]}>{this.props.data.author.fullname || this.props.data.author.fullName}  </ContentText></Meta>
-                        <TimeComponent date={true} time={this.props.data.publishAt.relativeTime} />
+                        <UserLinkComponent
+                            id={this.props.data?.author?.id || this.props.data?.author?._links?.profile?.href?.match?.(/\d+/g)}
+                            userName={this.props.data?.author?.fullName || this.props.data?.author?.fullname}
+                            isMeta={true}
+                            textBefore={newsItemAuthorLabel}
+                            style={{
+                                marginRight: 10
+                            }}
+                        />
+                        <TimeComponent
+                            date={true}
+                            time={
+                                this.props.data?.publishAt?.relativeTime
+                                || getRelativeTime(this.props.data?.publishAt?.unixTimestamp)
+                            }
+                        />
                     </View>
                     {
                         this.props.data.blurb
@@ -119,7 +181,7 @@ class NewsList extends Component {
                                 !(this.state.feed || this.state.isEmpty) || this.state.showActivity
                                     ? "loading"
                                     : (this.state.isEmpty ? "failed" : "loaded")}
-                            failText="No news could be found at the moment"
+                            failText={homepageNewsFailTextLabel}
                         >
                             <FlatList
                                 scrollEnabled={false}
@@ -132,6 +194,7 @@ class NewsList extends Component {
                         : null
                 }
             </View>
+
         );
     }
 
@@ -140,7 +203,10 @@ class NewsList extends Component {
 export { NewsList };
 
 export default function NewsRow() {
-    return <SectionComponent title="news" navigatorName="News">
+    return <SectionComponent
+        title={homepageNewsTitle}
+        navigatorName="News"
+    >
         <NewsList number={3} />
     </SectionComponent>
 }

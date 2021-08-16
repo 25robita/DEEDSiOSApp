@@ -1,13 +1,10 @@
 import React from "react";
-import { RefreshControl, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
+import { linksFailTextLabel } from "../lang";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
-
 
 class LinksScreen extends Component {
     constructor(props) {
@@ -39,7 +36,7 @@ class LinksScreen extends Component {
             >
                 <LoaderComponent
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
-                    failText="Unable to load your classes"
+                    failText={linksFailTextLabel}
                 >
                     {
                         this.state.loaded

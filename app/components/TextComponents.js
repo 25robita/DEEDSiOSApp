@@ -6,7 +6,8 @@ import { styles } from '../styles';
 import { navigate } from '../RootNavigation';
 import IconComponent from './IconComponent';
 
-function ContentText(props) {
+
+export function ContentText(props) {
     text = props.animated ? Animated.Text : Text
     return (
         props.animated
@@ -20,15 +21,21 @@ function ContentText(props) {
     );
 }
 
-function Meta(props) {
+export function Meta(props) {
     return (
-        <ContentText {...props} style={[styles.meta, props.style]}>
+        <ContentText
+            {...props}
+            style={[
+                styles.meta,
+                props.style
+            ]}
+        >
             {props.children}
         </ContentText>
     );
 }
 
-class SectionHeading extends Component {
+export class SectionHeading extends Component {
     constructor(props) {
         super(props)
     }
@@ -37,22 +44,34 @@ class SectionHeading extends Component {
     }
     render() {
         return (
-            <TouchableOpacity activeOpacity={0.5} onPress={this.navigate}>
+            <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={this.navigate}
+            >
                 <View style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     flexDirection: "row",
                     alignItems: 'baseline'
                 }}>
-                    <ContentText style={[styles.heading, styles.sectionHeading]}>
+                    <ContentText
+                        style={[
+
+                            styles.heading,
+                            styles.sectionHeading
+                        ]}
+                    >
                         {this.props.children}
                     </ContentText>
-                    <IconComponent name="next" style={{ fontSize: 16 }} />
+                    <IconComponent
+                        name="next"
+                        style={{
+                            fontSize: 16
+                        }}
+                    />
                 </View>
             </TouchableOpacity>
 
         )
     }
 }
-
-export { ContentText, Meta, SectionHeading };

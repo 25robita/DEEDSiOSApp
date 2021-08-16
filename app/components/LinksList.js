@@ -1,13 +1,11 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
 import IconComponent from "../components/IconComponent";
-import LoaderComponent from "../components/LoaderComponent";
 import { ContentText } from "../components/TextComponents";
 import { styles } from "../styles";
-import { fetchHTMLResource } from "../getters/get";
 import { openURL } from "../RootNavigation";
 
 class LinksList extends Component {
@@ -68,7 +66,6 @@ class LinksList extends Component {
                     renderItem={this.renderItem}
                     keyExtractor={this.keyExtractor}
                 />
-
             </View >
         );
     }

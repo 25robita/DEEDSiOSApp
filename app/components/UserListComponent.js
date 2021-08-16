@@ -48,7 +48,6 @@ export class UserList extends Component {
                         item.meta
                             ? <Meta
                                 style={{
-                                    // flexDirection: 'row',
                                     flexWrap: 'wrap',
                                     flex: 1,
                                     marginRight: 50

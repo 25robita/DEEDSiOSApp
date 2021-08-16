@@ -1,40 +1,81 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { styles, timetableStyles } from "../styles"
 import { getNowOnwards } from '../getters/timetable';
-import { ContentText, Meta, SectionHeading } from './TextComponents';
+import { ContentText, Meta } from './TextComponents';
 import LoaderComponent from './LoaderComponent';
 import TimeComponent from './TimeComponent';
 import SectionComponent from './SectionComponent';
 import { navigate, openURL } from '../RootNavigation';
-import { darkMode } from '../consts';
 import { turnLightnessToTransparency } from '../colours';
+import { homepageTimetableFailTextLabel, homepageTimetableTitle } from '../lang';
 
-function TimetableSubject(props) {
-    return (
-        props.data ?
-            <TouchableOpacity activeOpacity={0.5} onPress={_ => {
-                let url = `/homepage/code/` + props.data.code;
-                props.data.empty ? null : openURL(url)
-            }}>
-                <View style={[timetableStyles.row, styles.shadow]}>
-                    <View style={[timetableStyles.cell, timetableStyles.header, (props.data.empty) ? timetableStyles.longCell : {}]}>
-                        <ContentText style={[styles.heading]}>{props.data.period}</ContentText>
-                        <TimeComponent time={props.data.time} />
-                    </View>
-                    {
-                        (props.data.empty)
-                            ? null
-                            : <View style={[timetableStyles.cell, { backgroundColor: turnLightnessToTransparency(props.data.color) }]}>
-                                <ContentText style={[((props.data.isLinked) ? styles.link : {}), timetableStyles.subjectText, timetableStyles.subjectName]}>{props.data.name}</ContentText>
-                                <Meta style={[timetableStyles.subjectText]}>{props.data.code}</Meta>
-                                <ContentText style={[timetableStyles.subjectText]}>{props.data.location}</ContentText>
+class TimetableSubject extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    onPress() {
+        let url = `/homepage/code/` + this.props.data.code;
+        this.props.data.empty || openURL(url)
+    }
+
+    render() {
+        return (
+            this.props.data ?
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={this.onPress}>
+                    <View style={[timetableStyles.row, styles.shadow]}>
+                        <View style={[timetableStyles.cell, timetableStyles.header, (this.props.data.empty) ? timetableStyles.longCell : {}]}>
+                            <ContentText style={[styles.heading]}>{this.props.data.period}</ContentText>
+                            <TimeComponent time={this.props.data.time} />
+                        </View>
+                        {
+                            (this.props.data.empty)
+                            || <View
+                                style={[
+                                    timetableStyles.cell,
+                                    {
+                                        backgroundColor: turnLightnessToTransparency(this.props.data.color)
+                                    }]
+                                }
+                            >
+                                <ContentText
+                                    style={[
+                                        (
+                                            (this.props.data.isLinked)
+                                                ? styles.link
+                                                : {}
+                                        ),
+                                        timetableStyles.subjectText,
+                                        timetableStyles.subjectName
+                                    ]}
+                                >
+                                    {this.props.data.name}
+                                </ContentText>
+                                <Meta
+                                    style={[
+                                        timetableStyles.subjectText
+                                    ]}
+                                >
+                                    {this.props.data.code}
+                                </Meta>
+                                <ContentText
+                                    style={[
+                                        timetableStyles.subjectText
+                                    ]}
+                                >
+                                    {this.props.data.location}
+                                </ContentText>
                             </View>
-                    }
-                </View>
-            </TouchableOpacity>
-            : null
-    );
+                        }
+                    </View>
+                </TouchableOpacity>
+                : null
+        );
+    }
 }
 
 class TimetableRow extends Component {
@@ -79,7 +120,8 @@ class TimetableRow extends Component {
     }
 
     handleScreenToTimetable = () => {
-        navigate("Timetable");
+        navigate("Timetable", { day: new Date().getDay() + 6 % 7 });
+
     }
 
     render(props) {
@@ -88,8 +130,14 @@ class TimetableRow extends Component {
                 {
                     (this.state.timetable.length || !this.state.isFilled)
                         ? (
-                            <TouchableOpacity activeOpacity={0.5} onPress={this.handleScreenToTimetable}>
-                                <SectionComponent title="timetable" navigatorName="Timetable">
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.handleScreenToTimetable}
+                            >
+                                <SectionComponent
+                                    title={homepageTimetableTitle}
+                                    navigatorName="Timetable"
+                                >
                                     <LoaderComponent
                                         state={
                                             !(this.state.timetable.length || this.state.failed || this.state.isFilled) || this.state.showActivity
@@ -98,7 +146,7 @@ class TimetableRow extends Component {
                                                     ? "failed"
                                                     : "loaded"
                                         }
-                                        failText="Unable to load the timetable at the moment"
+                                        failText={homepageTimetableFailTextLabel}
                                     >
                                         <TimetableSubject data={this.state.timetable[0]} />
                                         <TimetableSubject data={this.state.timetable[1]} />

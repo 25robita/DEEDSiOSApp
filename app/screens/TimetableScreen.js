@@ -1,33 +1,18 @@
-import { CommonActions, createNavigationContainerRef, createNavigatorFactory, NavigationContainer, StackActions } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import React, { Component } from 'react';
-import { View, SafeAreaView, FlatList, ScrollView, RefreshControl, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
-import GestureRecognizer from 'react-native-swipe-gestures';
+import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
+import { customColours } from '../colours';
 import IconComponent from '../components/IconComponent';
 import { ContentText, Meta } from '../components/TextComponents';
 import { TimetableSubject } from '../components/TimetableRow';
-import { TopBarBackButton, TopBarHeading } from '../components/TopBar';
-import { styles } from '../styles';
-import { customColours } from '../colours';
 import { getDayAndFull } from '../getters/timetable';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { dispatch, navigate } from '../RootNavigation';
-import { decodeTimetable, minifyTimetable } from '../MinifyTimetable';
-import LoaderComponent from '../components/LoaderComponent';
-import Animated from 'react-native-reanimated';
+import { days } from '../lang';
+import { decodeTimetable } from '../MinifyTimetable';
+import { styles } from '../styles';
 
 const DaysTabs = createMaterialTopTabNavigator();
-
 const DaysTabsRef = createNavigationContainerRef();
-
-const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-]
 
 function handleKeyExtraction(index, item) {
     return item + index
@@ -48,8 +33,20 @@ class TimetableSubScreen extends Component {
 
     render() {
         return (
-            <ScrollView style={{ minHeight: "100%", backgroundColor: customColours.background }}>
-                <View style={{ padding: '5%', /*marginBottom: "20%",*/ flex: 1, minHeight: "100%", backgroundColor: customColours.background }}>
+            <ScrollView
+                style={{
+                    minHeight: "100%",
+                    backgroundColor: customColours.background
+                }}
+            >
+                <View
+                    style={{
+                        padding: '5%',
+                        flex: 1,
+                        minHeight: "100%",
+                        backgroundColor: customColours.background
+                    }}
+                >
                     <FlatList
                         scrollEnabled={false}
                         style={{ overflow: "visible", height: "100%", flexGrow: 1 }}
@@ -63,7 +60,8 @@ class TimetableSubScreen extends Component {
     }
 }
 
-function DaySelector({ state, descriptors, navigation, position }) {
+
+function DaySelector({ state, navigation }) {
     return (
         <View
             style={{
@@ -86,7 +84,6 @@ function DaySelector({ state, descriptors, navigation, position }) {
                 }>
                 <IconComponent style={{
                     fontSize: 20,
-                    // bottom: 10
                 }} name="previous" />
             </TouchableOpacity>
             <View
@@ -116,7 +113,6 @@ function DaySelector({ state, descriptors, navigation, position }) {
                             return (
                                 <Meta
                                     style={{
-                                        // textDecorationLine: (index == state.index) ? "underline" : undefined,
                                         transform: [{ scale: 2 / ((((Math.abs(state.index - index) / state.routeNames.length)) + .5) * 3) }],
                                         fontSize: 25,
                                         padding: 0,
@@ -162,12 +158,11 @@ class TimetableScreen extends Component {
         let now = new Date();
         let day = (now.getDay() + 6) % 7
         let dayName = now.toLocaleDateString(undefined, { weekday: "long" })
-        this.state = { day, now, dayName };
+        this.state = { day, now };
     }
     updateTimetable = () => {
-        // console.log("TimetableScreen.js:164 says:", "hello");
         getDayAndFull(this.state.day, this.state.now)
-            .then(([timetable, fullTimetable, uncondensedTimetable]) => {
+            .then(([timetable, fullTimetable]) => {
                 this.state.willUpdate = true;
                 let x;
                 this.setState({ fullTimetable })
@@ -187,7 +182,6 @@ class TimetableScreen extends Component {
     }
     componentDidUpdate = () => {
         if (this.state.fullTimetable) {
-            // console.log("TimetableScreen.js:201 says:", this.state.fullTimetable);
         }
     }
     onRefresh = () => {
@@ -207,6 +201,7 @@ class TimetableScreen extends Component {
                             <DaysTabs.Navigator
                                 style={{ minHeight: "100%" }}
                                 tabBar={DaySelector}
+                                initialRouteName={days[this.props?.route?.params?.day]}
                             >
                                 {
                                     days.map((day, index) => {

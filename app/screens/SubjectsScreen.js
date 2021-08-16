@@ -1,9 +1,9 @@
 import React from "react";
-import { View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
+import { subjectsFailTextLabel } from "../lang";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 
@@ -37,7 +37,7 @@ class SubjectsScreen extends Component {
             >
                 <LoaderComponent
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
-                    failText="Unable to load your classes"
+                    failText={subjectsFailTextLabel}
                 >
                     {
                         this.state.loaded

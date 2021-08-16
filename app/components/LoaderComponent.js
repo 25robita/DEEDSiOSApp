@@ -1,7 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, ShadowPropTypesIOS, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { styles } from '../styles';
-import { ContentText, Meta } from './TextComponents';
+import { Meta } from './TextComponents';
 
 
 function LoaderComponent(props) {

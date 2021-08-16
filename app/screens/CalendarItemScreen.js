@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { View } from "react-native";
-import { customColours, getColorHSL, turnLightnessToTransparency } from "../colours";
+import { customColours, turnLightnessToTransparency } from "../colours";
 import LoaderComponent from "../components/LoaderComponent";
-import { ContentText, Meta } from "../components/TextComponents";
+import { ContentText } from "../components/TextComponents";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
 import { darkMode } from "../consts";
 import { fetchJSONResource } from "../getters/get";
+import { eventAttendAcceptLabel, eventAttendancePromptLabel, eventAttendDeclineLabel, eventAuthorLabel, eventDateAndTimeLabel, eventFailTextLabel, eventLocationLabel, eventNavigationTitle, eventNumberAcceptedLabel, eventNumberDeclinedLabel, eventNumberPendingLabel, sliceNavigationTitle } from "../lang";
 import { styles } from "../styles";
 import ContentScreenTemplate from "./ContentScreenTemplate";
 import { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
@@ -34,6 +35,7 @@ class CalendarItemScreen extends Component {
                     this.setState({ attendance: j })
                 })
         }
+        this.props.navigation.setOptions({ title: sliceNavigationTitle(`${eventNavigationTitle} – ${this.props.route.params?.item?.title}`) })
     }
 
     render() {
@@ -49,7 +51,7 @@ class CalendarItemScreen extends Component {
                         state={this.props.route.params?.item
                             ? 'loaded'
                             : "failed"}
-                        failText='Failed to load event'
+                        failText={eventFailTextLabel}
                     >
                         <View
                             style={{
@@ -82,7 +84,7 @@ class CalendarItemScreen extends Component {
                                                     .reduce((h, j) => ((parseInt(h, 16) / 255) + j), 0)
                                                 > 1.5
                                             )
-                                            == darkMode// logical XNOR to see what is the best colour for contrast
+                                            == darkMode// logical XNOR to see what is the best colour for contrast; im very proud of this logic gate anyways moving on
                                         )
                                             ? 'black'
                                             : 'white'
@@ -96,7 +98,7 @@ class CalendarItemScreen extends Component {
                                     marginTop: 10
                                 }}
                                 isMeta={true}
-                                textBefore="By"
+                                textBefore={eventAuthorLabel}
                                 userName={this.props.route.params?.item?.data?.meta?.author}
                                 id={this.props.route.params?.item?.data?.meta?.authorId}
                             />
@@ -130,7 +132,7 @@ class CalendarItemScreen extends Component {
                                             <ContentText
                                                 style={dataHeaderStyle}
                                             >
-                                                DATE AND TIME
+                                                {eventDateAndTimeLabel}
                                             </ContentText>
                                             <ContentText>{
                                                 new Date(this.props.route.params?.item?.start).toLocaleDateString('EN-au', { weekday: 'long', month: 'long', year: 'numeric', day: 'numeric' })
@@ -147,7 +149,7 @@ class CalendarItemScreen extends Component {
                                         <ContentText
                                             style={dataHeaderStyle}
                                         >
-                                            LOCATION
+                                            {eventLocationLabel}
                                         </ContentText>
                                         <ContentText>
                                             {this.props.route.params?.item?.data?.meta?.location}
@@ -167,7 +169,9 @@ class CalendarItemScreen extends Component {
                                                             fontWeight: '600',
                                                             marginBottom: 10
                                                         }}
-                                                    >Attending?</ContentText>
+                                                    >
+                                                        {eventAttendancePromptLabel}
+                                                    </ContentText>
                                                     <View
                                                         style={{
                                                             flexDirection: 'row',
@@ -189,7 +193,7 @@ class CalendarItemScreen extends Component {
                                                                     color: customColours.link
                                                                 }}
                                                             >
-                                                                Yes
+                                                                {eventAttendAcceptLabel}
                                                             </ContentText>
                                                         </View>
                                                         <View
@@ -206,7 +210,7 @@ class CalendarItemScreen extends Component {
                                                                     color: customColours.link
                                                                 }}
                                                             >
-                                                                No
+                                                                {eventAttendDeclineLabel}
                                                             </ContentText>
                                                         </View>
                                                     </View>
@@ -219,7 +223,7 @@ class CalendarItemScreen extends Component {
                                                 marginBottom: 20
                                             }}
                                         >
-                                            {this.state.attendance?.attendees?.accepted} accepted, {this.state.attendance?.attendees?.declined} declined, {this.state.attendance?.attendees?.pending} pending
+                                            {this.state.attendance?.attendees?.accepted} {eventNumberAcceptedLabel}, {this.state.attendance?.attendees?.declined} {eventNumberDeclinedLabel}, {this.state.attendance?.attendees?.pending} {eventNumberPendingLabel}
                                         </ContentText>
                                         <UserList
                                             users={this.state.attendance?.attendees?.guests}

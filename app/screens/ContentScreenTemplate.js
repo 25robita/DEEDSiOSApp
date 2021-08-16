@@ -1,12 +1,11 @@
 import React from "react";
-import { RefreshControl, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
 import { renderHTMLText } from "../renderHTML";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
-class ContentScreenTemplate extends Component {
+export default class ContentScreenTemplate extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -41,7 +40,7 @@ export function HorizontalRule(props) {
                     borderBottomWidth: 1,
                     borderBottomColor: customColours.neutralLowContrast,
                     marginVertical: 15,
-                    width: "90%",
+                    width: "90%"
 
                 },
                 props.style]}
@@ -50,9 +49,15 @@ export function HorizontalRule(props) {
 }
 
 export function HTMLTextView(props) {
-    return <View style={[{ backgroundColor: customColours.contentBackground, marginBottom: 50 }, props.style]}>
+    return <View
+        style={[
+            {
+                backgroundColor: customColours.contentBackground,
+                marginBottom: 50
+            },
+            props.style
+        ]}
+    >
         {renderHTMLText(props.children)}
     </View>
 }
-
-export default ContentScreenTemplate;

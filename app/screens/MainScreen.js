@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, RefreshControl, FlatList } from 'react-native';
 import React, { Component } from 'react';
-import { styles } from "../styles"
-import TimetableRow from '../components/TimetableRow';
+import { View } from 'react-native';
 import CalendarRow from '../components/CalendarRow';
-import NewsList from '../components/NewsRow';
 import DueWorkRow from '../components/DueWorkRow';
-import ScrollingScreenTemplate from './ScrollingScreenTemplate';
 import NewsRow from '../components/NewsRow';
+import TimetableRow from '../components/TimetableRow';
+import { styles } from "../styles";
+import ScrollingScreenTemplate from './ScrollingScreenTemplate';
 
 const mainScreenData = [
     {
@@ -44,7 +43,6 @@ class MainScreen extends Component {
         }, 1000)
     }
     renderItem({ name, RowComponent, props }) {
-        console.log("MainScreen.js:46 says:", name, props, RowComponent);
         return <RowComponent
             headerName={name}
             {...props}

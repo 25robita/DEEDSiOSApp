@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { homepageDueWorkFailTextLabel, homepageDueWorkTitle } from '../lang';
 import LoaderComponent from './LoaderComponent';
 import SectionComponent from './SectionComponent';
 
@@ -14,11 +14,15 @@ class DueWorkRow extends Component {
     }
     render() {
         return (
-            <SectionComponent title="due work" navigatorName="Due Work">
+            <SectionComponent
+                title={homepageDueWorkTitle}
+                navigatorName="Due Work"
+            >
                 <LoaderComponent
                     state={
-                        "loading"
+                        "failed"
                     }
+                    failText={homepageDueWorkFailTextLabel}
                 >
 
                 </LoaderComponent>

@@ -1,9 +1,10 @@
-import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
-import { Text, TextInput, View, Animated, Image, TouchableOpacity, Linking } from 'react-native';
-import { Easing, useDerivedValue } from 'react-native-reanimated';
+import { TextInput, View, Animated, Image, TouchableOpacity, Linking } from 'react-native';
+import { Easing } from 'react-native-reanimated';
 import { customColours } from '../colours';
-import { loginStyles, styles } from '../styles';
+import { loginForgotPasswordLink, loginForgotUsernameLink } from '../consts';
+import { loginForgottenPasswordLabel, loginForgottenUsernameLabel, loginPromptLabel, loginSubmitLabel, loginPasswordPlaceholderLabel, loginUsernamePlaceholderLabel, loginCredentialsErrorLabel, loginUnknownErrorLabel } from '../lang';
+import { loginStyles } from '../styles';
 import { ContentText } from './TextComponents';
 
 const logoImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EBCDEA4_deeds-logo-with-crest_copy.jpg" }
@@ -54,24 +55,59 @@ class LoginComponent extends Component {
     }
     onLogin = _ => {
         this.props.onSubmit(this.state.username, this.state.password, isIncorrectPassword => {
-            this.setState({ errorMessage: (isIncorrectPassword.ok) ? "Incorrect username or password" : "Unknown Error encountered" })
+            this.setState({
+                errorMessage: (isIncorrectPassword.ok)
+                    ? loginCredentialsErrorLabel
+                    : loginUnknownErrorLabel
+            })
         })
     }
     handleOpenBrowserUsername() {
-        Linking.openURL("https://camberwell-login.cloudworkengine.net/module.php/accountinfo/forgot-username.php")
+        Linking.openURL(loginForgotUsernameLink)
     }
     handleOpenBrowserPassword() {
-        Linking.openURL("https://camberwell-login.cloudworkengine.net/module.php/accountinfo/start-reset.php")
+        Linking.openURL(loginForgotPasswordLink)
     }
     render() {
         return (
-            <Animated.View style={[loginStyles.halfContainer, { transform: [{ translateY: this.state.moveAnim }] }]}>
-                <Image source={logoImage} resizeMode={'contain'} style={{ width: "100%", height: "40%", alignSelf: "center" }}></Image>
-                <ContentText style={[loginStyles.text, loginStyles.loginHeader, { marginBottom: (this.state.errorMessage ? 25 : 50) }]}>Please enter your username and password</ContentText>
+            <Animated.View
+                style={[
+                    loginStyles.halfContainer,
+                    {
+                        transform:
+                            [{
+                                translateY: this.state.moveAnim
+                            }]
+                    }]}
+            >
+                <Image
+                    source={logoImage}
+                    resizeMode={'contain'}
+                    style={{
+                        width: "100%",
+                        height: "40%",
+                        alignSelf: "center"
+                    }}
+                />
+                <ContentText
+                    style={[
+                        loginStyles.text,
+                        loginStyles.loginHeader,
+                        {
+                            marginBottom: (this.state.errorMessage ? 25 : 50)
+                        }
+                    ]}
+                >
+                    {loginPromptLabel}
+                </ContentText>
                 {
                     this.state.errorMessage
                         ? <View style={[loginStyles.errorContainer]}>
-                            <ContentText style={loginStyles.error}>{this.state.errorMessage}</ContentText>
+                            <ContentText
+                                style={loginStyles.error}
+                            >
+                                {this.state.errorMessage}
+                            </ContentText>
                         </View>
                         : null
                 }
@@ -81,7 +117,7 @@ class LoginComponent extends Component {
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         style={[loginStyles.input, loginStyles.usernameInput]}
-                        placeholder="Username"
+                        placeholder={loginUsernamePlaceholderLabel}
                         placeholderTextColor={customColours.loginText}
                         value={this.state.username}
                     />
@@ -91,21 +127,27 @@ class LoginComponent extends Component {
                         onBlur={this.onBlur}
                         style={[loginStyles.input, loginStyles.passwordInput]}
                         secureTextEntry={true}
-                        placeholder="Password"
+                        placeholder={loginPasswordPlaceholderLabel}
                         placeholderTextColor={customColours.loginText}
-                    ></TextInput>
+                    />
                     <View style={loginStyles.buttonsContainer}>
                         <View style={loginStyles.iForgotContainer}>
                             <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserUsername}>
-                                <ContentText style={loginStyles.iForgot}>I forgot my username</ContentText>
+                                <ContentText style={loginStyles.iForgot}>
+                                    {loginForgottenUsernameLabel}
+                                </ContentText>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserPassword}>
-                                <ContentText style={loginStyles.iForgot}>I forgot my password</ContentText>
+                                <ContentText style={loginStyles.iForgot}>
+                                    {loginForgottenPasswordLabel}
+                                </ContentText>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity activeOpacity={0.5} onPress={this.onLogin}>
                             <View style={loginStyles.submitButton}>
-                                <ContentText style={loginStyles.submitText}>Sign In</ContentText>
+                                <ContentText style={loginStyles.submitText}>
+                                    {loginSubmitLabel}
+                                </ContentText>
                             </View>
                         </TouchableOpacity>
                     </View>

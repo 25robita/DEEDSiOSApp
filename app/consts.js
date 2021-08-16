@@ -4,6 +4,9 @@
 import { Appearance } from "react-native";
 
 export const serviceURL = 'https://deeds.cgs.vic.edu.au';
+export const loginForgotPasswordLink = "https://camberwell-login.cloudworkengine.net/module.php/accountinfo/start-reset.php"
+export const loginForgotUsernameLink = "https://camberwell-login.cloudworkengine.net/module.php/accountinfo/forgot-username.php"
+
 export const darkMode = Appearance.getColorScheme() == 'dark';
 
 // add dark mode and stuff

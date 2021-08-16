@@ -55,7 +55,7 @@ export function openURL(url, parse = true) {
         }
     }
     else {
-        if (url.startsWith('http')) {
+        if (url.startsWith('http')) { // catches both http and https dont be fooled
             Linking.openURL(url)
             return
         }

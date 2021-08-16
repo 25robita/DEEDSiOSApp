@@ -1,13 +1,13 @@
+import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
-import { FlatList, Image, RefreshControl, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, Image, View } from "react-native";
+import { customColours } from "../colours";
 import LoaderComponent from "../components/LoaderComponent";
 import { ContentText } from "../components/TextComponents";
-import { customColours } from "../colours";
-import { fetchHTMLResource } from "../getters/get";
-import { openURL } from "../RootNavigation";
-import { getItemAsync } from "expo-secure-store";
 import { serviceURL } from "../consts";
+import { fetchHTMLResource } from "../getters/get";
+import { profileNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
+import { openURL } from "../RootNavigation";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 class Table extends Component {
@@ -133,7 +133,7 @@ class UserProfileScreen extends Component {
                 let fullName = d.querySelector("#content h1").innerText.trim()
 
                 fullName
-                    ? this.props.navigation.setOptions({ title: `Profile – ${fullName}` })
+                    ? this.props.navigation.setOptions({ title: sliceNavigationTitle(`${profileNavigationTitlePrepend} – ${fullName}`) })
                     : null
 
                 this.setState({

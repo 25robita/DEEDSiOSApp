@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, View } from "react-native";
+import { RefreshControl } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";

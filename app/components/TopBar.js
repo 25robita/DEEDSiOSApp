@@ -4,13 +4,13 @@ import { styles } from '../styles';
 import IconComponent from './IconComponent';
 import { ContentText } from './TextComponents';
 
-function TopBarHeading(props) {
+export function TopBarHeading(props) {
     return (
         <ContentText style={[styles.topBarHeading]}>{props.children}</ContentText>
     );
 }
 
-class TopBarBackButton extends Component {
+export class TopBarBackButton extends Component {
     constructor(props) {
         super(props)
     }
@@ -41,5 +41,3 @@ class TopBarBackButton extends Component {
         )
     }
 }
-
-export { TopBarHeading, TopBarBackButton };

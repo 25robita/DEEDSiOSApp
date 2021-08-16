@@ -1,6 +1,6 @@
 import parse from "node-html-parser";
 import React, { Component } from "react";
-import { FlatList, Image, Linking, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { ContentText } from "./components/TextComponents";
 import { customColours } from "./colours";
 import { openURL } from "./RootNavigation";
@@ -9,13 +9,23 @@ import IconComponent from "./components/IconComponent";
 import { serviceURL } from "./consts";
 
 function HTMLSpan(props) {
-    return <ContentText {...props} style={props.style}>
+    return <ContentText
+        {...props}
+        style={props.style}
+    >
         {props.children}
     </ContentText>
 }
 
 function HTMLParagraph(props) {
-    return <HTMLSpan style={[{ marginBottom: 10 }, ...props.style]}>
+    return <HTMLSpan
+        style={[
+            {
+                marginBottom: 10
+            },
+            ...props.style
+        ]}
+    >
         {props.children}
     </HTMLSpan>
 }
@@ -27,11 +37,18 @@ class HTMLAnchor extends Component {
     onPress = () => {
         openURL(this.props.href)
     }
-    render() {/*<TouchableOpacity activeOpacity={0.5}  style={{ display: "inline" }}>*/
-        return <HTMLSpan onPress={this.onPress} style={[{ color: customColours.link }, ...this.props.style]}>
+    render() {
+        return <HTMLSpan
+            onPress={this.onPress}
+            style={[
+                {
+                    color: customColours.link
+                },
+                ...this.props.style
+            ]}
+        >
             {this.props.children}
         </HTMLSpan>
-        // </TouchableOpacity>
     }
 }
 
@@ -47,10 +64,15 @@ class HTMLUnorderedList extends Component {
             return <View style={{
                 flexDirection: 'row',
                 marginBottom: 5,
-
             }}>
-                <HTMLSpan style={{ fontWeight: "700", marginHorizontal: 10 }}>•</HTMLSpan>
-                {/* <View> */}
+                <HTMLSpan
+                    style={{
+                        fontWeight: "700",
+                        marginHorizontal: 10
+                    }}
+                >
+                    •
+                </HTMLSpan>
                 <HTMLSpan
                     style={{
                         flex: 1,
@@ -59,7 +81,6 @@ class HTMLUnorderedList extends Component {
                 >
                     {item.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, this.props.style) : i.text))}
                 </HTMLSpan>
-                {/* </View> */}
             </View>
         }
     }
@@ -83,7 +104,14 @@ function HTMLImage(props) {
     }}>
         <Image
             resizeMode='contain'
-            style={[{ width: 300, height: 300, paddingHorizontal: 100 }, ...props.style]} // good enough
+            style={[
+                {
+                    width: 300,
+                    height: 300,
+                    paddingHorizontal: 100
+                },
+                ...props.style
+            ]} // good enough
             source={{ uri }}
         />
     </View>
@@ -180,14 +208,6 @@ class SocialStreamAttatchment extends Component {
                     }}
                     name="document"
                 />
-                {/* <Image
-                    style={{
-                        width: 25,
-                        height: 25,
-                        marginRight: 10
-                    }}
-                    source={{ uri: this.props.imageURI }}
-                /> */}
                 <ContentText
                     style={{
                         color: customColours.link
@@ -231,8 +251,8 @@ function renderHTMLElement(elem, style) {
     let elemAttributes = elem.attributes
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);
-    (elem.attributes && elem.attributes.style)
-        ? styles.push(parseStyle(elem.attributes.style))
+    (elemAttributes && elemAttributes.style)
+        ? styles.push(parseStyle(elemAttributes.style))
         : null
     // if (elem.nodeType == 3) { idk what to do here
     //     return <HTMLSpan style={styles}>{elem.text}</HTMLSpan>

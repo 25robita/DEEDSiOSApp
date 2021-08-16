@@ -4,7 +4,7 @@ import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
 import { ContentText } from "../components/TextComponents";
 import IconComponent from "../components/IconComponent";
-import { dispatch, navigate } from "../RootNavigation";
+import { dispatch } from "../RootNavigation";
 import { StackActions } from "@react-navigation/native";
 
 const navigationItems = [

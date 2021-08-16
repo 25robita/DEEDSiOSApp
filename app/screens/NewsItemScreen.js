@@ -1,42 +1,14 @@
 import React, { Component } from "react";
 import { Image, View } from "react-native";
-import { ContentText, Meta, SectionHeading } from "../components/TextComponents";
-import { fetchJSONResource } from "../getters/get";
-import { renderHTMLText } from "../renderHTML";
-import { ScrollView } from "react-native-gesture-handler";
-import LoaderComponent from "../components/LoaderComponent";
-import { openURL } from "../RootNavigation";
-import { serviceURL } from "../consts";
 import { customColours } from "../colours";
-import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
-import { styles } from "../styles";
+import LoaderComponent from "../components/LoaderComponent";
+import { ContentText } from "../components/TextComponents";
 import UserLinkComponent from "../components/UserLinkComponent";
-
-// export function HorizontalRule(props) {
-//     return <View style={{
-//         width: "100%",
-//         display: "flex",
-//         alignItems: "center",
-//     }}>
-//         <View
-//             style={[
-//                 {
-//                     borderBottomWidth: 1,
-//                     borderBottomColor: customColours.neutralLowContrast,
-//                     marginVertical: 15,
-//                     width: "90%",
-
-//                 },
-//                 props.style]}
-//         />
-//     </View>
-// }
-
-// export function HTMLTextView(props) {
-//     return <View style={[{ backgroundColor: customColours.contentBackground, marginBottom: 50 }, props.style]}>
-//         {renderHTMLText(props.children)}
-//     </View>
-// }
+import { serviceURL } from "../consts";
+import { fetchJSONResource } from "../getters/get";
+import { newsItemAuthorLabel, newsItemNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
+import { styles } from "../styles";
+import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
 
 class NewsItemScreen extends Component {
     constructor(props) {
@@ -49,11 +21,7 @@ class NewsItemScreen extends Component {
             fetchJSONResource(`/news/${this.props.route.params.id}`, { headers: { Accept: "application/json" } })
                 .then(body => {
                     this.setState({ body, bodyDone: true })
-                    title = "News Item – " + body.article.title
-                    let maxTitleLength = 25;
-                    let title = title.length > maxTitleLength ?
-                        title.substring(0, maxTitleLength - 3) + "..." :
-                        title;
+                    let title = sliceNavigationTitle(`${newsItemNavigationTitlePrepend} – ${body.article.title}`)
                     this.props.navigation.setOptions({ title })
                 })
         }
@@ -73,7 +41,7 @@ class NewsItemScreen extends Component {
                         <View style={{ paddingHorizontal: 15, paddingTop: 15, paddingBottom: 10 }}>
                             <ContentText style={styles.contentHeading}>{this.state.body.article.title}</ContentText>
                             <UserLinkComponent
-                                textBefore='By'
+                                textBefore={newsItemAuthorLabel}
                                 isMeta={true}
                                 userName={this.state.body.article.author.fullName}
                                 id={this.state.body.article.author._links.profile.href.match(/\d+/g)}

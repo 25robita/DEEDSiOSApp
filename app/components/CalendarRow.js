@@ -1,16 +1,13 @@
-import { loadAsync } from "expo-font";
-import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
-import { View, Text, FlatList, requireNativeComponent, SectionList, TouchableOpacity } from "react-native";
+import { View, SectionList, TouchableOpacity } from "react-native";
 import { styles } from "../styles";
 import { customColours } from "../colours";
-import { fetchJSONResource } from "../getters/get";
-import { ContentText, SectionHeading } from "./TextComponents";
+import { ContentText } from "./TextComponents";
 import LoaderComponent from "./LoaderComponent";
 import TimeComponent from "./TimeComponent";
 import SectionComponent from "./SectionComponent";
 import getCalendar from "../getters/calendar";
-import { navigate, openURL } from "../RootNavigation";
+import { navigate } from "../RootNavigation";
 
 class CalendarItem extends Component {
     constructor(props) {
@@ -26,12 +23,10 @@ class CalendarItem extends Component {
                 activeOpacity={0.5}
                 onPress={this.onPress}
             >
-
                 <View style={{
                     width: "100%",
                     backgroundColor: customColours.contentBackground,
                     marginBottom: 1,
-                    // height: 30,
                     padding: 5,
                     flex: 1,
                     flexDirection: 'row',
@@ -114,7 +109,9 @@ class CalendarRow extends Component {
                     margin: 8,
                     fontWeight: "800",
                     color: customColours.link
-                }]}>{title}</ContentText>
+                }]}>
+                    {title}
+                </ContentText>
             </View>
         )
     }
@@ -136,7 +133,6 @@ class CalendarRow extends Component {
                         borderColor: customColours.calendarBackground,
                         borderBottomWidth: 7,
                         borderRightWidth: 7,
-
                         borderLeftWidth: 0,
                         backgroundColor: customColours.calendarBackground
                     }]}>

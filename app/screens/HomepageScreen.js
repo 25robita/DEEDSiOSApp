@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, ScrollView, Text, View, Linking, ImageBackground, RefreshControl, Image, Pressable, FlatList } from "react-native";
+import { FlatList, Image, ImageBackground, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import Collapsible from "react-native-collapsible";
 import WebView from "react-native-webview";
 import { Component } from "react/cjs/react.production.min";
@@ -8,13 +8,13 @@ import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import { NewsList } from "../components/NewsRow";
 import { ContentText, Meta } from "../components/TextComponents";
-import { styles } from "../styles";
-import { fetchHTMLResource, fetchJSONResource } from "../getters/get";
+import { UserList } from "../components/UserListComponent";
+import { serviceURL } from "../consts";
+import { fetchHTMLResource } from "../getters/get";
+import { sliceNavigationTitle } from "../lang";
 import { renderHTMLText } from "../renderHTML";
 import { openURL } from "../RootNavigation";
-import { serviceURL } from "../consts";
-import UserLinkComponent from "../components/UserLinkComponent";
-import { UserList } from "../components/UserListComponent";
+import { styles } from "../styles";
 
 class SchoolboxComponent extends Component {
     constructor(props) {
@@ -583,9 +583,7 @@ class HomepageScreen extends Component {
                 let pageTitle = d.querySelector("#content h1").text;
                 let maxLength = 27;
                 this.setState({ name: pageTitle })
-                pageTitle = (pageTitle.length > maxLength)
-                    ? pageTitle.slice(0, maxLength - 3) + "..."
-                    : pageTitle
+                pageTitle = sliceNavigationTitle(pageTitle)
 
                 this.props.navigation.setOptions({ title: pageTitle })
                 let breadcrumbs = d.querySelectorAll(".breadcrumb li a")
