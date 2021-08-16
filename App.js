@@ -23,6 +23,7 @@ import NavigationScreen from './app/screens/NavigationScreen';
 import SubjectsScreen from './app/screens/SubjectsScreen';
 import GroupsScreen from './app/screens/GroupsScreen';
 import LinksScreen from './app/screens/LinksScreen'
+import CalendarItemScreen from './app/screens/CalendarItemScreen';
 const MainStack = createStackNavigator();
 
 const headerButtonHitslop = {
@@ -51,7 +52,7 @@ const navigatorOptionsHideBackBarcode = Object.assign({}, navigatorOptionsHideBa
             onPress={_ => {
                 getItemAsync("userMeta")
                     .then(userMeta => {
-                        navigate("Barcode", { id: JSON.parse(userMeta).schoolboxUser.externalId })
+                        navigate("Barcode", { id: JSON.parse(userMeta)?.schoolboxUser?.externalId })
                     })
             }}>
             <View style={{
@@ -118,9 +119,6 @@ class App extends Component {
             })
 
 
-    }
-    handleScreenChange = (screen) => {
-        this.setState({ screen })
     }
     render() {
         return (
@@ -198,6 +196,12 @@ class App extends Component {
                     <MainStack.Screen
                         name="News Item"
                         component={NewsItemScreen}
+                        options={navigatorOptions}
+                        initialParams={{}}
+                    />
+                    <MainStack.Screen
+                        name="Calendar Item"
+                        component={CalendarItemScreen}
                         options={navigatorOptions}
                         initialParams={{}}
                     />

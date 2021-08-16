@@ -1,7 +1,7 @@
 import { loadAsync } from "expo-font";
 import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
-import { View, Text, FlatList, requireNativeComponent, SectionList } from "react-native";
+import { View, Text, FlatList, requireNativeComponent, SectionList, TouchableOpacity } from "react-native";
 import { styles } from "../styles";
 import { customColours } from "../colours";
 import { fetchJSONResource } from "../getters/get";
@@ -10,6 +10,52 @@ import LoaderComponent from "./LoaderComponent";
 import TimeComponent from "./TimeComponent";
 import SectionComponent from "./SectionComponent";
 import getCalendar from "../getters/calendar";
+import { navigate, openURL } from "../RootNavigation";
+
+class CalendarItem extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    onPress = () => {
+        navigate("Calendar Item", { item: this.props.item })
+    }
+    render() {
+        return (
+            <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={this.onPress}
+            >
+
+                <View style={{
+                    width: "100%",
+                    backgroundColor: customColours.contentBackground,
+                    marginBottom: 1,
+                    // height: 30,
+                    padding: 5,
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: "center",
+                }}>
+                    <View style={{ backgroundColor: this.props.item.color, width: "2.3%", top: 0, bottom: 0, position: "absolute" }}></View>
+                    <View style={{
+                        flex: 1,
+                        marginLeft: "3%",
+                        flexDirection: "column"
+                    }}>
+                        <ContentText style={[{ fontSize: 16 }]}>{this.props.item.title}</ContentText>
+
+                        <TimeComponent time={
+                            this.props.item.allDay
+                                ? "all day"
+                                : ((this.props.item.data || { meta: { time: "?" } }).meta || { time: "?" }).time.replaceAll("&ndash;", "–")
+                        } />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+}
 
 
 class CalendarRow extends Component {
@@ -55,31 +101,10 @@ class CalendarRow extends Component {
     }
     handleRenderCalendarEvent({ item }) {
 
-        return <View style={{
-            width: "100%",
-            backgroundColor: customColours.contentBackground,
-            marginBottom: 1,
-            // height: 30,
-            padding: 5,
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: "center",
-        }}>
-            <View style={{ backgroundColor: item.color, width: "2.3%", top: 0, bottom: 0, position: "absolute" }}></View>
-            <View style={{
-                flex: 1,
-                marginLeft: "3%",
-                flexDirection: "column"
-            }}>
-                <ContentText style={[{ fontSize: 16 }]}>{item.title}</ContentText>
+        return <CalendarItem
+            item={item}
+        />
 
-                <TimeComponent time={
-                    item.allDay
-                        ? "all day"
-                        : ((item.data || { meta: { time: "?" } }).meta || { time: "?" }).time.replaceAll("&ndash;", "–")
-                } />
-            </View>
-        </View>
 
     }
     handleRenderCalendarHeader({ section: { title, isFirst } }) {

@@ -1,12 +1,34 @@
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, RefreshControl, FlatList } from 'react-native';
+import React, { Component } from 'react';
 import { styles } from "../styles"
 import TimetableRow from '../components/TimetableRow';
 import CalendarRow from '../components/CalendarRow';
 import NewsList from '../components/NewsRow';
 import DueWorkRow from '../components/DueWorkRow';
-import { Component } from 'react/cjs/react.production.min';
 import ScrollingScreenTemplate from './ScrollingScreenTemplate';
+import NewsRow from '../components/NewsRow';
+
+const mainScreenData = [
+    {
+        name: '',
+        RowComponent: TimetableRow
+    },
+    {
+        name: '',
+        RowComponent: CalendarRow
+    },
+    {
+        name: '',
+        RowComponent: NewsRow,
+        props: {
+            number: 3
+        }
+    },
+    {
+        name: '',
+        RowComponent: DueWorkRow
+    }
+]
 
 class MainScreen extends Component {
     state = {}
@@ -21,6 +43,16 @@ class MainScreen extends Component {
             // this.props.navigation.navigate("Homepage", { code: "8-0860-F" })
         }, 1000)
     }
+    renderItem({ name, RowComponent, props }) {
+        console.log("MainScreen.js:46 says:", name, props, RowComponent);
+        return <RowComponent
+            headerName={name}
+            {...props}
+        />
+    }
+    keyExtractor(a, b) {
+        return a + b
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -28,10 +60,9 @@ class MainScreen extends Component {
                     onRefresh={this.onRefresh}
                 >
                     <View style={{ padding: '5%', marginBottom: "20%" }}>
-                        <TimetableRow />
-                        <CalendarRow />
-                        <NewsList number={3} />
-                        <DueWorkRow />
+                        {
+                            mainScreenData.map(this.renderItem)
+                        }
                     </View>
                 </ScrollingScreenTemplate>
             </View>
@@ -41,6 +72,3 @@ class MainScreen extends Component {
 }
 
 export default MainScreen;
-
-
-// TODO: turn components into a FlatList

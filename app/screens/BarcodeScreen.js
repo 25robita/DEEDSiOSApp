@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DOMImplementation, XMLSerializer } from 'xmldom';
 import JsBarcode from 'jsbarcode';
-import { View } from "react-native";
+import { Appearance, View } from "react-native";
 import WebView from "react-native-webview";
 import { customColours } from "../colours";
 import { SvgXml } from "react-native-svg";
@@ -29,7 +29,7 @@ class BarcodeScreen extends Component {
         });
         const svgText = xmlSerializer.serializeToString(svgNode);
 
-        let svgData = Array.from(svgNode.lastChild.childNodes).map(i => [i.getAttribute("x"), i.getAttribute("width")]);
+        let svgData = Array.from(svgNode?.lastChild?.childNodes || []).map(i => [i.getAttribute("x"), i.getAttribute("width")]);
 
         this.setState({ svgText, svgData })
     }

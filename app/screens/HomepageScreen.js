@@ -13,6 +13,8 @@ import { fetchHTMLResource, fetchJSONResource } from "../getters/get";
 import { renderHTMLText } from "../renderHTML";
 import { openURL } from "../RootNavigation";
 import { serviceURL } from "../consts";
+import UserLinkComponent from "../components/UserLinkComponent";
+import { UserList } from "../components/UserListComponent";
 
 class SchoolboxComponent extends Component {
     constructor(props) {
@@ -397,6 +399,93 @@ class SchoolboxSocialStream extends Component {
     }
 }
 
+// class UserList extends Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {}
+//     }
+//     renderItem = ({ item }, a, b, c, d) => {
+//         return <View
+//             style={{
+//                 flexDirection: 'row',
+//                 borderBottomColor: customColours.neutralLowContrast,
+//                 borderBottomWidth: 1,
+//                 alignItems: 'center',
+//                 justifyContent: 'flex-start'
+//             }}
+//         >
+//             <Image
+//                 style={{
+//                     width: 50,
+//                     height: 50,
+//                     margin: 0
+//                 }}
+//                 source={{ uri: `${serviceURL}/portrait.php?id=${item.id}&size=square64` }}
+//             />
+//             <View>
+//                 <View
+//                     style={{
+//                         flexDirection: 'column',
+//                         paddingHorizontal: 20,
+//                     }}
+//                 >
+//                     <UserLinkComponent
+//                         style={{
+//                             margin: 0
+//                         }}
+//                         id={item.id}
+//                         userName={item.name}
+//                     />
+//                     {
+//                         item.meta
+//                             ? <Meta
+//                                 style={{
+//                                     // flexDirection: 'row',
+//                                     flexWrap: 'wrap',
+//                                     flex: 1,
+//                                     marginRight: 50
+//                                 }}
+//                             >{item.meta}</Meta>
+//                             : null
+//                     }
+//                 </View>
+//             </View>
+
+//         </View>
+
+//     }
+//     keyExtractor(a, b) {
+//         return a + b
+//     }
+//     render() {
+//         return <FlatList
+//             data={this.props.users}
+//             renderItem={this.props.renderItem || this.renderItem}
+//             keyExtractor={this.keyExtractor}
+//         />
+//     }
+// }
+
+class SchoolboxUserList extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+    render() {
+        return <SchoolboxComponent
+            title={this.props.title}
+            collapsed={this.props.collapsed}
+            contentStyle={{
+                padding: 0
+            }}
+        >
+            <UserList
+                users={this.props.users}
+            />
+        </SchoolboxComponent>
+    }
+}
+
 class SchoolboxLinks_Link extends Component {
     constructor(props) {
         super(props)
@@ -561,6 +650,23 @@ class HomepageScreen extends Component {
                                 cid={cid}
                                 homepage={homepageId}
                                 collapsed={isCollapsed}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Component_Homepage_ClassListController") || i.classList.contains("Component_Homepage_TeachersController")) {
+                        let users = i.querySelectorAll(".card").map(j => {
+                            let link = j.querySelector("a")
+                            return {
+                                id: link.attributes.href.match(/\d+/g),
+                                name: link.text.trim(),
+                                meta: j.querySelector("p.meta").text.trim()
+                            }
+                        })
+                        this.state.components.push((
+                            <SchoolboxUserList
+                                title={title}
+                                collapsed={isCollapsed}
+                                users={users}
                             />
                         ))
                     }

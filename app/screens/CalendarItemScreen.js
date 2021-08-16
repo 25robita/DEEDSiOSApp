@@ -1,0 +1,238 @@
+import React, { Component } from "react";
+import { View } from "react-native";
+import { customColours, getColorHSL, turnLightnessToTransparency } from "../colours";
+import LoaderComponent from "../components/LoaderComponent";
+import { ContentText, Meta } from "../components/TextComponents";
+import UserLinkComponent from "../components/UserLinkComponent";
+import { UserList } from "../components/UserListComponent";
+import { darkMode } from "../consts";
+import { fetchJSONResource } from "../getters/get";
+import { styles } from "../styles";
+import ContentScreenTemplate from "./ContentScreenTemplate";
+import { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
+
+const dataHeaderStyle = {
+    fontSize: 18,
+    color: customColours.neutralHighContrast,
+    marginBottom: 20
+}
+
+const infoSectionStyle = {
+    marginBottom: 15
+}
+
+class CalendarItemScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { attendance: {} };
+    }
+
+    componentDidMount = () => {
+        if (this.props.route.params?.item?.data?.meta?.eventId) {
+            fetchJSONResource(`/calendar/event/attendance/${this.props.route.params?.item?.data?.meta?.eventId}`)
+                .then(j => {
+                    this.setState({ attendance: j })
+                })
+        }
+    }
+
+    render() {
+        return (
+            <ContentScreenTemplate>
+                <View
+                    style={{
+                        backgroundColor: customColours.contentBackground,
+                        marginBottom: 70
+                    }}
+                >
+                    <LoaderComponent
+                        state={this.props.route.params?.item
+                            ? 'loaded'
+                            : "failed"}
+                        failText='Failed to load event'
+                    >
+                        <View
+                            style={{
+                                paddingHorizontal: 15,
+                                paddingTop: 15,
+                                paddingBottom: 10,
+                                flexDirection: "column"
+                            }}
+                        >
+                            <ContentText
+                                style={styles.contentHeading}
+                            >
+                                {this.props.route.params?.item?.title}
+                            </ContentText>
+                            <View
+                                style={{
+                                    backgroundColor: turnLightnessToTransparency(this.props.route.params?.item?.color),
+                                    padding: 5,
+                                    marginTop: 10
+                                }}
+                            >
+                                <ContentText
+                                    style={{
+                                        textAlign: "center",
+                                        fontWeight: '800',
+                                        fontSize: 13,
+                                        color: (
+                                            (
+                                                [...this.props.route.params?.item?.color?.matchAll(/\d{2}/g)]
+                                                    .reduce((h, j) => ((parseInt(h, 16) / 255) + j), 0)
+                                                > 1.5
+                                            )
+                                            == darkMode// logical XNOR to see what is the best colour for contrast
+                                        )
+                                            ? 'black'
+                                            : 'white'
+                                    }}
+                                >
+                                    {this.props.route.params?.item?.data?.meta?.type.toUpperCase?.()}
+                                </ContentText>
+                            </View>
+                            <UserLinkComponent
+                                style={{
+                                    marginTop: 10
+                                }}
+                                isMeta={true}
+                                textBefore="By"
+                                userName={this.props.route.params?.item?.data?.meta?.author}
+                                id={this.props.route.params?.item?.data?.meta?.authorId}
+                            />
+                            {
+                                this.props.route.params?.item?.data?.meta?.detail
+                                    ? <View>
+                                        <HorizontalRule />
+                                        <HTMLTextView
+                                            style={{
+                                                paddingHorizontal: 5,
+                                                paddingTop: 5,
+                                                marginBottom: 0
+                                            }}
+                                        >
+                                            {
+                                                this.props.route.params?.item?.data?.meta?.detail?.match(/<.*>/g) // is plaintext
+                                                    ? this.props.route.params?.item?.data?.meta?.detail
+                                                    : `<p>${this.props.route.params?.item?.data?.meta?.detail}</p>`
+                                            }
+                                        </HTMLTextView>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                this.props.route.params?.item?.start
+                                    ? <View>
+                                        <HorizontalRule />
+                                        <View
+                                            style={infoSectionStyle}
+                                        >
+                                            <ContentText
+                                                style={dataHeaderStyle}
+                                            >
+                                                DATE AND TIME
+                                            </ContentText>
+                                            <ContentText>{
+                                                new Date(this.props.route.params?.item?.start).toLocaleDateString('EN-au', { weekday: 'long', month: 'long', year: 'numeric', day: 'numeric' })
+                                            }</ContentText>
+                                        </View>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                this.props.route.params?.item?.data?.meta?.location
+                                    ? <View
+                                        style={infoSectionStyle}
+                                    >
+                                        <ContentText
+                                            style={dataHeaderStyle}
+                                        >
+                                            LOCATION
+                                        </ContentText>
+                                        <ContentText>
+                                            {this.props.route.params?.item?.data?.meta?.location}
+                                        </ContentText>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                this.state.attendance?.attendees && this.props.route.params?.item?.data?.attendance?.hasAttendance
+                                    ? <View>
+                                        <HorizontalRule />
+                                        {
+                                            (this.state.attendance?.attendees?.available ?? 1)
+                                                ? <View>
+                                                    <ContentText
+                                                        style={{
+                                                            fontWeight: '600',
+                                                            marginBottom: 10
+                                                        }}
+                                                    >Attending?</ContentText>
+                                                    <View
+                                                        style={{
+                                                            flexDirection: 'row',
+                                                            marginBottom: 20
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                backgroundColor: customColours.themeSeconday,
+                                                                flex: 1,
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                padding: 10,
+                                                                marginRight: 2
+                                                            }}
+                                                        >
+                                                            <ContentText
+                                                                style={{
+                                                                    color: customColours.link
+                                                                }}
+                                                            >
+                                                                Yes
+                                                            </ContentText>
+                                                        </View>
+                                                        <View
+                                                            style={{
+                                                                backgroundColor: customColours.themeSeconday,
+                                                                flex: 1,
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                padding: 10,
+                                                            }}
+                                                        >
+                                                            <ContentText
+                                                                style={{
+                                                                    color: customColours.link
+                                                                }}
+                                                            >
+                                                                No
+                                                            </ContentText>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                                : null
+                                        }
+                                        <ContentText
+                                            style={{
+                                                fontWeight: '600',
+                                                marginBottom: 20
+                                            }}
+                                        >
+                                            {this.state.attendance?.attendees?.accepted} accepted, {this.state.attendance?.attendees?.declined} declined, {this.state.attendance?.attendees?.pending} pending
+                                        </ContentText>
+                                        <UserList
+                                            users={this.state.attendance?.attendees?.guests}
+                                        />
+                                    </View>
+                                    : null
+                            }
+                        </View>
+                    </LoaderComponent>
+                </View>
+            </ContentScreenTemplate>
+        );
+    }
+}
+
+export default CalendarItemScreen;

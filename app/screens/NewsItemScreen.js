@@ -8,33 +8,35 @@ import LoaderComponent from "../components/LoaderComponent";
 import { openURL } from "../RootNavigation";
 import { serviceURL } from "../consts";
 import { customColours } from "../colours";
-import ContentScreenTemplate from "./ContentScreenTemplate";
+import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
+import { styles } from "../styles";
+import UserLinkComponent from "../components/UserLinkComponent";
 
-function VerticalRule(props) {
-    return <View style={{
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-    }}>
-        <View
-            style={[
-                {
-                    borderBottomWidth: 1,
-                    borderBottomColor: customColours.neutralLowContrast,
-                    marginVertical: 15,
-                    width: "90%",
+// export function HorizontalRule(props) {
+//     return <View style={{
+//         width: "100%",
+//         display: "flex",
+//         alignItems: "center",
+//     }}>
+//         <View
+//             style={[
+//                 {
+//                     borderBottomWidth: 1,
+//                     borderBottomColor: customColours.neutralLowContrast,
+//                     marginVertical: 15,
+//                     width: "90%",
 
-                },
-                props.style]}
-        />
-    </View>
-}
+//                 },
+//                 props.style]}
+//         />
+//     </View>
+// }
 
-function HTMLTextView(props) {
-    return <View style={[{ backgroundColor: customColours.contentBackground, marginBottom: 50 }, props.style]}>
-        {renderHTMLText(props.children)}
-    </View>
-}
+// export function HTMLTextView(props) {
+//     return <View style={[{ backgroundColor: customColours.contentBackground, marginBottom: 50 }, props.style]}>
+//         {renderHTMLText(props.children)}
+//     </View>
+// }
 
 class NewsItemScreen extends Component {
     constructor(props) {
@@ -69,11 +71,14 @@ class NewsItemScreen extends Component {
                             resizeMode='cover'
                         /> : null}
                         <View style={{ paddingHorizontal: 15, paddingTop: 15, paddingBottom: 10 }}>
-                            <ContentText style={{ fontWeight: "500", fontSize: 25 }}>{this.state.body.article.title}</ContentText>
-                            <Meta>
-                                By <Meta onPress={_ => openURL(this.state.body.article.author._links.profile.href)} style={{ color: customColours.link }}>{this.state.body.article.author.fullName}</Meta>
-                            </Meta>
-                            <VerticalRule></VerticalRule>
+                            <ContentText style={styles.contentHeading}>{this.state.body.article.title}</ContentText>
+                            <UserLinkComponent
+                                textBefore='By'
+                                isMeta={true}
+                                userName={this.state.body.article.author.fullName}
+                                id={this.state.body.article.author._links.profile.href.match(/\d+/g)}
+                            />
+                            <HorizontalRule></HorizontalRule>
                             <HTMLTextView style={{ paddingHorizontal: 5, paddingTop: 5, marginBottom: 0 }}>{this.state.body.article.body}</HTMLTextView>
                         </View>
                     </LoaderComponent>

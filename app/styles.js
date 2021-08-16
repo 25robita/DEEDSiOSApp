@@ -2,6 +2,10 @@ import { customColours } from "./colours";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    contentHeading: {
+        fontSize: 25,
+        fontWeight: '500'
+    },
     topBar: {
         backgroundColor: customColours.headerBackground || customColours.themePrimary,
     },
