@@ -1,9 +1,7 @@
 import parse from "node-html-parser";
-import React, { Component } from "react";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
-import WebView from "react-native-webview";
+import React from "react";
+import { View } from "react-native";
 import { customColours } from "./colours";
-import { ContentText } from "./components/ContentTextComponent";
 import HTMLAnchor from "./components/HTMLComponents/AnchorComponent";
 import HTMLImage from "./components/HTMLComponents/ImageComponent";
 import HTMLParagraph from "./components/HTMLComponents/ParagraphComponent";
@@ -11,9 +9,7 @@ import SocialStreamAttatchment from "./components/HTMLComponents/SocialStreamAtt
 import HTMLSpan from "./components/HTMLComponents/SpanComponent";
 import HTMLUnorderedList from "./components/HTMLComponents/UnorderedListComponent";
 import HTMLWebView from "./components/HTMLComponents/WebViewComponent";
-import IconComponent from "./components/IconComponent";
 import { serviceURL } from "./consts";
-import { openURL } from "./RootNavigation";
 
 
 function parseStyle(style) {

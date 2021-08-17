@@ -1,8 +1,9 @@
+import { decode } from 'html-entities';
 import React, { Component } from "react";
 import { View } from "react-native";
 import { customColours, turnLightnessToTransparency } from "../colours";
-import LoaderComponent from "../components/LoaderComponent";
 import { ContentText } from "../components/ContentTextComponent";
+import LoaderComponent from "../components/LoaderComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
 import { darkMode } from "../consts";
@@ -28,7 +29,6 @@ function parseDate(dateString) { // because the dates they give us are in a weir
     }
     let dateRegex = dateString.matchAll(/(\d+)-(\d+)-(\d)+\s((\d+):(\d+):(\d+))?/g).next().value
     let dateOutput = new Date(dateRegex[1], dateRegex[2], dateRegex[3], dateRegex[5], dateRegex[6], dateRegex[7]) // ignores bad values
-    console.log("CalendarItemScreen.js:31 says:", dateOutput);
     return dateOutput;
 }
 
@@ -146,16 +146,17 @@ class CalendarItemScreen extends Component {
                                             </ContentText>
                                             <ContentText>
                                                 {
-                                                    parseDate(this.props.route.params?.item?.start)
-                                                        .toLocaleTimeString('EN-au', {
-                                                            weekday: 'long',
-                                                            month: 'long',
-                                                            year: 'numeric',
-                                                            day: 'numeric',
-                                                            hours: 'numeric',
-                                                            minutes: 'numeric',
-                                                            seconds: 'numeric'
-                                                        }) // inlcude end time
+                                                    [
+                                                        parseDate(this.props.route.params?.item?.start)
+                                                            .toLocaleDateString('EN-au', {
+                                                                weekday: 'long',
+                                                                month: 'long',
+                                                                year: 'numeric',
+                                                                day: 'numeric'
+                                                            }) // inlcude end time
+                                                        ,
+                                                        decode(this.props.route.params?.item?.data?.meta?.time.trim())
+                                                    ].filter(i => i).join(", ")
                                                 }
                                             </ContentText>
                                         </View>

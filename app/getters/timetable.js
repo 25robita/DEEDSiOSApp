@@ -16,7 +16,7 @@ function getTimetable() {
                     data[n] = Array(7)
                     if (!times.includes(n)) {
                         times.push(n)
-                        timeNames.push([n, el.querySelector("time.meta").innerText.replace("&ndash;", "–")])
+                        timeNames.push([n, el.querySelector("time.meta").text])
                     }
                 })
                 timetable.querySelectorAll(".timetable-subject")
