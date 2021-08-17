@@ -29,7 +29,7 @@ function getTimetable() {
                         var periodName = trChildren[0].childNodes[0].textContent.trim()
 
                         var dayNumber = trChildren.indexOf(td) - 1
-                        if (el.innerText.trim()) {
+                        if (el.text.trim()) {
                             var classData = el.childNodes.filter(i => i.textContent.trim())
                             classData[1] = classData[1].childNodes.filter(i => i.textContent.trim())
                             classData = classData.flat()

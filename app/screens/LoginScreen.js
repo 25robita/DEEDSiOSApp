@@ -18,8 +18,8 @@ class LoginScreen extends Component {
             .then(d => {
                 let js = d
                     .querySelectorAll("script")
-                    .filter(i => !i.src && /schoolboxUser\s+=/g.test(i.innerText))
-                    .map(i => i.innerText)[0]
+                    .filter(i => !i.src && /schoolboxUser\s+=/g.test(i.text))
+                    .map(i => i.text)[0]
                 js = js.replaceAll(/\n\s+/g, "\n").replaceAll(/\s+=\s+/g, " = ")
                 js = js.slice(js.indexOf("var schoolboxUser"), js.lastIndexOf("\n//"))
                 let jsVars = Array.from(

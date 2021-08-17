@@ -111,9 +111,9 @@ class UserProfileScreen extends Component {
                     }
                 }
 
-                let baseConfigScript = d.querySelectorAll("script[type='text/javascript']").filter(i => i.innerText.includes("let baseConfig"))
+                let baseConfigScript = d.querySelectorAll("script[type='text/javascript']").filter(i => i.text.includes("let baseConfig"))
                 let isStudent = Boolean(baseConfigScript.length)
-                let baseConfigString = isStudent && baseConfigScript[0].innerText.matchAll(/student\s*:\s*(\{[^\}]*\})/g).next().value[1]
+                let baseConfigString = isStudent && baseConfigScript[0].text.matchAll(/student\s*:\s*(\{[^\}]*\})/g).next().value[1]
                 let baseConfig = baseConfigString && JSON.parse(baseConfigString)
                 if (baseConfig && !profileData["Student ID:"]) {
                     if (baseConfig.externalId)
@@ -130,7 +130,7 @@ class UserProfileScreen extends Component {
                     }
                 }
 
-                let fullName = d.querySelector("#content h1").innerText.trim()
+                let fullName = d.querySelector("#content h1").text.trim()
 
                 fullName
                     ? this.props.navigation.setOptions({ title: sliceNavigationTitle(`${profileNavigationTitlePrepend} – ${fullName}`) })
@@ -161,7 +161,7 @@ class UserProfileScreen extends Component {
                     "Scofield"
                 ]
 
-                let userCampuses = d.querySelector("#content p.meta").innerText.trim().split(', ');
+                let userCampuses = d.querySelector("#content p.meta").text.trim().split(', ');
 
                 let house = userCampuses.filter(i => houses.includes(i))[0];
                 if (house) {
