@@ -7,8 +7,9 @@ import { navigate, openURL } from '../RootNavigation';
 import { styles, timetableStyles } from "../styles";
 import LoaderComponent from './LoaderComponent';
 import SectionComponent from './SectionComponent';
-import { ContentText, Meta } from './TextComponents';
+import { ContentText } from './ContentTextComponent';
 import TimeComponent from './TimeComponent';
+import { Meta } from './MetaTextComponent';
 
 class TimetableSubject extends Component {
     constructor(props) {

@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
 import { customColours } from "../colours";
 import { openURL } from "../RootNavigation";
-import { ContentText, Meta } from "./TextComponents";
+import { ContentText } from "./ContentTextComponent";
+import { Meta } from "./MetaTextComponent";
 
 class UserLinkComponent extends Component {
     constructor(props) {

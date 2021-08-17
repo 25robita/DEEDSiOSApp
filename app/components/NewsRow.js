@@ -6,10 +6,11 @@ import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } fro
 import { renderHTMLText } from '../renderHTML';
 import { getCurrentRoute, push } from '../RootNavigation';
 import { newsStyles, styles } from '../styles';
+import { ContentText } from './ContentTextComponent';
 import IconComponent from './IconComponent';
 import LoaderComponent from './LoaderComponent';
+import { Meta } from './MetaTextComponent';
 import SectionComponent from './SectionComponent';
-import { ContentText, Meta } from './TextComponents';
 import TimeComponent from './TimeComponent';
 import UserLinkComponent from './UserLinkComponent';
 

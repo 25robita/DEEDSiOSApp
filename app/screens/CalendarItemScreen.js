@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { customColours, turnLightnessToTransparency } from "../colours";
 import LoaderComponent from "../components/LoaderComponent";
-import { ContentText } from "../components/TextComponents";
+import { ContentText } from "../components/ContentTextComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
 import { darkMode } from "../consts";

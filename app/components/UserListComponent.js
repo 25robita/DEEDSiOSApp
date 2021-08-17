@@ -4,7 +4,7 @@ import { FlatList } from "react-native-gesture-handler"
 import { Component } from "react/cjs/react.production.min"
 import { customColours } from "../colours"
 import { serviceURL } from "../consts"
-import { Meta } from "./TextComponents"
+import { Meta } from "./MetaTextComponent"
 import UserLinkComponent from "./UserLinkComponent"
 
 export class UserList extends Component {

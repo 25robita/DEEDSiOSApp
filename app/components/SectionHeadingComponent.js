@@ -1,39 +1,23 @@
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { TouchableOpacity, View } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
 import { styles } from '../styles';
 import { navigate } from '../RootNavigation';
 import IconComponent from './IconComponent';
 
-
-export function ContentText(props) {
-    text = props.animated ? Animated.Text : Text
-    return (
-        props.animated
-            ? (<Animated.Text style={[styles.text, props.style]}>
-                {props.children}</Animated.Text>)
-            : (<Text {...props} style={[styles.text, props.style]}>
-                {props.children}
-            </Text>)
-
-
-    );
-}
-
-export function Meta(props) {
-    return (
-        <ContentText
-            {...props}
-            style={[
-                styles.meta,
-                props.style
-            ]}
-        >
-            {props.children}
-        </ContentText>
-    );
-}
+// export function Meta(props) {
+//     return (
+//         <ContentText
+//             {...props}
+//             style={[
+//                 styles.meta,
+//                 props.style
+//             ]}
+//         >
+//             {props.children}
+//         </ContentText>
+//     );
+// }
 
 export class SectionHeading extends Component {
     constructor(props) {

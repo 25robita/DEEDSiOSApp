@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import WebView from "react-native-webview";
 import { customColours } from "./colours";
+import { ContentText } from "./components/ContentTextComponent";
 import IconComponent from "./components/IconComponent";
-import { ContentText } from "./components/TextComponents";
 import { serviceURL } from "./consts";
 import { openURL } from "./RootNavigation";
 

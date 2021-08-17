@@ -1,8 +1,7 @@
 import React from 'react';
 import { styles } from '../styles';
 import { icons } from '../consts';
-
-import { ContentText } from './TextComponents';
+import { ContentText } from './ContentTextComponent';
 
 
 function IconComponent(props) {

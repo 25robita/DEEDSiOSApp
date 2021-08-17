@@ -4,7 +4,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
 import IconComponent from "../components/IconComponent";
-import { ContentText } from "../components/TextComponents";
+import { ContentText } from "./ContentTextComponent";
 import { styles } from "../styles";
 import { openURL } from "../RootNavigation";
 

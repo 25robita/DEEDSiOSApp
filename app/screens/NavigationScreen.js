@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import { customColours } from "../colours";
-import { ContentText } from "../components/TextComponents";
+import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import { dispatch } from "../RootNavigation";
 import { StackActions } from "@react-navigation/native";

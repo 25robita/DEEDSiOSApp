@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { styles } from "../styles";
-import { SectionHeading } from "./TextComponents";
+import { SectionHeading } from "./SectionHeadingComponent";
 
 function SectionComponent(props) {
     return (

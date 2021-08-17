@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { styles } from '../styles';
-import { Meta } from './TextComponents';
+import { Meta } from './MetaTextComponent';
 
 
 function LoaderComponent(props) {

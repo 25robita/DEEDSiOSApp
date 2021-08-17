@@ -17,7 +17,7 @@ import NewsScreen from './app/screens/NewsScreen';
 import UserProfileScreen from './app/screens/UserProfile';
 import BarcodeScreen from './app/screens/BarcodeScreen';
 import IconComponent from './app/components/IconComponent';
-import { ContentText } from './app/components/TextComponents';
+import { ContentText } from './app/components/ContentTextComponent';
 import HomepageScreen from './app/screens/HomepageScreen';
 import NavigationScreen from './app/screens/NavigationScreen';
 import SubjectsScreen from './app/screens/SubjectsScreen';

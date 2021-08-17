@@ -3,13 +3,14 @@ import { Image, View } from "react-native";
 import { customColours } from "../colours";
 import LoaderComponent from "../components/LoaderComponent";
 import { getRelativeTime } from "../components/NewsRow";
-import { ContentText, Meta } from "../components/TextComponents";
+import { ContentText } from "../components/ContentTextComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { serviceURL } from "../consts";
 import { fetchJSONResource } from "../getters/get";
 import { newsItemAuthorLabel, newsItemNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
+import { Meta } from "../components/MetaTextComponent";
 
 class NewsItemScreen extends Component {
     constructor(props) {

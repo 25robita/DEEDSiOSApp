@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Meta } from './TextComponents';
 import IconComponent from './IconComponent';
+import { Meta } from './MetaTextComponent';
 
 function TimeComponent(props) {
     return (

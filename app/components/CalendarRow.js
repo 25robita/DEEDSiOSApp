@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, SectionList, TouchableOpacity } from "react-native";
 import { styles } from "../styles";
 import { customColours } from "../colours";
-import { ContentText } from "./TextComponents";
+import { ContentText } from "./ContentTextComponent";
 import LoaderComponent from "./LoaderComponent";
 import TimeComponent from "./TimeComponent";
 import SectionComponent from "./SectionComponent";

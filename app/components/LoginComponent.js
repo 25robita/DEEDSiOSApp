@@ -5,7 +5,7 @@ import { customColours } from '../colours';
 import { loginForgotPasswordLink, loginForgotUsernameLink } from '../consts';
 import { loginForgottenPasswordLabel, loginForgottenUsernameLabel, loginPromptLabel, loginSubmitLabel, loginPasswordPlaceholderLabel, loginUsernamePlaceholderLabel, loginCredentialsErrorLabel, loginUnknownErrorLabel } from '../lang';
 import { loginStyles } from '../styles';
-import { ContentText } from './TextComponents';
+import { ContentText } from './ContentTextComponent';
 
 const logoImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EBCDEA4_deeds-logo-with-crest_copy.jpg" }
 

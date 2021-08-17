@@ -3,14 +3,14 @@ import { createNavigationContainerRef, NavigationContainer } from '@react-naviga
 import React, { Component } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
 import { customColours } from '../colours';
+import { ContentText } from '../components/ContentTextComponent';
 import IconComponent from '../components/IconComponent';
-import { ContentText, Meta } from '../components/TextComponents';
+import { Meta } from '../components/MetaTextComponent';
 import { TimetableSubject } from '../components/TimetableRow';
 import { getDayAndFull } from '../getters/timetable';
 import { days } from '../lang';
 import { decodeTimetable } from '../MinifyTimetable';
 import { styles } from '../styles';
-
 const DaysTabs = createMaterialTopTabNavigator();
 const DaysTabsRef = createNavigationContainerRef();
 
