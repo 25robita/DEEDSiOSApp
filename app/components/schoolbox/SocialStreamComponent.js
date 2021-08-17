@@ -1,14 +1,15 @@
-import { Image, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
 import { customColours } from '../../colours';
+import { serviceURL } from '../../consts';
+import { fetchHTMLResource } from '../../getters/get';
+import { socialStreamPostLabel, socialStreamPostSubmitLabel, socialStreamUrlLabel } from '../../lang';
+import { renderHTMLText } from '../../renderHTML';
+import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import { Meta } from '../MetaTextComponent';
 import SchoolboxComponent from './SchoolboxComponent';
-import { serviceURL } from '../../consts';
-import { fetchHTMLResource } from '../../getters/get';
-import { renderHTMLText } from '../../renderHTML';
-import { openURL } from '../../RootNavigation';
-import React from 'react';
 
 class SchoolboxSocialStream_Post extends Component {
     constructor(props) {
@@ -19,6 +20,11 @@ class SchoolboxSocialStream_Post extends Component {
         openURL(this.props.profileURL)
     }
     render() {
+        // postSocialStream(
+        //     6002,
+        //     56560,
+        //     "test+in+rn",
+        // ) i just sent 6 messages in the testing one oops
         return <View
             style={{
                 borderTopColor: customColours.neutralLowContrast,
@@ -158,6 +164,66 @@ export default class SchoolboxSocialStream extends Component {
                 padding: 0
             }}
         >
+            <View
+                style={{
+                    paddingHorizontal: 25,
+                    paddingVertical: 20,
+                    backgroundColor: customColours.background
+                }}
+            >
+                <TextInput
+                    style={{
+                        borderColor: customColours.themeSeconday,
+                        borderWidth: 1,
+                        backgroundColor: customColours.contentBackground,
+                        padding: 10,
+                        paddingTop: 10, // needs to be overridden for some reason
+                        color: customColours.foreground,
+                        maxHeight: 16 * 7,
+                        overflow: 'scroll'
+                    }}
+                    placeholder={socialStreamPostLabel}
+                    placeholderTextColor={customColours.neutralLowContrast}
+                    multiline={true}
+                />
+                <TextInput
+                    style={{
+                        borderColor: customColours.themeSeconday,
+                        borderWidth: 1,
+                        backgroundColor: customColours.contentBackground,
+                        padding: 10,
+                        paddingTop: 10, // needs to be overridden for some reason
+                        color: customColours.foreground,
+                        marginTop: 15,
+                    }}
+                    placeholder={socialStreamUrlLabel}
+                    placeholderTextColor={customColours.neutralLowContrast}
+                />
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={{
+                        marginTop: 15
+                    }}
+                >
+                    <View
+                        style={{
+                            padding: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: customColours.link
+                        }}
+                    >
+                        <ContentText
+                            style={{
+                                fontWeight: "600",
+                                color: 'white'
+                            }}
+                        >
+                            {socialStreamPostSubmitLabel}
+                        </ContentText>
+                    </View>
+                </TouchableOpacity>
+            </View>
             <View>
                 {this.state.threads}
             </View>

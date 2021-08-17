@@ -73,6 +73,11 @@ export const subjectsFailTextLabel = "Unable to load your classes"
 // Groups Screen (groups~Label)
 export const groupsFailTextLabel = "Unable to load your groupd"
 
+// Social Stream (socialStream~Label)
+export const socialStreamPostLabel = "Share Something";
+export const socialStreamPostSubmitLabel = "Post";
+export const socialStreamUrlLabel = "http://";
+
 // Homepage (homepage~Label)
 // News Row (homepageNews~Label)
 export const homepageNewsFailTextLabel = "No news could be found at the moment"
