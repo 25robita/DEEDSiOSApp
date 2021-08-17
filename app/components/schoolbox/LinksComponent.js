@@ -1,0 +1,85 @@
+import { FlatList, TouchableOpacity } from 'react-native';
+import { Component } from 'react/cjs/react.production.min';
+import { customColours } from '../../colours';
+import { ContentText } from '../ContentTextComponent';
+import IconComponent from '../IconComponent';
+import SchoolboxComponent from './SchoolboxComponent';
+import { openURL } from '../../RootNavigation';
+import React from 'react';
+
+class SchoolboxLinks_Link extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    onPress = () => {
+        openURL(this.props.url)
+    }
+
+    render() {
+        return <TouchableOpacity
+            onPress={this.onPress}
+            activeOpacity={0.5}
+            style={{
+                padding: 10,
+                borderBottomColor: customColours.neutralLowContrast,
+                borderBottomWidth: this.props.isLast ? 0 : 1,
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}
+        >
+            <IconComponent
+                name={(this.props.type == "file") ? "document" : "link"}
+                style={{
+                    marginRight: 10,
+                    fontSize: 20
+                }}
+            />
+            <ContentText
+                style={{
+                    color: customColours.link
+                }}
+            >
+                {this.props.text}
+            </ContentText>
+        </TouchableOpacity>
+    }
+}
+
+export default class SchoolboxLinks extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    renderListItem = ({ item: { url, text, isLast } }) => {
+        return <SchoolboxLinks_Link
+            type={this.props.type}
+            url={url}
+            text={text.trim ? text.trim() : ""}
+            isLast={isLast}
+        />
+    }
+
+    keyExtractor(a, b) {
+        return a + b
+    }
+
+    render() {
+        return <SchoolboxComponent
+            collapsed={this.props.collapsed}
+            title={this.props.title}
+            noTitle={!Boolean(this.props.title)}
+            contentStyle={{
+                padding: 0
+            }}
+        >
+            <FlatList
+                renderItem={this.renderListItem}
+                keyExtractor={this.keyExtractor}
+                data={this.props.links}
+            />
+        </SchoolboxComponent>
+    }
+}

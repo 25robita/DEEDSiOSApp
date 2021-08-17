@@ -4,222 +4,17 @@ import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import WebView from "react-native-webview";
 import { customColours } from "./colours";
 import { ContentText } from "./components/ContentTextComponent";
+import HTMLAnchor from "./components/HTMLComponents/AnchorComponent";
+import HTMLImage from "./components/HTMLComponents/ImageComponent";
+import HTMLParagraph from "./components/HTMLComponents/ParagraphComponent";
+import SocialStreamAttatchment from "./components/HTMLComponents/SocialStreamAttatchmentComponent";
+import HTMLSpan from "./components/HTMLComponents/SpanComponent";
+import HTMLUnorderedList from "./components/HTMLComponents/UnorderedListComponent";
+import HTMLWebView from "./components/HTMLComponents/WebViewComponent";
 import IconComponent from "./components/IconComponent";
 import { serviceURL } from "./consts";
 import { openURL } from "./RootNavigation";
 
-function HTMLSpan(props) {
-    return <ContentText
-        {...props}
-        style={props.style}
-    >
-        {props.children}
-    </ContentText>
-}
-
-function HTMLParagraph(props) {
-    return <HTMLSpan
-        style={[
-            {
-                marginBottom: 10
-            },
-            ...props.style
-        ]}
-    >
-        {props.children}
-    </HTMLSpan>
-}
-
-class HTMLAnchor extends Component {
-    constructor(props) {
-        super(props)
-    }
-    onPress = () => {
-        openURL(this.props.href)
-    }
-    render() {
-        return <HTMLSpan
-            onPress={this.onPress}
-            style={[
-                {
-                    color: customColours.link
-                },
-                ...this.props.style
-            ]}
-        >
-            {this.props.children}
-        </HTMLSpan>
-    }
-}
-
-class HTMLUnorderedList extends Component {
-    constructor(props) {
-        super(props)
-    }
-    keyExtractor(a, b) {
-        return a + b
-    }
-    renderItem = ({ item }) => {
-        if (item.tagName == "LI") {
-            return <View style={{
-                flexDirection: 'row',
-                marginBottom: 5,
-            }}>
-                <HTMLSpan
-                    style={{
-                        fontWeight: "700",
-                        marginHorizontal: 10
-                    }}
-                >
-                    •
-                </HTMLSpan>
-                <HTMLSpan
-                    style={{
-                        flex: 1,
-                        flexWrap: 'wrap'
-                    }}
-                >
-                    {item.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, this.props.style) : i.text))}
-                </HTMLSpan>
-            </View>
-        }
-    }
-    render() {
-        return <FlatList
-            style={{ marginBottom: 10 }}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-            data={this.props.data}
-        />
-    }
-}
-
-function HTMLImage(props) {
-    let uri = (!props.src.startsWith("https") ? serviceURL : "") + props.src
-    return <View style={{
-        width: "100%",
-        display: 'flex',
-        alignItems: "center",
-        paddingHorizontal: 100
-    }}>
-        <Image
-            resizeMode='contain'
-            style={[
-                {
-                    width: 300,
-                    height: 300,
-                    paddingHorizontal: 100
-                },
-                ...props.style
-            ]} // good enough
-            source={{ uri }}
-        />
-    </View>
-}
-
-class HTMLWebView extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            uri: props.uri
-                && (
-                    props.uri.startsWith("//")
-                        ? "https:" + props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
-                        : props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
-                )
-        }
-    }
-    onLoad = (syntheticEvent) => {
-        console.log("renderHTML.js:98 says:", syntheticEvent.nativeEvent);
-        let title = syntheticEvent.nativeEvent.title;
-        title = (title.length > 30)
-            ? title.slice(0, 27) + "..."
-            : title
-        this.setState({ title })
-    }
-    onOpenInBrowser = () => {
-        openURL(this.state.uri)
-    }
-    render() {
-        return <View>
-            <View
-                style={{
-                    backgroundColor: customColours.themeSeconday,
-                    padding: 10,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}
-            >
-                <ContentText
-                    style={{
-                        fontSize: 20
-                    }}
-                >{this.state.title}</ContentText>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={this.onOpenInBrowser}
-                    hitSlop={{ top: 10, bottom: 10, right: 10, left: 20 }}
-                >
-                    <IconComponent id=''
-                        style={{
-                            color: customColours.neutralHighContrast,
-                            fontSize: 16
-                        }}
-                    />
-                </TouchableOpacity>
-
-            </View>
-            <WebView
-                style={{
-                    width: 400,
-                    height: 500
-                }}
-                source={{ uri: this.state.uri }}
-                originWhitelist={['*']}
-                onLoad={this.onLoad}
-                contentMode={this.state.uri.includes("docs.google") ? "desktop" : "mobile"}
-            />
-        </View>
-    }
-}
-
-class SocialStreamAttatchment extends Component {
-    constructor(props) {
-        super(props)
-    }
-    onPress = () => {
-        openURL(this.props.url)
-    }
-    render() {
-        return <View>
-            <TouchableOpacity
-                onPress={this.onPress}
-                activeOpacity={0.5}
-                style={{
-                    padding: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                }}
-            >
-                <IconComponent
-                    style={{
-                        fontSize: 20,
-                        marginRight: 10
-                    }}
-                    name="document"
-                />
-                <ContentText
-                    style={{
-                        color: customColours.link
-                    }}
-                >
-                    {this.props.text}
-                </ContentText>
-            </TouchableOpacity>
-        </View>
-    }
-}
 
 function parseStyle(style) {
     let properties = {
@@ -248,7 +43,7 @@ function getLastStyleDecleration(styles, property, fallback) {
     return value
 }
 
-function renderHTMLElement(elem, style) {
+export function renderHTMLElement(elem, style) {
     let elemAttributes = elem.attributes
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);

@@ -4,20 +4,7 @@ import { Component } from 'react/cjs/react.production.min';
 import { styles } from '../styles';
 import { navigate } from '../RootNavigation';
 import IconComponent from './IconComponent';
-
-// export function Meta(props) {
-//     return (
-//         <ContentText
-//             {...props}
-//             style={[
-//                 styles.meta,
-//                 props.style
-//             ]}
-//         >
-//             {props.children}
-//         </ContentText>
-//     );
-// }
+import { ContentText } from './ContentTextComponent';
 
 export class SectionHeading extends Component {
     constructor(props) {
