@@ -77,6 +77,9 @@ export const groupsFailTextLabel = "Unable to load your groupd"
 export const socialStreamPostLabel = "Share Something";
 export const socialStreamPostSubmitLabel = "Post";
 export const socialStreamUrlLabel = "http://";
+export const socialStreamFailTextLabel = "Nothing here yet! Make a post"
+export const socialStreamLoadMoreLabel = "LOAD MORE" // will not auto capitalize
+export const socialStreamLoadAllLabel = "LOAD ALL" // will not auto capitalize
 
 // Homepage (homepage~Label)
 // News Row (homepageNews~Label)

@@ -1,15 +1,18 @@
 import React from 'react';
-import { Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
 import { customColours } from '../../colours';
 import { serviceURL } from '../../consts';
 import { fetchHTMLResource } from '../../getters/get';
-import { socialStreamPostLabel, socialStreamPostSubmitLabel, socialStreamUrlLabel } from '../../lang';
+import { socialStreamFailTextLabel, socialStreamLoadAllLabel, socialStreamLoadMoreLabel, socialStreamPostLabel, socialStreamPostSubmitLabel, socialStreamUrlLabel } from '../../lang';
+import { postSocialStream } from '../../posters/socialStream';
 import { renderHTMLText } from '../../renderHTML';
 import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
+import LoaderComponent from '../LoaderComponent';
 import { Meta } from '../MetaTextComponent';
 import SchoolboxComponent from './SchoolboxComponent';
+
 
 class SchoolboxSocialStream_Post extends Component {
     constructor(props) {
@@ -20,15 +23,10 @@ class SchoolboxSocialStream_Post extends Component {
         openURL(this.props.profileURL)
     }
     render() {
-        // postSocialStream(
-        //     6002,
-        //     56560,
-        //     "test+in+rn",
-        // ) i just sent 6 messages in the testing one oops
         return <View
             style={{
-                borderTopColor: customColours.neutralLowContrast,
-                borderTopWidth: this.props.index ? 1 : 0, // only on all but first
+                borderBottomColor: customColours.neutralLowContrast,
+                borderBottomWidth: 1,
                 backgroundColor: this.props.layer ? customColours.homepageSocialStream : 'transparent'
             }}
         >
@@ -104,10 +102,114 @@ class SchoolboxSocialStream_Post extends Component {
     }
 }
 
+class SchoolboxSocialStream_MakePost extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            body: '',
+            url: ''
+        }
+    }
+
+    sendPost = () => {
+        this.setState({ body: '', url: "" })
+        postSocialStream(
+            this.props.homepage,
+            this.props?.cid,
+            this.state?.body,
+            this.state?.url,
+            this.props?.parent,
+            this.props?.root
+        )
+        this.props?.refresh?.(); // refresh if a refresher exists
+    }
+
+    handleUpdateBody = ({ nativeEvent: { text } }) => {
+        this.setState({
+            body: text
+        })
+    }
+
+    handleUpdateURL = ({ nativeEvent: { text } }) => {
+        this.setState({
+            url: text
+        })
+    }
+
+    render() {
+        return <View
+            style={{
+                paddingHorizontal: 25,
+                paddingVertical: 20,
+                backgroundColor: customColours.background
+            }}
+        >
+            <TextInput
+                style={{
+                    borderColor: customColours.themeSeconday,
+                    borderWidth: 1,
+                    backgroundColor: customColours.contentBackground,
+                    padding: 10,
+                    paddingTop: 10, // needs to be overridden for some reason
+                    color: customColours.foreground,
+                    maxHeight: 16 * 7,
+                    overflow: 'scroll'
+                }}
+                placeholder={socialStreamPostLabel}
+                placeholderTextColor={customColours.neutralLowContrast}
+                multiline={true}
+                onChange={this.handleUpdateBody}
+                value={this.state.body}
+            />
+            <TextInput
+                style={{
+                    borderColor: customColours.themeSeconday,
+                    borderWidth: 1,
+                    backgroundColor: customColours.contentBackground,
+                    padding: 10,
+                    paddingTop: 10, // needs to be overridden for some reason
+                    color: customColours.foreground,
+                    marginTop: 15,
+                }}
+                placeholder={socialStreamUrlLabel}
+                placeholderTextColor={customColours.neutralLowContrast}
+                onChange={this.handleUpdateURL}
+                value={this.state.url}
+            />
+            <TouchableOpacity
+                activeOpacity={0.5}
+                style={{
+                    marginTop: 15
+                }}
+                onPress={this.sendPost}
+            >
+                <View
+                    style={{
+                        padding: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: customColours.link
+                    }}
+                >
+                    <ContentText
+                        style={{
+                            fontWeight: "600",
+                            color: 'white'
+                        }}
+                    >
+                        {socialStreamPostSubmitLabel}
+                    </ContentText>
+                </View>
+            </TouchableOpacity>
+        </View>
+
+    }
+}
+
 export default class SchoolboxSocialStream extends Component {
     constructor(props) {
         super(props)
-        this.state = { threads: [] }
+        this.state = { threads: [], done: false, threadDone: false }
     }
     renderPost = (layer = 0, i, index, _a, _b) => {
         if (!i.querySelector) {
@@ -144,15 +246,32 @@ export default class SchoolboxSocialStream extends Component {
             renderPost={this.renderPost}
         />
     }
-    componentDidMount = () => {
+    updatePosts = (limit = 5, start = 0, append = false) => {
         if (this.props.cid && this.props.homepage) {
-            fetchHTMLResource(`/socialstream/threads/threads.php?instanceId=${this.props.cid}&homepageId=${this.props.homepage}&start=0&offset=5`)
+            this.setState({ threads: append ? this.state.threads : [] }) //  if not appending then clear previous ones as to not cause an issue
+            fetchHTMLResource(
+                `/socialstream/threads/threads.php?\
+            instanceId=${this.props?.cid}\
+            &homepageId=${this.props?.homepage}\
+            &start=${start}\
+            &offset=${limit}`
+            )
                 .then(d => {
-                    this.setState({
-                        threads: d.childNodes.map(this.renderPost.bind(null, 0))
-                    })
-                })
+                    let threads = d.childNodes.map(this.renderPost.bind(null, 0)).filter(i => i);
+                    let threadDone = (threads.length < limit) || !limit; // if not as many posts as limit, it could not find any more and is therefore done
+
+                    this.state.threads.push(...threads);
+                    this.setState({ done: true, threadDone, threads: this.state.threads });
+                }, this.setState.bind(this, { done: true }))
         }
+    }
+    componentDidMount = () => {
+        this.updatePosts()
+    }
+
+    loadMore = () => {
+        console.log("SocialStreamComponent.js:284 says:", this.state.threads.length);
+        this.updatePosts(5, this.state.threads.length, true)
     }
 
     render() {
@@ -164,68 +283,73 @@ export default class SchoolboxSocialStream extends Component {
                 padding: 0
             }}
         >
+            <SchoolboxSocialStream_MakePost
+                cid={this.props?.cid}
+                homepage={this.props?.homepage}
+                refresh={this.updatePosts}
+            />
+            <LoaderComponent
+                failText={socialStreamFailTextLabel}
+                state={
+                    this.state?.threads?.length
+                        ? "loaded"
+                        : (
+                            this.state.done
+                                ? "failed"
+                                : 'loading'
+                        )
+                }
+            >
+                <FlatList
+                    data={this.state.threads}
+                    keyExtractor={(a, b) => a + b}
+                    renderItem={({ item }) => item /* TODO: fix this its bad */}
+                />
+            </LoaderComponent>
             <View
                 style={{
-                    paddingHorizontal: 25,
-                    paddingVertical: 20,
-                    backgroundColor: customColours.background
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    display: this.state.threadDone ? "none" : 'flex'
                 }}
             >
-                <TextInput
-                    style={{
-                        borderColor: customColours.themeSeconday,
-                        borderWidth: 1,
-                        backgroundColor: customColours.contentBackground,
-                        padding: 10,
-                        paddingTop: 10, // needs to be overridden for some reason
-                        color: customColours.foreground,
-                        maxHeight: 16 * 7,
-                        overflow: 'scroll'
-                    }}
-                    placeholder={socialStreamPostLabel}
-                    placeholderTextColor={customColours.neutralLowContrast}
-                    multiline={true}
-                />
-                <TextInput
-                    style={{
-                        borderColor: customColours.themeSeconday,
-                        borderWidth: 1,
-                        backgroundColor: customColours.contentBackground,
-                        padding: 10,
-                        paddingTop: 10, // needs to be overridden for some reason
-                        color: customColours.foreground,
-                        marginTop: 15,
-                    }}
-                    placeholder={socialStreamUrlLabel}
-                    placeholderTextColor={customColours.neutralLowContrast}
-                />
                 <TouchableOpacity
                     activeOpacity={0.5}
+                    onPress={this.updatePosts.bind(this, 0, 0, false)}
                     style={{
-                        marginTop: 15
+                        padding: 10,
+                        backgroundColor: 'white',
                     }}
                 >
-                    <View
+                    <ContentText
                         style={{
-                            padding: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: customColours.link
+                            color: customColours.link,
+                            fontWeight: '600'
                         }}
                     >
-                        <ContentText
-                            style={{
-                                fontWeight: "600",
-                                color: 'white'
-                            }}
-                        >
-                            {socialStreamPostSubmitLabel}
-                        </ContentText>
-                    </View>
+                        {socialStreamLoadAllLabel}
+
+                    </ContentText>
                 </TouchableOpacity>
-            </View>
-            <View>
-                {this.state.threads}
+
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={this.loadMore}
+                    style={{
+                        padding: 10,
+                        backgroundColor: 'white',
+                    }}
+                >
+                    <ContentText
+                        style={{
+                            color: customColours.link,
+                            fontWeight: '600'
+                        }}
+                    >
+                        {socialStreamLoadMoreLabel}
+
+                    </ContentText>
+                </TouchableOpacity>
             </View>
         </SchoolboxComponent>
     }

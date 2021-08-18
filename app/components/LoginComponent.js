@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { TextInput, View, Animated, Image, TouchableOpacity, Linking } from 'react-native';
+import { Animated, Image, Linking, TextInput, TouchableOpacity, View } from 'react-native';
 import { Easing } from 'react-native-reanimated';
 import { customColours } from '../colours';
 import { loginForgotPasswordLink, loginForgotUsernameLink } from '../consts';
-import { loginForgottenPasswordLabel, loginForgottenUsernameLabel, loginPromptLabel, loginSubmitLabel, loginPasswordPlaceholderLabel, loginUsernamePlaceholderLabel, loginCredentialsErrorLabel, loginUnknownErrorLabel } from '../lang';
+import { loginCredentialsErrorLabel, loginForgottenPasswordLabel, loginForgottenUsernameLabel, loginPasswordPlaceholderLabel, loginPromptLabel, loginSubmitLabel, loginUnknownErrorLabel, loginUsernamePlaceholderLabel } from '../lang';
 import { loginStyles } from '../styles';
 import { ContentText } from './ContentTextComponent';
 
@@ -31,7 +31,6 @@ class LoginComponent extends Component {
                 useNativeDriver: false
             }
         ).start()
-        // this.setState({ marginBottom: 100 })
     }
     onBlur = () => {
         Animated.timing(
@@ -46,11 +45,11 @@ class LoginComponent extends Component {
         // this.setState({ marginBottom: 0 })
     }
     handleUnameChange = (event = {}) => {
-        const value = event.nativeEvent.text
+        let value = event.nativeEvent.text
         this.setState({ username: value })
     }
     handlePwordChange = (event = {}) => {
-        const value = event.nativeEvent.text
+        let value = event.nativeEvent.text
         this.setState({ password: value })
     }
     onLogin = _ => {
