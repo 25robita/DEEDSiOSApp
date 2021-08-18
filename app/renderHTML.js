@@ -1,15 +1,18 @@
 import parse from "node-html-parser";
 import React from "react";
 import { View } from "react-native";
-import { customColours } from "./colours";
 import HTMLAnchor from "./components/HTMLComponents/AnchorComponent";
+import HTMLBlockQuote from "./components/HTMLComponents/BlockquoteComponent";
 import HTMLImage from "./components/HTMLComponents/ImageComponent";
 import HTMLParagraph from "./components/HTMLComponents/ParagraphComponent";
 import SocialStreamAttatchment from "./components/HTMLComponents/SocialStreamAttatchmentComponent";
 import HTMLSpan from "./components/HTMLComponents/SpanComponent";
+import HTMLSubscript from "./components/HTMLComponents/SubscriptComponent";
+import HTMLSuperscript from "./components/HTMLComponents/SuperscriptComponent";
 import HTMLUnorderedList from "./components/HTMLComponents/UnorderedListComponent";
 import HTMLWebView from "./components/HTMLComponents/WebViewComponent";
 import { serviceURL } from "./consts";
+import { HTMLStyles, HTMLSubscriptSuperscriptFontSizeMultiplier } from "./styles";
 
 
 function parseStyle(style) {
@@ -28,108 +31,77 @@ function parseStyle(style) {
     return outputStyle
 }
 
+function renderChildren(elem, styles) { // renders children of an element
+    return elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))
+}
 
-function getLastStyleDecleration(styles, property, fallback) {
-    let value = fallback
-    Array.from(styles).forEach(style => {
+export function getLastStyleDecleration(styles, property, fallback, ignore = 0) {
+    let values = []
+    Array.from(styles).reverse().forEach(style => {
         if (style[property]) {
-            value = style[property]
+            values.push(style[property])
         }
     })
-    return value
+    return values[ignore] ?? fallback
 }
 
 export function renderHTMLElement(elem, style) {
     let elemAttributes = elem.attributes
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);
-    (elemAttributes && elemAttributes.style)
-        ? styles.push(parseStyle(elemAttributes.style))
-        : null
+    elemAttributes?.style
+        && styles.push(parseStyle(elemAttributes.style))
     // if (elem.nodeType == 3) { idk what to do here
     //     return <HTMLSpan style={styles}>{elem.text}</HTMLSpan>
     // }
     switch (elem.tagName) {
         case "P":
-            return <HTMLParagraph style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLParagraph>
+            return <HTMLParagraph style={styles}>{renderChildren(elem, styles)}</HTMLParagraph>
         case "STRONG":
         case "B":
-            styles.push({ fontWeight: "700" })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.strong)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "EM":
         case "I":
-            styles.push({ fontStyle: 'italic' })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.em)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "U":
-            styles.push({ textDecorationLine: 'underline' })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.underline)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "S":
-            styles.push({ textDecorationLine: "line-through" })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.strikethrough)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "SUB":
             styles.push({
-                fontSize: fontSize / 1.5,
+                fontSize: fontSize * HTMLSubscriptSuperscriptFontSizeMultiplier,
             })
-            return <View
-                style={{
-                    // justifyContent: 'baseline',
-                    alignItems: 'flex-end',
-                    // backgroundColor: 'pink',
-                    flexDirection: 'row',
-                    transform: [{
-                        translateY: fontSize / 2.5
-                    }]
-                }}
-            >
-                <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
-            </View>
+            return <HTMLSubscript style={styles}>{renderChildren(elem, styles)}</HTMLSubscript>
         case "SUP":
-            fontSize = getLastStyleDecleration(styles, 'fontSize', 16)
             styles.push({
-                fontSize: fontSize / 1.5,
+                fontSize: fontSize * HTMLSubscriptSuperscriptFontSizeMultiplier,
             })
-            return <View
-                style={{
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    height: fontSize
-                }}
-            >
-                <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
-            </View>
+            return <HTMLSuperscript style={styles}>{renderChildren(elem, styles)}</HTMLSuperscript>
         case "BLOCKQUOTE":
-            styles.push({ fontStyle: 'italic', color: customColours.blockquoteForeground })
-            return <View
-                style={{
-                    width: '100%',
-                    backgroundColor: customColours.blockquoteBackground,
-                    borderColor: customColours.blockquoteBorder,
-                    borderLeftWidth: 5,
-                    paddingLeft: 20,
-                    marginBottom: 10
-                }}
-            >
-                <HTMLSpan style={styles}>
-                    {elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}
-                </HTMLSpan>
-            </View>
+            styles.push(HTMLStyles.blockquote)
+            return <HTMLBlockQuote style={styles}>{renderChildren(elem, styles)}</HTMLBlockQuote>
         case "H1":
-            styles.push({ fontSize: 20 })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.h1)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "H2":
-            styles.push({ fontSize: 18 })
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            styles.push(HTMLStyles.h2)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "SPAN":
-            return <HTMLSpan style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLSpan>
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "A":
-            return <HTMLAnchor href={elem.attributes.href} style={styles}>{elem.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text))}</HTMLAnchor>
+            return <HTMLAnchor href={elem.attributes.href} style={styles}>{renderChildren(elem, styles)}</HTMLAnchor>
         case "UL":
-            return <HTMLUnorderedList style={styles} data={[...elem.childNodes]}></HTMLUnorderedList>
+            return <HTMLUnorderedList style={styles} data={[...elem.childNodes]} />
         case "IMG":
-            return <HTMLImage style={style} src={elem.attributes.src}></HTMLImage>
+            return <HTMLImage style={style} src={elem.attributes.src} />
         default:
-            if (elem.outerHTML && elem.classList.contains("socialstream-attachment")) {
+            if (elem?.classList?.contains?.("socialstream-attachment")) {
                 if (elem.querySelector("iframe")) {
+                    console.log("renderHTML.js:104 says:", elem.querySelector('iframe').attributes.src);
                     return <HTMLWebView
                         uri={elem.querySelector("iframe").attributes.src}
                     />
@@ -140,7 +112,6 @@ export function renderHTMLElement(elem, style) {
 
                 let imgElem = elem.querySelector("img")
                 let imageURI = imgElem && imgElem.attributes.src
-                console.log("renderHTML.js:311 says:", serviceURL + imageURI);
                 let mimeTypeRegex = imgElem && imgElem.attributes.src.matchAll(/\/([\w-]+)\..*/g).next().value
                 let mimeType = mimeTypeRegex && mimeTypeRegex[1].replace("-", '/')
                 return <SocialStreamAttatchment
@@ -150,8 +121,8 @@ export function renderHTMLElement(elem, style) {
                     imageURI={serviceURL + imageURI}
                 />
             }
-            if (elem.outerHTML && elem.outerHTML.includes('data-oembed-url')) {
-                return <HTMLWebView uri={elem.outerHTML.matchAll(/data-oembed-url="([^"]*)"/g).next().value[1]} />
+            if (elem?.attributes?.["data-oembed-url"]) {
+                return <HTMLWebView uri={elem.attributes['data-oembed-url']} />
             }
             return <View style={styles}>{elem.childNodes.map(i => renderHTMLElement(i, styles))}</View>
     }

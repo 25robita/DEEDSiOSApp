@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import WebView from 'react-native-webview';
 import { customColours } from '../../colours';
+import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import IconComponent from '../IconComponent';
-import { openURL } from '../../RootNavigation';
 
 export default class HTMLWebView extends Component {
     constructor(props) {
@@ -12,14 +12,15 @@ export default class HTMLWebView extends Component {
         this.state = {
             uri: props.uri
                 && (
-                    props.uri.startsWith("//")
-                        ? "https:" + props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
-                        : props.uri.replaceAll("www.youtube.com/embed/", "www.youtube.com/watch?v=")
+                    (
+                        props.uri.startsWith("//")
+                            ? "https:" + props.uri
+                            : props.uri
+                    )
                 )
         }
     }
     onLoad = (syntheticEvent) => {
-        console.log("renderHTML.js:98 says:", syntheticEvent.nativeEvent);
         let title = syntheticEvent.nativeEvent.title;
         title = (title.length > 30)
             ? title.slice(0, 27) + "..."
@@ -30,7 +31,13 @@ export default class HTMLWebView extends Component {
         openURL(this.state.uri)
     }
     render() {
-        return <View>
+        return <View
+            style={{
+                justifyContent: 'flex-start',
+                flexDirection: 'column',
+                minHeight: 600
+            }}
+        >
             <View
                 style={{
                     backgroundColor: customColours.themeSeconday,
@@ -62,7 +69,7 @@ export default class HTMLWebView extends Component {
             <WebView
                 style={{
                     width: 400,
-                    height: 500
+                    height: 600
                 }}
                 source={{ uri: this.state.uri }}
                 originWhitelist={['*']}

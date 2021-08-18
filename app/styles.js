@@ -1,5 +1,5 @@
-import { customColours } from "./colours";
 import { StyleSheet } from "react-native";
+import { customColours } from "./colours";
 
 export const styles = StyleSheet.create({
     contentHeading: {
@@ -207,3 +207,29 @@ export const newsStyles = StyleSheet.create({
     }
 })
 
+export const HTMLStyles = StyleSheet.create({
+    strong: {
+        fontWeight: '700'
+    },
+    em: {
+        fontStyle: 'italic'
+    },
+    underline: {
+        textDecorationLine: 'underline'
+    },
+    strikethrough: {
+        textDecorationLine: 'line-through'
+    },
+    blockquote: {
+        fontStyle: 'italic',
+        color: customColours.blockquoteForeground
+    },
+    h1: {
+        fontSize: 20
+    },
+    h2: {
+        fontSize: 18
+    }
+})
+
+export const HTMLSubscriptSuperscriptFontSizeMultiplier = 1 / 1.5;
