@@ -15,13 +15,19 @@ import SchoolboxTiles from "../components/schoolbox/TilesComponent";
 import SchoolboxUserList from "../components/schoolbox/UserListComponent";
 import { serviceURL } from "../consts";
 import { fetchHTMLResource } from "../getters/get";
-import { sliceNavigationTitle } from "../lang";
+import { homepageFailTextLabel, sliceNavigationTitle } from "../lang";
 import { openURL } from "../RootNavigation";
 
 export default class HomepageScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = { components: [], name: "", breadcrumbs: [], url: "" };
+        this.state = {
+            components: [],
+            name: "",
+            breadcrumbs: [],
+            url: "",
+            done: false
+        };
     }
     componentDidMount() {
         let url = `/homepage/${this.props.route.params.code ? "code/" : ""}${this.props.route.params.code || this.props.route.params.id}/?readonly=1`;
@@ -36,7 +42,6 @@ export default class HomepageScreen extends Component {
         fetchHTMLResource(this.state.url)
             .then(d => {
                 let pageTitle = d.querySelector("#content h1").text;
-                let maxLength = 27;
                 this.setState({ name: pageTitle })
                 pageTitle = sliceNavigationTitle(pageTitle)
 
@@ -106,7 +111,7 @@ export default class HomepageScreen extends Component {
                             />
                         ))
                     }
-                    else if (i.classList.contains("Component_Homepage_ClassListController") || i.classList.contains("Component_Homepage_TeachersController")) {
+                    else if (i.classList.contains("Component_Homepage_ClassListController") || i.classList.contains("Component_Homepage_TeachersController") || i.classList.contains("Component_Homepage_MembersController")) {
                         let users = i.querySelectorAll(".card").map(j => {
                             let link = j.querySelector("a")
                             return {
@@ -153,7 +158,6 @@ export default class HomepageScreen extends Component {
                             text: i.text,
                             isLast: index == arr.length - 1
                         }))
-                        console.log("HomepageScreen.js:577 says:", links);
                         this.state.components.push((
                             <SchoolboxLinks
                                 title={title}
@@ -168,10 +172,24 @@ export default class HomepageScreen extends Component {
                             text: i.text,
                             isLast: index == arr.length - 1
                         }))
-                        console.log("HomepageScreen.js:577 says:", links);
                         this.state.components.push((
                             <SchoolboxLinks
                                 type="file"
+                                title={title}
+                                collapsed={isCollapsed}
+                                links={links}
+                            />
+                        ))
+                    }
+                    else if (i.classList.contains("Component_Homepage_FolderListController")) {
+                        let links = i.querySelectorAll(".list-item a").map((i, index, arr) => ({ //may need better selector
+                            url: i.attributes.href,
+                            text: i.text,
+                            isLast: index == arr.length - 1
+                        }))
+                        this.state.components.push((
+                            <SchoolboxLinks
+                                type="homepage"
                                 title={title}
                                 collapsed={isCollapsed}
                                 links={links}
@@ -198,7 +216,7 @@ export default class HomepageScreen extends Component {
                         ))
                     }
                 })
-                this.setState({})
+                this.setState({ done: true })
             })
     }
     render() {
@@ -266,7 +284,16 @@ export default class HomepageScreen extends Component {
                 </View>
                 <View>
                     <LoaderComponent
-                        state={this.state.components.length ? "loaded" : "loading"}
+                        state={
+                            this.state.components.length
+                                ? "loaded"
+                                : (
+                                    this.state.done
+                                        ? 'failed'
+                                        : "loading"
+                                )
+                        }
+                        failText={homepageFailTextLabel}
                         size="large"
                         loaderStyle={{
                             transform: [{

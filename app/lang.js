@@ -82,6 +82,7 @@ export const socialStreamLoadMoreLabel = "LOAD MORE" // will not auto capitalize
 export const socialStreamLoadAllLabel = "LOAD ALL" // will not auto capitalize
 
 // Homepage (homepage~Label)
+export const homepageFailTextLabel = ""; // empty
 // News Row (homepageNews~Label)
 export const homepageNewsFailTextLabel = "No news could be found at the moment"
 export const homepageNewsTitle = "news" // auto capitalizes

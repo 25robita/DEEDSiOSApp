@@ -1,11 +1,11 @@
+import React from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
 import { customColours } from '../../colours';
+import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import IconComponent from '../IconComponent';
 import SchoolboxComponent from './SchoolboxComponent';
-import { openURL } from '../../RootNavigation';
-import React from 'react';
 
 class SchoolboxLinks_Link extends Component {
     constructor(props) {
@@ -18,6 +18,17 @@ class SchoolboxLinks_Link extends Component {
     }
 
     render() {
+        let icon;
+        switch (this.props.type) {
+            case "file":
+                icon = 'document'
+                break
+            case "homepage":
+                icon = "home"
+                break
+            default:
+                icon = 'link'
+        }
         return <TouchableOpacity
             onPress={this.onPress}
             activeOpacity={0.5}
@@ -30,7 +41,7 @@ class SchoolboxLinks_Link extends Component {
             }}
         >
             <IconComponent
-                name={(this.props.type == "file") ? "document" : "link"}
+                name={icon}
                 style={{
                     marginRight: 10,
                     fontSize: 20
