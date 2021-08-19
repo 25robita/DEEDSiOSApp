@@ -102,7 +102,7 @@ class NewsItem extends Component {
                     </View>
                     {
                         this.props.data.blurb
-                            ? <ContentText>{this.props.data.blurb}</ContentText>
+                            ? <ContentText>{renderHTMLText(this.props.data.blurb)}</ContentText>
                             : <View>{renderHTMLText(this.props.data.body)}</View>
                     }
                     {

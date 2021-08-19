@@ -1,9 +1,11 @@
 import parse from "node-html-parser";
 import React from "react";
 import { View } from "react-native";
+import { ContentText } from "./components/ContentTextComponent";
 import HTMLAnchor from "./components/HTMLComponents/AnchorComponent";
 import HTMLBlockQuote from "./components/HTMLComponents/BlockquoteComponent";
 import HTMLImage from "./components/HTMLComponents/ImageComponent";
+import HTMLOrderedList from "./components/HTMLComponents/OrderedListComponent";
 import HTMLParagraph from "./components/HTMLComponents/ParagraphComponent";
 import SocialStreamAttatchment from "./components/HTMLComponents/SocialStreamAttatchmentComponent";
 import HTMLSpan from "./components/HTMLComponents/SpanComponent";
@@ -59,7 +61,14 @@ export function renderHTMLElement(elem, style) {
             return <HTMLParagraph style={styles}>{renderChildren(elem, styles)}</HTMLParagraph>
         case "STRONG":
         case "B":
-            styles.push(HTMLStyles.strong)
+            let fontWeight = parseInt(getLastStyleDecleration(styles, 'fontWeight', 400));
+            if (fontWeight < 400) { fontWeight = 400 }
+            else if (fontWeight < 600) { fontWeight = 700 }
+            else { fontWeight = 900 }
+            fontWeight = fontWeight.toString()
+            styles.push({
+                fontWeight // bolder, which is the spec
+            })
             return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "EM":
         case "I":
@@ -96,6 +105,8 @@ export function renderHTMLElement(elem, style) {
             return <HTMLAnchor href={elem.attributes.href} style={styles}>{renderChildren(elem, styles)}</HTMLAnchor>
         case "UL":
             return <HTMLUnorderedList style={styles} data={[...elem.childNodes]} />
+        case "OL":
+            return <HTMLOrderedList style={styles} data={[...elem.childNodes]} />
         case "IMG":
             return <HTMLImage style={style} src={elem.attributes.src} />
         default:
@@ -129,5 +140,10 @@ export function renderHTMLElement(elem, style) {
 }
 
 export function renderHTMLText(string) {
+    if (!/<.*>.*<\/.*>/g.test(string)) {
+        return <ContentText>
+            {string}
+        </ContentText>
+    }
     return renderHTMLElement(parse(string), []);
 }
