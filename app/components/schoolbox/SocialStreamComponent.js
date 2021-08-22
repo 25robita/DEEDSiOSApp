@@ -194,7 +194,7 @@ class SchoolboxSocialStream_MakePost extends Component {
                     <ContentText
                         style={{
                             fontWeight: "600",
-                            color: 'white'
+                            color: customColours.foregroundContrast
                         }}
                     >
                         {socialStreamPostSubmitLabel}
@@ -318,7 +318,7 @@ export default class SchoolboxSocialStream extends Component {
                     onPress={this.updatePosts.bind(this, 0, 0, false)}
                     style={{
                         padding: 10,
-                        backgroundColor: 'white',
+                        backgroundColor: customColours.contentBackground,
                     }}
                 >
                     <ContentText
@@ -337,7 +337,7 @@ export default class SchoolboxSocialStream extends Component {
                     onPress={this.loadMore}
                     style={{
                         padding: 10,
-                        backgroundColor: 'white',
+                        backgroundColor: customColours.contentBackground,
                     }}
                 >
                     <ContentText

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, ImageBackground, View } from 'react-native';
+import { customColours } from '../colours';
 
 function WaitingScreen() {
     return (
@@ -20,7 +21,7 @@ function WaitingScreen() {
                         marginBottom: 100
                     }}
                     size="large"
-                    color="white"
+                    color={customColours.waitingActivityColor}
                 />
             </View>
         </ImageBackground>

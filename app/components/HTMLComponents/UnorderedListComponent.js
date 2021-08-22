@@ -24,14 +24,18 @@ export default class HTMLUnorderedList extends Component {
                 >
                     •
                 </HTMLSpan>
-                <HTMLSpan
+                <View
                     style={{
-                        flex: 1,
-                        flexWrap: 'wrap'
+                        flexDirection: 'column'
                     }}
                 >
-                    {item.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, this.props.style) : i.text))}
-                </HTMLSpan>
+                    {item.childNodes.filter(i => i.text.trim() || i?.tagName == "IMG")
+                        .map(i => (
+                            i.nodeType == 1
+                                ? renderHTMLElement(i, this.props.style)
+                                : <HTMLSpan>{i.text.trim()}</HTMLSpan>
+                        ))}
+                </View>
             </View>
         }
     }

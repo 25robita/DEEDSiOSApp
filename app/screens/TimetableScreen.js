@@ -207,7 +207,9 @@ class TimetableScreen extends Component {
                                     days.map((day, index) => {
                                         return <DaysTabs.Screen
                                             name={day}
-                                            style={{ minHeight: "100%", backgroundColor: "black" }}
+                                            style={{
+                                                minHeight: "100%",
+                                            }}
                                             component={TimetableSubScreen}
                                             initialParams={{ day: index, timetable: (this.state.fullTimetable || [])[index] }}
                                             key={index}

@@ -52,12 +52,16 @@ export function renderHTMLElement(elem, style) {
     let styles = [...style];
     let fontSize = getLastStyleDecleration(styles, 'fontSize', 16);
     elemAttributes?.style
-        && styles.push(parseStyle(elemAttributes.style))
-    // if (elem.nodeType == 3) { idk what to do here
-    //     return <HTMLSpan style={styles}>{elem.text}</HTMLSpan>
-    // }
+        && styles.push(parseStyle(elemAttributes.style));
+    ([...elem?.parentNodes || []].filter(i => i.tagName == "LI").length) && console.log("renderHTML.js:56 says:", elemAttributes?.style);
     switch (elem.tagName) {
         case "P":
+            if (elem?.attributes?.style && styles?.[styles.length - 1]?.textAlign == "right") {
+                style.push({ alignSelf: 'flex-end' })
+            }
+            else {
+                console.log("renderHTML.js:63 says:", elem?.attributes?.style && styles?.[styles.length - 1]);
+            }
             return <HTMLParagraph style={styles}>{renderChildren(elem, styles)}</HTMLParagraph>
         case "STRONG":
         case "B":
@@ -76,6 +80,12 @@ export function renderHTMLElement(elem, style) {
             return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "U":
             styles.push(HTMLStyles.underline)
+            return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
+        case "FONT": // idk why this tag exists but sure
+            styles.push({
+                fontSize: elem?.attributes?.size * 8,
+                lineHeight: getLastStyleDecleration(styles, 'fontSize', 16)
+            })
             return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         case "S":
             styles.push(HTMLStyles.strikethrough)
@@ -104,9 +114,9 @@ export function renderHTMLElement(elem, style) {
         case "A":
             return <HTMLAnchor href={elem.attributes.href} style={styles}>{renderChildren(elem, styles)}</HTMLAnchor>
         case "UL":
-            return <HTMLUnorderedList style={styles} data={[...elem.childNodes]} />
+            return <HTMLUnorderedList style={styles} data={[...elem.childNodes].filter(i => i.text.trim())} />
         case "OL":
-            return <HTMLOrderedList style={styles} data={[...elem.childNodes]} />
+            return <HTMLOrderedList style={styles} data={[...elem.childNodes].filter(i => i.text.trim())} />
         case "IMG":
             return <HTMLImage style={style} src={elem.attributes.src} />
         default:

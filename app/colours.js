@@ -10,6 +10,7 @@ export const coloursLight = {
     background: "#ededed",
     link: "#0066b0",
     foreground: "#242424",
+    foregroundContrast: "#fdfdfd", // has to be hex
     neutralHighContrast: "#9a9a9a",
     neutralLowContrast: "#ddd",
 
@@ -58,6 +59,9 @@ export const coloursLight = {
     // Homepage Colours (homepage~)
     // Social Stream Colours (homepageSocialStream~)
     homepageSocialStream: "#fafafa",
+
+    // Waiting Screen colours (waiting~)
+    waitingActivityColor: "white"
 }
 
 export const coloursDark = {
@@ -70,6 +74,7 @@ export const coloursDark = {
     background: "#101114",
     link: "#33a0f3",
     foreground: "#fdfdfd",
+    foregroundContrast: "#242424", // has to be hex
     neutralHighContrast: "#bbb",
     neutralLowContrast: "#9a9a9a",
 
@@ -118,6 +123,9 @@ export const coloursDark = {
     // Homepage Colours (homepage~)
     // Social Stream Colours (homepageSocialStream~)
     homepageSocialStream: "#2f2f34",
+
+    // Waiting Screen colours (waiting~)
+    waitingActivityColor: "white"
 }
 
 export function getColorHSL([r, g, b]) {
@@ -182,3 +190,13 @@ export function turnLightnessToTransparency(color) {
 }
 
 export const customColours = darkMode ? coloursDark : coloursLight;
+
+export function getRoughColorLightness(hexColor) { // makes a lightness value on a scale of 0 to 1
+    if (!hexColor) return getRoughColorLightness(customColours.contentBackground); // fallback just because
+    return [
+        ...hexColor.matchAll(/\d{2}/g)
+    ]
+        .reduce((h, j) => ((parseInt(h, 16) / 255) + j), 0) / 3
+}
+
+export const foregroundContrastBreakpoint = (getRoughColorLightness(customColours.foreground) + getRoughColorLightness(customColours.foregroundContrast)) / 2// on a scale from 0 to 1; used to choose which text colour to use in a calendar event above the event color

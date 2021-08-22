@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { customColours } from '../colours';
 import { styles } from '../styles';
 import IconComponent from './IconComponent';
 import { ContentText } from './TextComponents';
@@ -30,7 +31,7 @@ export class TopBarBackButton extends Component {
                 <IconComponent
                     style={[
                         {
-                            color: "white",
+                            color: customColours.headerForeground,
                             fontSize: 20
                         },
                         this.props.style

@@ -11,11 +11,11 @@ export default class HTMLOrderedList extends Component {
         return a + b
     }
     renderItem = ({ item, index }) => {
-        console.log("OrderedListComponent.js:14 says:", item.childNodes.map(i => i.text));
+        // console.log("OrderedListComponent.js:14 says:", item.childNodes.map(i => i.text));
         if (item.tagName == "LI") {
             return <View style={{
                 flexDirection: 'row',
-                marginBottom: 5,
+                marginBottom: 5
             }}>
                 <HTMLSpan
                     style={{
@@ -24,20 +24,27 @@ export default class HTMLOrderedList extends Component {
                 >
                     {index + 1}.
                 </HTMLSpan>
-                <HTMLSpan
+                <View
                     style={{
-                        flex: 1,
-                        flexWrap: 'wrap'
+                        flexDirection: 'column'
                     }}
                 >
-                    {item.childNodes.map(i => (i.nodeType == 1 ? renderHTMLElement(i, this.props.style) : i.text))}
-                </HTMLSpan>
+                    {item.childNodes.filter(i => i.text.trim() || i?.tagName == "IMG")
+                        .map(i => (
+                            i.nodeType == 1
+                                ? renderHTMLElement(i, this.props.style)
+                                : <HTMLSpan>{i.text.trim()}</HTMLSpan>
+                        ))}
+                </View>
             </View>
         }
     }
     render() {
         return <FlatList
-            style={{ marginBottom: 10 }}
+            style={{
+                marginBottom: 10,
+                // backgroundColor: '#fab3'
+            }}
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
             data={this.props.data}

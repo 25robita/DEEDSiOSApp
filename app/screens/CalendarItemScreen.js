@@ -1,12 +1,11 @@
 import { decode } from 'html-entities';
 import React, { Component } from "react";
 import { View } from "react-native";
-import { customColours, turnLightnessToTransparency } from "../colours";
+import { customColours, foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
-import { darkMode } from "../consts";
 import { fetchJSONResource } from "../getters/get";
 import { eventAttendAcceptLabel, eventAttendancePromptLabel, eventAttendDeclineLabel, eventAuthorLabel, eventDateAndTimeLabel, eventFailTextLabel, eventLocationLabel, eventNavigationTitle, eventNumberAcceptedLabel, eventNumberDeclinedLabel, eventNumberPendingLabel, sliceNavigationTitle } from "../lang";
 import { styles } from "../styles";
@@ -90,14 +89,12 @@ class CalendarItemScreen extends Component {
                                         fontSize: 13,
                                         color: (
                                             (
-                                                [...this.props.route.params?.item?.color?.matchAll(/\d{2}/g)]
-                                                    .reduce((h, j) => ((parseInt(h, 16) / 255) + j), 0)
-                                                > 1.5
+                                                getRoughColorLightness(this.props.route.params?.item?.color)
+                                                > foregroundContrastBreakpoint // if color is lighter than midpoint of foreground and foregroundContrast
                                             )
-                                            == darkMode// logical XNOR to see what is the best colour for contrast; im very proud of this logic gate anyways moving on
                                         )
-                                            ? 'black'
-                                            : 'white'
+                                            ? customColours.foregroundContrast
+                                            : customColours.foreground // may be the wrong way around i haven't tested it
                                     }}
                                 >
                                     {this.props.route.params?.item?.data?.meta?.type.toUpperCase?.()}
