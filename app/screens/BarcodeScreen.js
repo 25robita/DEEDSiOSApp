@@ -1,17 +1,21 @@
-import React, { Component } from "react";
-import { DOMImplementation, XMLSerializer } from 'xmldom';
 import JsBarcode from 'jsbarcode';
+import React, { Component } from "react";
 import { View } from "react-native";
-import { customColours } from "../colours";
+import { Appearance } from 'react-native-appearance';
+import { DOMImplementation, XMLSerializer } from 'xmldom';
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from '../colours';
 import { barcodeExplanation } from "../lang";
 import { renderHTMLText } from "../renderHTML";
 
 class BarcodeScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = { svgText: "", svgData: [] };
     }
     componentDidMount = () => {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         const xmlSerializer = new XMLSerializer();
         const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null);
         const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -36,6 +40,7 @@ class BarcodeScreen extends Component {
         this.setState({ svgText, svgData })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         let lastItem,
             width,
             fillColor = customColours.barcodeColor || customColours.themePrimary;

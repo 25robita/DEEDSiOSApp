@@ -1,18 +1,19 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Appearance, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
+import { coloursDark, coloursLight } from "../colours";
 import IconComponent from "../components/IconComponent";
-import { ContentText } from "./ContentTextComponent";
-import { styles } from "../styles";
 import { openURL } from "../RootNavigation";
+import { styles } from "../styles";
+import { ContentText } from "./ContentTextComponent";
 
 class LinksList extends Component {
     constructor(props) {
         super(props);
     }
     renderItem = ({ item }) => {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
         return <TouchableOpacity activeOpacity={0.5}
             onPress={_ => {
                 openURL(item.href)

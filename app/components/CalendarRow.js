@@ -1,15 +1,17 @@
 import React, { Component } from "react";
-import { View, SectionList, TouchableOpacity } from "react-native";
-import { styles } from "../styles";
-import { customColours } from "../colours";
-import { ContentText } from "./ContentTextComponent";
-import LoaderComponent from "./LoaderComponent";
-import TimeComponent from "./TimeComponent";
-import SectionComponent from "./SectionComponent";
+import { Appearance, SectionList, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../../ThemeProvider";
+import { coloursDark, coloursLight } from "../colours";
 import getCalendar from "../getters/calendar";
 import { navigate } from "../RootNavigation";
+import { styles } from "../styles";
+import { ContentText } from "./ContentTextComponent";
+import LoaderComponent from "./LoaderComponent";
+import SectionComponent from "./SectionComponent";
+import TimeComponent from "./TimeComponent";
 
 class CalendarItem extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = {};
@@ -18,6 +20,7 @@ class CalendarItem extends Component {
         navigate("Calendar Item", { item: this.props.item })
     }
     render() {
+        let customColours = this.context.isDark ? coloursDark : coloursLight
         return (
             <TouchableOpacity
                 activeOpacity={0.5}
@@ -51,7 +54,6 @@ class CalendarItem extends Component {
         );
     }
 }
-
 
 class CalendarRow extends Component {
     constructor() {
@@ -103,6 +105,7 @@ class CalendarRow extends Component {
 
     }
     handleRenderCalendarHeader({ section: { title, isFirst } }) {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: customColours.calendarHeaderBackground }}>
                 <ContentText style={[{
@@ -116,6 +119,7 @@ class CalendarRow extends Component {
         )
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <SectionComponent title="calendar" navigateName="Calendar">
                 <LoaderComponent

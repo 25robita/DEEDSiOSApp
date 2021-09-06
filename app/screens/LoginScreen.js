@@ -1,6 +1,9 @@
 import { setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { ImageBackground, SafeAreaView, View } from 'react-native';
+import { Appearance } from 'react-native-appearance';
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from '../colours';
 import LoginComponent from '../components/LoginComponent';
 import { fetchHTMLResource } from '../getters/get';
 import { loginStyles, styles } from '../styles';
@@ -8,6 +11,7 @@ import { loginStyles, styles } from '../styles';
 const backgroundImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EABB6EF_190220CGS-339.jpg" };
 
 class LoginScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
     }
@@ -49,9 +53,15 @@ class LoginScreen extends Component {
             }, cb)
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <View
-                style={styles.container}
+                style={[
+                    styles.container,
+                    {
+                        backgroundColor: customColours.background
+                    }
+                ]}
             >
                 <View
                     style={[

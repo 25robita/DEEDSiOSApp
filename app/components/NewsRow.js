@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
-import { customColours } from '../colours';
+import { Appearance, FlatList, TouchableOpacity, View } from 'react-native';
+import { coloursDark, coloursLight } from '../colours';
 import { fetchJSONResource } from '../getters/get';
 import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } from '../lang';
 import { renderHTMLText } from '../renderHTML';
@@ -45,11 +45,14 @@ class NewsItem extends Component {
         })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
                 <View
                     style={[
-                        newsStyles.newsItem,
+                        newsStyles.newsItem, {
+                            backgroundColor: customColours.contentBackground
+                        },
                         styles.shadow,
                         {
                             backgroundColor: this.props.data.sticky
@@ -60,7 +63,10 @@ class NewsItem extends Component {
                 >
                     <ContentText
                         style={[
-                            newsStyles.newsTitle
+                            newsStyles.newsTitle,
+                            {
+                                color: customColours.link
+                            }
                         ]}
                     >
                         {

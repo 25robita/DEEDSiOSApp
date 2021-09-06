@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { TouchableOpacity } from "react-native";
-import { customColours } from "../colours";
+import { Appearance, TouchableOpacity } from "react-native";
+import { coloursDark, coloursLight } from "../colours";
 import { openURL } from "../RootNavigation";
 import { ContentText } from "./ContentTextComponent";
 import { Meta } from "./MetaTextComponent";
@@ -16,6 +16,7 @@ class UserLinkComponent extends Component {
             || openURL(`/search/user/${this.props.id}`)
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
         return (
             this.props.userName
                 ? <TouchableOpacity

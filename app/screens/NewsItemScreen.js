@@ -1,18 +1,21 @@
 import React, { Component } from "react";
 import { Image, View } from "react-native";
-import { customColours } from "../colours";
-import LoaderComponent from "../components/LoaderComponent";
-import { getRelativeTime } from "../components/NewsRow";
+import { Appearance } from "react-native-appearance";
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
+import LoaderComponent from "../components/LoaderComponent";
+import { Meta } from "../components/MetaTextComponent";
+import { getRelativeTime } from "../components/NewsRow";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { serviceURL } from "../consts";
 import { fetchJSONResource } from "../getters/get";
 import { newsItemAuthorLabel, newsItemNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
-import { Meta } from "../components/MetaTextComponent";
 
 class NewsItemScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = { bodyDone: false, body: {} };
@@ -29,6 +32,7 @@ class NewsItemScreen extends Component {
         }
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <ContentScreenTemplate
             onRefresh={this.componentDidMount}
         >

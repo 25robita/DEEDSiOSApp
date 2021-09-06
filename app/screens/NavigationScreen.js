@@ -1,11 +1,13 @@
+import { StackActions } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
+import { Appearance } from "react-native-appearance";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import { dispatch } from "../RootNavigation";
-import { StackActions } from "@react-navigation/native";
 
 const navigationItems = [
     {
@@ -81,12 +83,14 @@ const navigationItems = [
 ]
 
 class NavigationScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = {};
     }
 
     renderItem = ({ icon, link, name }) => {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         let iconStyle = {
             color: customColours.navigation || customColours.themePrimary,
             fontSize: 50
@@ -131,6 +135,7 @@ class NavigationScreen extends Component {
     }
 
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <View
                 style={{

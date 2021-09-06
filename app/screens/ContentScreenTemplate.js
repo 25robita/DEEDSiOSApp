@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
+import { Appearance } from "react-native-appearance";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
+import { coloursDark, coloursLight } from "../colours";
 import { renderHTMLText } from "../renderHTML";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
@@ -29,6 +30,7 @@ export default class ContentScreenTemplate extends Component {
 
 
 export function HorizontalRule(props) {
+    let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
     return <View style={{
         width: "100%",
         display: "flex",
@@ -49,6 +51,7 @@ export function HorizontalRule(props) {
 }
 
 export function HTMLTextView(props) {
+    let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
     return <View
         style={[
             {

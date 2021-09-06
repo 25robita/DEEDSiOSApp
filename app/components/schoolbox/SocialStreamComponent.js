@@ -1,7 +1,8 @@
 import React from 'react';
-import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { Appearance, FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
-import { customColours } from '../../colours';
+import { coloursDark, coloursLight } from '../../colours';
+// import { customColours } from '../../colours';
 import { serviceURL } from '../../consts';
 import { fetchHTMLResource } from '../../getters/get';
 import { socialStreamFailTextLabel, socialStreamLoadAllLabel, socialStreamLoadMoreLabel, socialStreamPostLabel, socialStreamPostSubmitLabel, socialStreamUrlLabel } from '../../lang';
@@ -23,6 +24,7 @@ class SchoolboxSocialStream_Post extends Component {
         openURL(this.props.profileURL)
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return <View
             style={{
                 borderBottomColor: customColours.neutralLowContrast,
@@ -137,6 +139,7 @@ class SchoolboxSocialStream_MakePost extends Component {
     }
 
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return <View
             style={{
                 paddingHorizontal: 25,
@@ -275,7 +278,7 @@ export default class SchoolboxSocialStream extends Component {
     }
 
     render() {
-
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <SchoolboxComponent
             title={this.props.title}
             collapsed={this.props.collapsed}

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import { Appearance } from 'react-native-appearance';
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from '../colours';
 import CalendarRow from '../components/CalendarRow';
 import DueWorkRow from '../components/DueWorkRow';
 import NewsRow from '../components/NewsRow';
@@ -30,6 +33,7 @@ const mainScreenData = [
 ]
 
 class MainScreen extends Component {
+    static contextType = ThemeContext;
     state = {}
     constructor(props) {
         super(props)
@@ -52,8 +56,15 @@ class MainScreen extends Component {
         return a + b
     }
     render() {
+
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
-            <View style={styles.container}>
+            <View style={[
+                styles.container,
+                {
+                    backgroundColor: customColours.background
+                }
+            ]}>
                 <ScrollingScreenTemplate
                     onRefresh={this.onRefresh}
                 >

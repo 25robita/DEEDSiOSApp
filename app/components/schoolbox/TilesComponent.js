@@ -1,9 +1,9 @@
+import React from 'react';
 import { ImageBackground, TouchableOpacity, View } from 'react-native';
-import { ContentText } from '../ContentTextComponent';
-import SchoolboxComponent from './SchoolboxComponent';
 import { serviceURL } from '../../consts';
 import { openURL } from '../../RootNavigation';
-import React from 'react';
+import { ContentText } from '../ContentTextComponent';
+import SchoolboxComponent from './SchoolboxComponent';
 
 export default function SchoolboxTiles(props) {
     let tileWidth = props.tileWidth

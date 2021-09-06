@@ -1,7 +1,9 @@
 import { decode } from 'html-entities';
 import React, { Component } from "react";
 import { View } from "react-native";
-import { customColours, foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
+import { Appearance } from 'react-native-appearance';
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight, foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
@@ -11,11 +13,7 @@ import { eventAttendAcceptLabel, eventAttendancePromptLabel, eventAttendDeclineL
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
 
-const dataHeaderStyle = {
-    fontSize: 18,
-    color: customColours.neutralHighContrast,
-    marginBottom: 20
-}
+
 
 const infoSectionStyle = {
     marginBottom: 15
@@ -32,6 +30,7 @@ function parseDate(dateString) { // because the dates they give us are in a weir
 }
 
 class CalendarItemScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = { attendance: {} };
@@ -48,6 +47,12 @@ class CalendarItemScreen extends Component {
     }
 
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight;
+        const dataHeaderStyle = {
+            fontSize: 18,
+            color: customColours.neutralHighContrast,
+            marginBottom: 20
+        }
         return (
             <ContentScreenTemplate>
                 <View

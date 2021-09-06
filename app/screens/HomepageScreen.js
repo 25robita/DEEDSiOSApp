@@ -1,7 +1,8 @@
 import React from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
+import { ThemeContext } from '../../ThemeProvider';
+import { getColors } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
@@ -19,6 +20,7 @@ import { homepageFailTextLabel, sliceNavigationTitle } from "../lang";
 import { openURL } from "../RootNavigation";
 
 export default class HomepageScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -220,6 +222,7 @@ export default class HomepageScreen extends Component {
             })
     }
     render() {
+        var customColours = getColors();
         return (
             <ScrollView
                 style={{

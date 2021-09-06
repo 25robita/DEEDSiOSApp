@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import { Appearance } from 'react-native-appearance';
 import WebView from 'react-native-webview';
-import { customColours } from '../../colours';
+import { coloursDark, coloursLight } from '../../colours';
 import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import IconComponent from '../IconComponent';
@@ -31,6 +32,7 @@ export default class HTMLWebView extends Component {
         openURL(this.state.uri)
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <View
             style={{
                 justifyContent: 'flex-start',

@@ -1,9 +1,11 @@
-import React, { Component } from "react"
-import { View } from "react-native"
-import { NewsList } from "../components/NewsRow"
-import ScrollingScreenTemplate from "./ScrollingScreenTemplate"
+import React, { Component } from "react";
+import { View } from "react-native";
+import { ThemeContext } from '../../ThemeProvider';
+import { NewsList } from "../components/NewsRow";
+import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 export default class NewsScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
         this.state = { refreshListeners: [] }

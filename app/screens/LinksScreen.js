@@ -1,5 +1,6 @@
 import React from "react";
 import { Component } from "react/cjs/react.production.min";
+import { ThemeContext } from '../../ThemeProvider';
 import LinksList from "../components/LinksList";
 import LoaderComponent from "../components/LoaderComponent";
 import { fetchHTMLResource } from "../getters/get";
@@ -7,6 +8,7 @@ import { linksFailTextLabel } from "../lang";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 class LinksScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = { items: [], loaded: false, failed: false };

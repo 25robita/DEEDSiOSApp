@@ -1,12 +1,12 @@
-import { TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Appearance, TouchableOpacity, View } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import { Component } from 'react/cjs/react.production.min';
-import { customColours } from '../../colours';
-import { ContentText } from '../ContentTextComponent';
-import IconComponent from '../IconComponent';
+import { coloursDark, coloursLight } from '../../colours';
 import { openURL } from '../../RootNavigation';
 import { styles } from '../../styles';
-import React from 'react';
+import { ContentText } from '../ContentTextComponent';
+import IconComponent from '../IconComponent';
 
 export default class SchoolboxComponent extends Component {
     constructor(props) {
@@ -26,6 +26,7 @@ export default class SchoolboxComponent extends Component {
             })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return <View style={[{
             display: "flex",
             flexDirection: "column",

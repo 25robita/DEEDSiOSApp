@@ -1,30 +1,34 @@
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { loadAsync } from 'expo-font';
-import { getItemAsync, setItemAsync } from 'expo-secure-store';
+import { getItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import { AppearanceProvider } from "react-native-appearance";
+import { customColours } from './app/colours';
+import { ContentText } from './app/components/ContentTextComponent';
+import IconComponent from './app/components/IconComponent';
 import { fetchResource } from './app/getters/get';
+import { eventNavigationTitle, profileNavigationTitleInitial, timetableNavigationTitle } from './app/lang';
+import { MainNavigationReference, navigate } from './app/RootNavigation';
+import BarcodeScreen from './app/screens/BarcodeScreen';
+import CalendarItemScreen from './app/screens/CalendarItemScreen';
+import GroupsScreen from './app/screens/GroupsScreen';
+import HomepageScreen from './app/screens/HomepageScreen';
+import LinksScreen from './app/screens/LinksScreen';
 import LoginScreen from './app/screens/LoginScreen';
 import MainScreen from './app/screens/MainScreen';
-import TimetableScreen from './app/screens/TimetableScreen';
-import WaitingScreen from './app/screens/WaitingScreen';
-import { createStackNavigator } from '@react-navigation/stack';
-import { styles } from './app/styles';
-import { customColours } from './app/colours';
-import { MainNavigationReference, navigate } from './app/RootNavigation';
+import NavigationScreen from './app/screens/NavigationScreen';
 import NewsItemScreen from './app/screens/NewsItemScreen';
 import NewsScreen from './app/screens/NewsScreen';
-import UserProfileScreen from './app/screens/UserProfile';
-import BarcodeScreen from './app/screens/BarcodeScreen';
-import IconComponent from './app/components/IconComponent';
-import { ContentText } from './app/components/ContentTextComponent';
-import HomepageScreen from './app/screens/HomepageScreen';
-import NavigationScreen from './app/screens/NavigationScreen';
 import SubjectsScreen from './app/screens/SubjectsScreen';
-import GroupsScreen from './app/screens/GroupsScreen';
-import LinksScreen from './app/screens/LinksScreen'
-import CalendarItemScreen from './app/screens/CalendarItemScreen';
-import { eventNavigationTitle, profileNavigationTitleInitial, timetableNavigationTitle } from './app/lang';
+import TimetableScreen from './app/screens/TimetableScreen';
+import UserProfileScreen from './app/screens/UserProfile';
+import WaitingScreen from './app/screens/WaitingScreen';
+import { styles } from './app/styles';
+import { ThemeProvider } from './ThemeProvider';
+
+
 const MainStack = createStackNavigator();
 
 const headerButtonHitslop = {
@@ -123,97 +127,101 @@ class App extends Component {
     }
     render() {
         return (
-            <NavigationContainer
-                ref={MainNavigationReference}
-            >
-                <MainStack.Navigator>
-                    <MainStack.Screen
-                        name="Waiting"
-                        component={WaitingScreen}
-                        options={hideHeaders}
-                    />
-                    <MainStack.Screen
-                        name="Login"
-                        component={LoginScreen}
-                        options={hideHeaders}
-                    />
-                    <MainStack.Screen
-                        name="Home"
-                        component={MainScreen}
-                        options={Object.assign({}, navigatorOptionsHideBackBarcodeNavipage, {
-                            title: ""
-                        })}
-                    />
-                    <MainStack.Screen
-                        name="Navigation"
-                        component={NavigationScreen}
-                        options={Object.assign({}, navigatorOptions, {
-                            presentation: 'modal',
-                            headerLeft: _ => null
-                        })}
-                    />
-                    <MainStack.Screen
-                        name="Homepage"
-                        component={HomepageScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Timetable"
-                        component={TimetableScreen}
-                        options={Object.assign({}, navigatorOptions, { title: timetableNavigationTitle })}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Subjects"
-                        component={SubjectsScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Groups"
-                        component={GroupsScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Links"
-                        component={LinksScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="News"
-                        component={NewsScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="User"
-                        component={UserProfileScreen}
-                        options={Object.assign({}, navigatorOptions, { title: profileNavigationTitleInitial })}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="News Item"
-                        component={NewsItemScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Calendar Item"
-                        component={CalendarItemScreen}
-                        options={Object.assign({}, navigatorOptions, { title: eventNavigationTitle })}
-                        initialParams={{}}
-                    />
-                    <MainStack.Screen
-                        name="Barcode"
-                        component={BarcodeScreen}
-                        options={navigatorOptions}
-                        initialParams={{}}
-                    />
-                </MainStack.Navigator>
-            </NavigationContainer >
+            <AppearanceProvider>
+                <NavigationContainer
+                    ref={MainNavigationReference}
+                >
+                    <ThemeProvider>
+                        <MainStack.Navigator>
+                            <MainStack.Screen
+                                name="Waiting"
+                                component={WaitingScreen}
+                                options={hideHeaders}
+                            />
+                            <MainStack.Screen
+                                name="Login"
+                                component={LoginScreen}
+                                options={hideHeaders}
+                            />
+                            <MainStack.Screen
+                                name="Home"
+                                component={MainScreen}
+                                options={Object.assign({}, navigatorOptionsHideBackBarcodeNavipage, {
+                                    title: ""
+                                })}
+                            />
+                            <MainStack.Screen
+                                name="Navigation"
+                                component={NavigationScreen}
+                                options={Object.assign({}, navigatorOptions, {
+                                    presentation: 'modal',
+                                    headerLeft: _ => null
+                                })}
+                            />
+                            <MainStack.Screen
+                                name="Homepage"
+                                component={HomepageScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Timetable"
+                                component={TimetableScreen}
+                                options={Object.assign({}, navigatorOptions, { title: timetableNavigationTitle })}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Subjects"
+                                component={SubjectsScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Groups"
+                                component={GroupsScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Links"
+                                component={LinksScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="News"
+                                component={NewsScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="User"
+                                component={UserProfileScreen}
+                                options={Object.assign({}, navigatorOptions, { title: profileNavigationTitleInitial })}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="News Item"
+                                component={NewsItemScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Calendar Item"
+                                component={CalendarItemScreen}
+                                options={Object.assign({}, navigatorOptions, { title: eventNavigationTitle })}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Barcode"
+                                component={BarcodeScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                        </MainStack.Navigator>
+                    </ThemeProvider>
+                </NavigationContainer >
+            </AppearanceProvider>
         )
     }
 }

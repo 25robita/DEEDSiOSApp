@@ -1,6 +1,7 @@
 import React from 'react';
+import { Appearance } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
-import { customColours } from '../../colours';
+import { coloursDark, coloursLight } from '../../colours';
 import { NewsList } from '../NewsRow';
 import SchoolboxComponent from './SchoolboxComponent';
 
@@ -15,6 +16,7 @@ export class SchoolboxNewsList extends Component {
         })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return <SchoolboxComponent
             collapsed={this.props.collapsed}
             title={this.props.title}

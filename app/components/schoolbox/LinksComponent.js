@@ -1,7 +1,7 @@
 import React from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { Appearance, FlatList, TouchableOpacity } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
-import { customColours } from '../../colours';
+import { coloursDark, coloursLight } from '../../colours';
 import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import IconComponent from '../IconComponent';
@@ -18,6 +18,7 @@ class SchoolboxLinks_Link extends Component {
     }
 
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         let icon;
         switch (this.props.type) {
             case "file":

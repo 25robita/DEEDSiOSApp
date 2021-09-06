@@ -1,9 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { customColours } from '../../colours';
+import { Appearance } from 'react-native-appearance';
+import { coloursDark, coloursLight } from '../../colours';
 import HTMLSpan from './SpanComponent';
 
 export default function HTMLBlockQuote(props) {
+    let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
     return <View
         style={{
             width: '100%',

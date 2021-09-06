@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { turnLightnessToTransparency } from '../colours';
+import { Appearance, TouchableOpacity, View } from 'react-native';
+import { coloursDark, coloursLight, turnLightnessToTransparency } from '../colours';
 import { getNowOnwards } from '../getters/timetable';
 import { homepageTimetableFailTextLabel, homepageTimetableTitle } from '../lang';
 import { navigate, openURL } from '../RootNavigation';
 import { styles, timetableStyles } from "../styles";
-import LoaderComponent from './LoaderComponent';
-import SectionComponent from './SectionComponent';
 import { ContentText } from './ContentTextComponent';
-import TimeComponent from './TimeComponent';
+import LoaderComponent from './LoaderComponent';
 import { Meta } from './MetaTextComponent';
+import SectionComponent from './SectionComponent';
+import TimeComponent from './TimeComponent';
 
 class TimetableSubject extends Component {
     constructor(props) {
@@ -23,14 +23,26 @@ class TimetableSubject extends Component {
     }
 
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
         return (
             this.props.data ?
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={this.onPress}>
-                    <View style={[timetableStyles.row, styles.shadow]}>
-                        <View style={[timetableStyles.cell, timetableStyles.header, (this.props.data.empty) ? timetableStyles.longCell : {}]}>
-                            <ContentText style={[styles.heading]}>{this.props.data.period}</ContentText>
+                    <View style={[
+                        timetableStyles.row,
+                        {
+                            backgroundColor: customColours.contentBackground
+                        }, styles.shadow
+                    ]}>
+                        <View style={[
+                            timetableStyles.cell,
+                            {
+                                backgroundColor: customColours.timetableContentBackground || customColours.contentBackground,
+                            },
+                            (this.props.data.empty) ? timetableStyles.longCell : {}
+                        ]}>
+                            <ContentText style={[{ color: customColours.neutralHighContrast }, styles.heading]}>{this.props.data.period}</ContentText>
                             <TimeComponent time={this.props.data.time} />
                         </View>
                         {
@@ -47,7 +59,9 @@ class TimetableSubject extends Component {
                                     style={[
                                         (
                                             (this.props.data.isLinked)
-                                                ? styles.link
+                                                ? {
+                                                    color: customColours.link
+                                                }
                                                 : {}
                                         ),
                                         timetableStyles.subjectText,

@@ -1,3 +1,4 @@
+import { Appearance } from "react-native";
 import { darkMode } from "./consts";
 
 export const coloursLight = {
@@ -197,6 +198,10 @@ export function getRoughColorLightness(hexColor) { // makes a lightness value on
         ...hexColor.matchAll(/\d{2}/g)
     ]
         .reduce((h, j) => ((parseInt(h, 16) / 255) + j), 0) / 3
+}
+
+export function getColors() {
+    return Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
 }
 
 export const foregroundContrastBreakpoint = (getRoughColorLightness(customColours.foreground) + getRoughColorLightness(customColours.foregroundContrast)) / 2// on a scale from 0 to 1; used to choose which text colour to use in a calendar event above the event color

@@ -2,7 +2,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import React, { Component } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
-import { customColours } from '../colours';
+import { Appearance } from 'react-native-appearance';
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight, customColours } from '../colours';
 import { ContentText } from '../components/ContentTextComponent';
 import IconComponent from '../components/IconComponent';
 import { Meta } from '../components/MetaTextComponent';
@@ -27,6 +29,7 @@ var handleRenderItem = ({ item }) => {
 }
 
 class TimetableSubScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
     }
@@ -146,6 +149,7 @@ function DaySelector({ state, navigation }) {
 }
 
 class TimetableScreen extends Component {
+    static contextType = ThemeContext;
     state = {
         timetable: [],
         fullTimetable: [],
@@ -188,8 +192,14 @@ class TimetableScreen extends Component {
         this.setState({ day: this.state.day })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
-            <View style={styles.container}>
+            <View style={[
+                styles.container,
+                {
+                    backgroundColor: customColours.background
+                }
+            ]}>
                 {
 
                     this.state.fullTimetable ?

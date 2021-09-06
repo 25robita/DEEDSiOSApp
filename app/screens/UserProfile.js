@@ -1,7 +1,8 @@
 import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
-import { FlatList, Image, View } from "react-native";
-import { customColours } from "../colours";
+import { Appearance, FlatList, Image, View } from "react-native";
+import { ThemeContext } from '../../ThemeProvider';
+import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import { serviceURL } from "../consts";
@@ -15,6 +16,7 @@ class Table extends Component {
         super(props)
     }
     renderRow({ item }) {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', marginBottom: 5 }}>
                 <View style={{ flex: 1, alignSelf: 'stretch' }}><ContentText style={{ fontWeight: "700" }}>{item[0]}</ContentText></View>
@@ -61,6 +63,7 @@ class Table extends Component {
 }
 
 class UserProfileScreen extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -178,6 +181,7 @@ class UserProfileScreen extends Component {
             })
     }
     render() {
+        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <View>
                 <ScrollingScreenTemplate

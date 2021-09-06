@@ -1,8 +1,8 @@
 import React from "react";
-import { RefreshControl } from "react-native";
+import { Appearance, RefreshControl } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Component } from "react/cjs/react.production.min";
-import { customColours } from "../colours";
+import { coloursDark, coloursLight } from "../colours";
 
 class ScrollingScreenTemplate extends Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class ScrollingScreenTemplate extends Component {
         this.state = {};
     }
     render() {
+        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <ScrollView
                 style={[{

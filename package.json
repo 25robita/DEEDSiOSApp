@@ -31,6 +31,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
+    "react-native-appearance": "~0.3.3",
     "react-native-collapsible": "^1.6.0",
     "react-native-context-menu-view": "^1.2.1",
     "react-native-gesture-handler": "^1.10.3",

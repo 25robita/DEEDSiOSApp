@@ -13,7 +13,6 @@ export const styles = StyleSheet.create({
         color: customColours.headerForeground,
     },
     container: {
-        backgroundColor: customColours.background,
         height: "100%"
     },
     section: {
@@ -23,21 +22,13 @@ export const styles = StyleSheet.create({
         marginBottom: 13
     },
     heading: {
-        color: customColours.neutralHighContrast,
         textTransform: "uppercase",
         fontSize: 16,
         fontWeight: "500",
         marginBottom: 7
     },
     meta: {
-        color: customColours.neutralHighContrast,
         fontStyle: "italic"
-    },
-    text: {
-        color: customColours.foreground
-    },
-    link: {
-        color: customColours.link,
     },
     loader: {
         marginTop: 20,
@@ -52,7 +43,6 @@ export const styles = StyleSheet.create({
         fontFamily: "schoolbox",
         marginTop: 5,
         marginBottom: 4,
-        color: customColours.neutralHighContrast
     },
     shadow: {
         shadowRadius: 5,
@@ -68,8 +58,7 @@ export const styles = StyleSheet.create({
 export const timetableStyles = StyleSheet.create({
     row: {
         display: "flex",
-        flexDirection: "row",
-        backgroundColor: customColours.contentBackground
+        flexDirection: "row"
     },
     cell: {
         padding: "5%",
@@ -78,16 +67,13 @@ export const timetableStyles = StyleSheet.create({
     longCell: {
         width: "100%"
     },
-    nowCell: {
-        // shadowRadius: 10,
-        // shadowOpacity: 0.5
-    },
-    nowCellHeader: {
-        backgroundColor: customColours.themeSeconday,
-    },
-    header: {
-        backgroundColor: customColours.timetableContentBackground || customColours.contentBackground,
-    },
+    // nowCell: {
+    // shadowRadius: 10,
+    // shadowOpacity: 0.5
+    // },
+    // header: {
+    //     backgroundColor: customColours.timetableContentBackground || customColours.contentBackground,
+    // },
     subjectText: {
         textAlign: "right",
     },
@@ -107,7 +93,6 @@ export const loginStyles = StyleSheet.create({
     halfContainer: {
         width: "90%%",
         alignSelf: "center",
-        backgroundColor: customColours.loginContentBackground || customColours.contentBackground,
         borderRadius: 10,
         padding: "10%",
         paddingBottom: 0,
@@ -115,7 +100,6 @@ export const loginStyles = StyleSheet.create({
     },
     text: {
         textAlign: "center",
-        color: customColours.loginText
         // marginRight: 10
     },
     inputView: {
@@ -127,10 +111,8 @@ export const loginStyles = StyleSheet.create({
         width: "100%",
         fontSize: 16,
         padding: 10,
-        backgroundColor: customColours.loginInputBackground,
         borderRadius: 3,
         fontWeight: "700",
-        color: customColours.foreground
     },
     usernameInput: {
         marginBottom: 14
@@ -141,7 +123,6 @@ export const loginStyles = StyleSheet.create({
         fontSize: 17
     },
     error: {
-        color: customColours.loginErrorForeground,
         textAlign: "center",
         fontWeight: "700",
         // margin: 25
@@ -149,14 +130,12 @@ export const loginStyles = StyleSheet.create({
     errorContainer: {
         padding: 20,
         overflow: "visible",
-        backgroundColor: customColours.loginErrorBackground,
         marginBottom: 25,
         borderRadius: 10,
         borderWidth: 2,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        borderColor: customColours.loginErrorBorder,
         opacity: .7
     },
     buttonsContainer: {
@@ -167,7 +146,6 @@ export const loginStyles = StyleSheet.create({
     },
     submitButton: {
         padding: 20,
-        backgroundColor: customColours.loginSubmitButtonBackground,
         width: "100%",
         borderRadius: 5,
         margin: 7,
@@ -177,11 +155,9 @@ export const loginStyles = StyleSheet.create({
     },
     submitText: {
         fontWeight: "800",
-        color: customColours.loginSubmitButtonForeground,
         alignSelf: "center"
     },
     iForgot: { // apple ceo now has dementia
-        color: customColours.loginIForgotMyForeground,
         fontWeight: "700",
     },
     iForgotContainer: {
@@ -196,13 +172,11 @@ export const loginStyles = StyleSheet.create({
 
 export const newsStyles = StyleSheet.create({
     newsItem: {
-        backgroundColor: customColours.contentBackground,
         padding: 20,
         marginBottom: 20
     },
     newsTitle: {
         fontWeight: "600",
-        color: customColours.link,
         fontSize: 16
     }
 })
@@ -222,7 +196,6 @@ export const HTMLStyles = StyleSheet.create({
     },
     blockquote: {
         fontStyle: 'italic',
-        color: customColours.blockquoteForeground
     },
     h1: {
         fontSize: 20
