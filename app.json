@@ -19,14 +19,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "deeds.ios"
+      "bundleIdentifier": "com.camberwellgrammer.deedsstudent"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/icon.png",
         "backgroundColor": "#041e42"
       },
-      "package": "deeds.ios"
+      "package": "com.camberwellgrammer.deedsstudent"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"

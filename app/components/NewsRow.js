@@ -17,15 +17,15 @@ import UserLinkComponent from './UserLinkComponent';
 export function getRelativeTime(unix) {
     if (!unix) return;
     let totalSeconds = (new Date() / 1000) - new Date(unix);
-    let years = Math.floor(totalSeconds / 31_536_000); // divide by seconds in a year and floor
+    let years = Math.floor(totalSeconds / 31536000); // divide by seconds in a year and floor
     if (years) return `${years} year${years == 1 ? '' : 's'} ago`;
-    let months = Math.floor(totalSeconds / 2_628_000); // divide by seconds in a month
+    let months = Math.floor(totalSeconds / 2628000); // divide by seconds in a month
     if (months) return `${months} month${months == 1 ? '' : 's'} ago`;
-    let weeks = Math.floor(totalSeconds / 604_800);// divide by seconds in a week
+    let weeks = Math.floor(totalSeconds / 604800);// divide by seconds in a week
     if (weeks) return `${weeks} week${weeks == 1 ? '' : 's'} ago`;
-    let days = Math.floor(totalSeconds / 86_400);
+    let days = Math.floor(totalSeconds / 86400);
     if (days) return `${days} day${days == 1 ? '' : 's'} ago`;
-    let hours = Math.floor(totalSeconds / 3_600);
+    let hours = Math.floor(totalSeconds / 3600);
     if (hours) return `${hours} hour${hours == 1 ? '' : 's'} ago`;
     let minutes = Math.floor(totalSeconds / 60);
     if (minutes) return `${minutes} minute${minutes == 1 ? '' : 's'} ago`;
