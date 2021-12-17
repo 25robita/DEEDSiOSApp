@@ -1,9 +1,7 @@
 import { setItemAsync } from 'expo-secure-store';
 import React, { Component } from 'react';
 import { ImageBackground, SafeAreaView, View } from 'react-native';
-import { Appearance } from 'react-native-appearance';
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from '../colours';
 import LoginComponent from '../components/LoginComponent';
 import { authenticate } from '../getters/authenticate';
 import { fetchHTMLResource } from '../getters/get';
@@ -58,13 +56,12 @@ class LoginScreen extends Component {
         })
     }
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <View
                 style={[
                     styles.container,
                     {
-                        backgroundColor: customColours.background
+                        backgroundColor: this.context.colors.background
                     }
                 ]}
             >

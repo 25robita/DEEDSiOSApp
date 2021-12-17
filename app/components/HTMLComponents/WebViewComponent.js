@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { Appearance } from 'react-native-appearance';
 import WebView from 'react-native-webview';
-import { coloursDark, coloursLight } from '../../colours';
+import { ThemeContext } from '../../../ThemeProvider';
 import { openURL } from '../../RootNavigation';
 import { ContentText } from '../ContentTextComponent';
 import IconComponent from '../IconComponent';
 
 export default class HTMLWebView extends Component {
+    static contextType = ThemeContext
     constructor(props) {
         super(props)
         this.state = {
@@ -32,7 +32,6 @@ export default class HTMLWebView extends Component {
         openURL(this.state.uri)
     }
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <View
             style={{
                 justifyContent: 'flex-start',
@@ -42,7 +41,7 @@ export default class HTMLWebView extends Component {
         >
             <View
                 style={{
-                    backgroundColor: customColours.themeSeconday,
+                    backgroundColor: this.context.colors.themeSeconday,
                     padding: 10,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -61,7 +60,7 @@ export default class HTMLWebView extends Component {
                 >
                     <IconComponent id=''
                         style={{
-                            color: customColours.neutralHighContrast,
+                            color: this.context.colors.neutralHighContrast,
                             fontSize: 16
                         }}
                     />

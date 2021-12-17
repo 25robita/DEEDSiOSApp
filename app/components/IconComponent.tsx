@@ -1,12 +1,12 @@
-import React from 'react';
-import { Appearance } from 'react-native';
-import { coloursDark, coloursLight } from '../colours';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../../ThemeProvider';
 import { icons } from '../consts';
 import { styles } from '../styles';
 import { ContentText } from './ContentTextComponent';
 
 function IconComponent(props: { name: string, style: object | null } | { id: string, style: object | null }) {
-    let colors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+    // let colors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+    const { colors } = useContext(ThemeContext)
     return (
         <ContentText
             style={[

@@ -1,23 +1,23 @@
 import React from "react"
-import { Appearance, Image, View } from "react-native"
+import { Image, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 import { Component } from "react/cjs/react.production.min"
-import { coloursDark, coloursLight } from "../colours"
+import { ThemeContext } from "../../ThemeProvider"
 import { serviceURL } from "../consts"
 import { Meta } from "./MetaTextComponent"
 import UserLinkComponent from "./UserLinkComponent"
 
 export class UserList extends Component {
+    static contextType = ThemeContext
     constructor(props) {
         super(props)
         this.state = {}
     }
     renderItem = ({ item }, a, b, c, d) => {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight;
         return <View
             style={{
                 flexDirection: 'row',
-                borderBottomColor: customColours.neutralLowContrast,
+                borderBottomColor: this.context.colors.neutralLowContrast,
                 borderBottomWidth: 1,
                 alignItems: 'center',
                 justifyContent: 'flex-start'

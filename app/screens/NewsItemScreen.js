@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Image, View } from "react-native";
-import { Appearance } from "react-native-appearance";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
@@ -30,7 +28,6 @@ class NewsItemScreen extends Component {
                 .then(body => {
                     this.setState({ body, bodyDone: true })
                     let title = sliceNavigationTitle(`${newsItemNavigationTitlePrepend} – ${body.article.title}`)
-                    const customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
                     this.props.navigation.setOptions({
                         title,
                         headerRight: () =>
@@ -41,7 +38,7 @@ class NewsItemScreen extends Component {
                             >
                                 <IconComponent id={"\ue921"} style={{
                                     fontSize: 20,
-                                    color: customColors.headerForeground,
+                                    color: this.context.colors.headerForeground,
                                     paddingRight: 20
                                 }} />
                             </TouchableOpacity>
@@ -51,11 +48,10 @@ class NewsItemScreen extends Component {
         }
     }
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <ContentScreenTemplate
             onRefresh={this.componentDidMount}
         >
-            <View style={{ backgroundColor: customColours.contentBackground, marginBottom: 70 }}>
+            <View style={{ backgroundColor: this.context.colors.contentBackground, marginBottom: 70 }}>
                 <LoaderComponent style={{ padding: 0 }} state={this.state.bodyDone ? "loaded" : "loading"}>
                     {this.state.body?.article?.featureImage ? <Image
                         source={{

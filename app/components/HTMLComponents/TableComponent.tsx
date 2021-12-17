@@ -1,8 +1,8 @@
 import { HTMLElement } from 'node-html-parser';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FlatList, View } from 'react-native';
-import { Appearance } from 'react-native-appearance';
-import { coloursDark, coloursLight, turnLightnessToTransparency } from '../../colours';
+import { ThemeContext } from '../../../ThemeProvider';
+import { turnLightnessToTransparency } from '../../colours';
 import { renderHTMLElement } from '../../renderHTML';
 import { ContentText } from '../ContentTextComponent';
 
@@ -19,9 +19,9 @@ function renderTableCell({ item: { nCells, cell }, index }: { item: { nCells: nu
     </View>
 }
 
-function renderTableRow({ item, index }: { item: HTMLElement, index: number }) {
+function HTMLTableRow({ item }: { item: HTMLElement }) {
     let cells = item.querySelectorAll("td");
-    let customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
+    const { colors } = useContext(ThemeContext);
     return <View
         style={{
             flexDirection: "row",
@@ -44,7 +44,7 @@ function renderTableRow({ item, index }: { item: HTMLElement, index: number }) {
                         flexBasis: 1,
                         flexShrink: 0,
                         height: "100%",
-                        borderColor: customColors.foreground,
+                        borderColor: colors.foreground,
                         borderWidth: .5,
                         padding: 5,
                     }, bgColor ? { backgroundColor: turnLightnessToTransparency(bgColor).replace(/, (\d+(\.\d+)?)\)/g, (m, p1) => `, ${parseFloat(p1) / 2})`) } : {}]}
@@ -56,6 +56,10 @@ function renderTableRow({ item, index }: { item: HTMLElement, index: number }) {
             })
         }
     </View>
+}
+
+function renderTableRow({ item, index }: { item: HTMLElement, index: number }) {
+    return <HTMLTableRow item={item} />
 }
 
 export default function HTMLTable(props: { elem: HTMLElement }) {

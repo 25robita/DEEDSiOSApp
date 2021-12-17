@@ -1,32 +1,24 @@
-import React, { Component } from 'react';
-import { Appearance, TouchableOpacity } from 'react-native';
-import { coloursDark, coloursLight } from '../../colours';
+import React, { useContext } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { ThemeContext } from '../../../ThemeProvider';
 import { openURL } from '../../RootNavigation';
 import HTMLSpan from './SpanComponent';
 
-export default class HTMLAnchor extends Component {
-    constructor(props) {
-        super(props)
-    }
-    onPress = () => {
-        openURL(this.props.href)
-    }
-    render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
-        return <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={this.onPress}
+export default function HTMLAnchor(props) {
+    const { colors } = useContext(ThemeContext)
+    return <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => openURL(props.href)}
+    >
+        <HTMLSpan
+            style={[
+                {
+                    color: colors.link
+                },
+                ...props.style
+            ]}
         >
-            <HTMLSpan
-                style={[
-                    {
-                        color: customColours.link
-                    },
-                    ...this.props.style
-                ]}
-            >
-                {this.props.children}
-            </HTMLSpan>
-        </TouchableOpacity>
-    }
+            {props.children}
+        </HTMLSpan>
+    </TouchableOpacity>
 }

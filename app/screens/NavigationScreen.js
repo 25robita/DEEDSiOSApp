@@ -1,10 +1,8 @@
 import { StackActions } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { Appearance } from "react-native-appearance";
 import { Component } from "react/cjs/react.production.min";
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import { dispatch } from "../RootNavigation";
@@ -90,13 +88,12 @@ class NavigationScreen extends Component {
     }
 
     renderItem = ({ icon, link, name }) => {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         let iconStyle = {
-            color: customColours.navigation || customColours.themePrimary,
+            color: this.context.colors.navigation || this.context.colors.themePrimary,
             fontSize: 50
         }
         let textStyle = {
-            color: customColours.navigation || customColours.themePrimary,
+            color: this.context.colors.navigation || this.context.colors.themePrimary,
             fontSize: 18
         }
         return <TouchableOpacity activeOpacity={0.5}
@@ -109,7 +106,7 @@ class NavigationScreen extends Component {
         >
             <View
                 style={{
-                    borderColor: customColours.navigation || customColours.themePrimary,
+                    borderColor: this.context.colors.navigation || this.context.colors.themePrimary,
                     borderRadius: 10,
                     borderWidth: 3,
                     height: '100%',
@@ -135,14 +132,13 @@ class NavigationScreen extends Component {
     }
 
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <View
                 style={{
                     paddingTop: 20,
                     display: 'flex',
                     height: '100%',
-                    backgroundColor: customColours.background,
+                    backgroundColor: this.context.colors.background,
                     paddingBottom: 20
                 }}
             >

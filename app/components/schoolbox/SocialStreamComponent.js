@@ -1,7 +1,7 @@
-import React from 'react';
-import { Appearance, FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useContext } from 'react';
+import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { Component } from 'react/cjs/react.production.min';
-import { coloursDark, coloursLight } from '../../colours';
+import { ThemeContext } from '../../../ThemeProvider';
 // import { customColours } from '../../colours';
 import { serviceURL } from '../../consts';
 import { fetchHTMLResource } from '../../getters/get';
@@ -15,107 +15,103 @@ import { Meta } from '../MetaTextComponent';
 import SchoolboxComponent from './SchoolboxComponent';
 
 
-class SchoolboxSocialStream_Post extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
-    onProfilePress = () => {
-        openURL(this.props.profileURL)
-    }
-    render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
-        return (
-            // <ContextMenu
-            //     actions={[
-            //         {
-            //             title: "Delete",
-            //             destructive: true,
-            //         },
-            //         {
-            //             title: "Reply"
-            //         }
-            //     ]}
-            // >
+function SchoolboxSocialStream_Post(props) {
+    const { colors } = useContext(ThemeContext);
+    return (
+        // <ContextMenu
+        //     actions={[
+        //         {
+        //             title: "Delete",
+        //             destructive: true,
+        //         },
+        //         {
+        //             title: "Reply"
+        //         }
+        //     ]}
+        // >
+        <View
+            style={{
+                borderBottomColor: colors.neutralLowContrast,
+                borderBottomWidth: 1,
+                backgroundColor: props.layer ? colors.homepageSocialStream : 'transparent'
+            }}
+        >
             <View
                 style={{
-                    borderBottomColor: customColours.neutralLowContrast,
-                    borderBottomWidth: 1,
-                    backgroundColor: this.props.layer ? customColours.homepageSocialStream : 'transparent'
+                    flexDirection: 'row',
+                    alignItems: 'center'
                 }}
             >
+                <TouchableOpacity
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    onPress={() => openURL(props.profileURL)}
+                >
+                    <Image
+                        style={{
+                            width: 50,
+                            height: 50,
+                        }}
+                        source={{ uri: serviceURL + props.authorImageURL }}
+                    />
+                </TouchableOpacity>
                 <View
                     style={{
                         flexDirection: 'row',
-                        alignItems: 'center'
+                        justifyContent: 'space-between',
+                        flex: 1,
+                        flexWrap: 'wrap', // incase stuff is too long
+                        paddingHorizontal: 20
                     }}
                 >
                     <TouchableOpacity
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                        onPress={this.onProfilePress}
+                        hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
+                        onPress={() => openURL(props.profileURL)}
                     >
-                        <Image
+                        <ContentText
                             style={{
-                                width: 50,
-                                height: 50,
+                                color: colors.link,
+                                fontSize: 14,
+                                marginRight: 10 // force it to go on a newline if too close
                             }}
-                            source={{ uri: serviceURL + this.props.authorImageURL }}
-                        />
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            flex: 1,
-                            flexWrap: 'wrap', // incase stuff is too long
-                            paddingHorizontal: 20
-                        }}
-                    >
-                        <TouchableOpacity
-                            hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
-                            onPress={this.onProfilePress}
                         >
-                            <ContentText
-                                style={{
-                                    color: customColours.link,
-                                    fontSize: 14,
-                                    marginRight: 10 // force it to go on a newline if too close
-                                }}
-                            >
-                                {this.props.postAuthor}
-                            </ContentText>
-                        </TouchableOpacity>
-                        <Meta>
-                            {this.props.postMetaText}
-                        </Meta>
-                    </View>
-                </View>
-                <View
-                    style={{
-                        paddingLeft: 70,
-                        paddingRight: 10
-                    }}
-                >
-                    <ContentText>
-                        {renderHTMLText(this.props.postContentHTML)}
-                    </ContentText>
-                </View>
-                <View
-                    style={{
-                        borderLeftWidth: 10,
-                        borderLeftColor: customColours.neutralHighContrast,
-                        marginLeft: this.props.layer == 1 ? 15 : 0
-                    }}
-                >
-                    {this.props.postReplies && this.props.postReplies.map(this.props.renderPost.bind(null, this.props.layer + 1))}
+                            {props.postAuthor}
+                        </ContentText>
+                    </TouchableOpacity>
+                    <Meta>
+                        {props.postMetaText}
+                    </Meta>
                 </View>
             </View>
-            // </ContextMenu>
-        )
-    }
+            <View
+                style={{
+                    paddingLeft: 70,
+                    paddingRight: 10
+                }}
+            >
+                <ContentText>
+                    {renderHTMLText(props.postContentHTML)}
+                </ContentText>
+            </View>
+            <View
+                style={{
+                    borderLeftWidth: 10,
+                    borderLeftColor: colors.neutralHighContrast,
+                    marginLeft: props.layer == 1 ? 15 : 0
+                }}
+            >
+                {props.postReplies && props.postReplies.map(props.renderPost.bind(null, props.layer + 1))}
+            </View>
+        </View>
+        // </ContextMenu>
+    )
+
 }
 
+
+
+
 class SchoolboxSocialStream_MakePost extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
         this.state = {
@@ -150,43 +146,42 @@ class SchoolboxSocialStream_MakePost extends Component {
     }
 
     render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return <View
             style={{
                 paddingHorizontal: 25,
                 paddingVertical: 20,
-                backgroundColor: customColours.background
+                backgroundColor: this.context.colors.background
             }}
         >
             <TextInput
                 style={{
-                    borderColor: customColours.themeSeconday,
+                    borderColor: this.context.colors.themeSeconday,
                     borderWidth: 1,
-                    backgroundColor: customColours.contentBackground,
+                    backgroundColor: this.context.colors.contentBackground,
                     padding: 10,
                     paddingTop: 10, // needs to be overridden for some reason
-                    color: customColours.foreground,
+                    color: this.context.colors.foreground,
                     maxHeight: 16 * 7,
                     overflow: 'scroll'
                 }}
                 placeholder={socialStreamPostLabel}
-                placeholderTextColor={customColours.neutralLowContrast}
+                placeholderTextColor={this.context.colors.neutralLowContrast}
                 multiline={true}
                 onChange={this.handleUpdateBody}
                 value={this.state.body}
             />
             <TextInput
                 style={{
-                    borderColor: customColours.themeSeconday,
+                    borderColor: this.context.colors.themeSeconday,
                     borderWidth: 1,
-                    backgroundColor: customColours.contentBackground,
+                    backgroundColor: this.context.colors.contentBackground,
                     padding: 10,
                     paddingTop: 10, // needs to be overridden for some reason
-                    color: customColours.foreground,
+                    color: this.context.colors.foreground,
                     marginTop: 15,
                 }}
                 placeholder={socialStreamUrlLabel}
-                placeholderTextColor={customColours.neutralLowContrast}
+                placeholderTextColor={this.context.colors.neutralLowContrast}
                 onChange={this.handleUpdateURL}
                 value={this.state.url}
             />
@@ -202,13 +197,13 @@ class SchoolboxSocialStream_MakePost extends Component {
                         padding: 10,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: customColours.link
+                        backgroundColor: this.context.colors.link
                     }}
                 >
                     <ContentText
                         style={{
                             fontWeight: "600",
-                            color: customColours.foregroundContrast
+                            color: this.context.colors.foregroundContrast
                         }}
                     >
                         {socialStreamPostSubmitLabel}
@@ -221,6 +216,7 @@ class SchoolboxSocialStream_MakePost extends Component {
 }
 
 export default class SchoolboxSocialStream extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
         this.state = { threads: [], done: false, threadDone: false }
@@ -289,7 +285,6 @@ export default class SchoolboxSocialStream extends Component {
     }
 
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return <SchoolboxComponent
             title={this.props.title}
             collapsed={this.props.collapsed}
@@ -332,12 +327,12 @@ export default class SchoolboxSocialStream extends Component {
                     onPress={this.updatePosts.bind(this, 0, 0, false)}
                     style={{
                         padding: 10,
-                        backgroundColor: customColours.contentBackground,
+                        backgroundColor: this.context.colors.contentBackground,
                     }}
                 >
                     <ContentText
                         style={{
-                            color: customColours.link,
+                            color: this.context.colors.link,
                             fontWeight: '600'
                         }}
                     >
@@ -351,12 +346,12 @@ export default class SchoolboxSocialStream extends Component {
                     onPress={this.loadMore}
                     style={{
                         padding: 10,
-                        backgroundColor: customColours.contentBackground,
+                        backgroundColor: this.context.colors.contentBackground,
                     }}
                 >
                     <ContentText
                         style={{
-                            color: customColours.link,
+                            color: this.context.colors.link,
                             fontWeight: '600'
                         }}
                     >

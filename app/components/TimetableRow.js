@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import { Appearance, TouchableOpacity, View } from 'react-native';
-import { coloursDark, coloursLight, turnLightnessToTransparency } from '../colours';
+import React, { Component, useContext } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { ThemeContext } from '../../ThemeProvider';
+import { turnLightnessToTransparency } from '../colours';
 import { getNowOnwards } from '../getters/timetable';
 import { homepageTimetableFailTextLabel, homepageTimetableTitle } from '../lang';
 import { navigate, openURL } from '../RootNavigation';
@@ -11,86 +12,77 @@ import { Meta } from './MetaTextComponent';
 import SectionComponent from './SectionComponent';
 import TimeComponent from './TimeComponent';
 
-class TimetableSubject extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
+function TimetableSubject(props) {
+    const { colors } = useContext(ThemeContext);
 
-    onPress = () => {
-        let url = `/homepage/code/` + this.props?.data?.code;
-        this.props?.data?.empty || openURL(url)
-    }
-
-    render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
-        return (
-            this.props.data ?
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={this.onPress}>
+    return (
+        props.data ?
+            <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() =>
+                    props?.data?.empty || openURL(`/homepage/code/` + this.props?.data?.code)}>
+                <View style={[
+                    timetableStyles.row,
+                    {
+                        backgroundColor: colors.contentBackground
+                    }, styles.shadow
+                ]}>
                     <View style={[
-                        timetableStyles.row,
+                        timetableStyles.cell,
                         {
-                            backgroundColor: customColours.contentBackground
-                        }, styles.shadow
+                            backgroundColor: colors.timetableContentBackground || colors.contentBackground,
+                        },
+                        (props.data.empty) ? timetableStyles.longCell : {}
                     ]}>
-                        <View style={[
-                            timetableStyles.cell,
-                            {
-                                backgroundColor: customColours.timetableContentBackground || customColours.contentBackground,
-                            },
-                            (this.props.data.empty) ? timetableStyles.longCell : {}
-                        ]}>
-                            <ContentText style={[{ color: customColours.neutralHighContrast }, styles.heading]}>{this.props.data.period}</ContentText>
-                            <TimeComponent time={this.props.data.time} />
-                        </View>
-                        {
-                            (this.props.data.empty)
-                            || <View
-                                style={[
-                                    timetableStyles.cell,
-                                    {
-                                        backgroundColor: turnLightnessToTransparency(this.props.data.color)
-                                    }]
-                                }
-                            >
-                                <ContentText
-                                    style={[
-                                        (
-                                            (this.props.data.isLinked)
-                                                ? {
-                                                    color: customColours.link
-                                                }
-                                                : {}
-                                        ),
-                                        timetableStyles.subjectText,
-                                        timetableStyles.subjectName
-                                    ]}
-                                >
-                                    {this.props.data.name}
-                                </ContentText>
-                                <Meta
-                                    style={[
-                                        timetableStyles.subjectText
-                                    ]}
-                                >
-                                    {this.props.data.code}
-                                </Meta>
-                                <ContentText
-                                    style={[
-                                        timetableStyles.subjectText
-                                    ]}
-                                >
-                                    {this.props.data.location}
-                                </ContentText>
-                            </View>
-                        }
+                        <ContentText style={[{ color: colors.neutralHighContrast }, styles.heading]}>{props.data.period}</ContentText>
+                        <TimeComponent time={props.data.time} />
                     </View>
-                </TouchableOpacity>
-                : null
-        );
-    }
+                    {
+                        (props.data.empty)
+                        || <View
+                            style={[
+                                timetableStyles.cell,
+                                {
+                                    backgroundColor: turnLightnessToTransparency(props.data.color)
+                                }]
+                            }
+                        >
+                            <ContentText
+                                style={[
+                                    (
+                                        (props.data.isLinked)
+                                            ? {
+                                                color: colors.link
+                                            }
+                                            : {}
+                                    ),
+                                    timetableStyles.subjectText,
+                                    timetableStyles.subjectName
+                                ]}
+                            >
+                                {props.data.name}
+                            </ContentText>
+                            <Meta
+                                style={[
+                                    timetableStyles.subjectText
+                                ]}
+                            >
+                                {props.data.code}
+                            </Meta>
+                            <ContentText
+                                style={[
+                                    timetableStyles.subjectText
+                                ]}
+                            >
+                                {props.data.location}
+                            </ContentText>
+                        </View>
+                    }
+                </View>
+            </TouchableOpacity>
+            : null
+    )
+
 }
 
 class TimetableRow extends Component {

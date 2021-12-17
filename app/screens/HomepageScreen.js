@@ -1,10 +1,9 @@
 import React from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
-import { Appearance } from "react-native-appearance";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Component } from "react/cjs/react.production.min";
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight, getColors } from "../colours";
+import { getColors } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
@@ -49,8 +48,6 @@ export default class HomepageScreen extends Component {
                 this.setState({ name: pageTitle })
                 pageTitle = sliceNavigationTitle(pageTitle)
 
-                const customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
-
                 this.props.navigation.setOptions({
                     title: pageTitle,
                     headerRight: () =>
@@ -61,7 +58,7 @@ export default class HomepageScreen extends Component {
                         >
                             <IconComponent id={"\ue921"} style={{
                                 fontSize: 20,
-                                color: customColors.headerForeground,
+                                color: this.context.colors.headerForeground,
                                 paddingRight: 20
                             }} />
                         </TouchableOpacity>

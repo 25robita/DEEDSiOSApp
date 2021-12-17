@@ -1,9 +1,8 @@
 import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
-import { Appearance, FlatList, Image, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from '../components/IconComponent';
 import LoaderComponent from "../components/LoaderComponent";
@@ -14,11 +13,11 @@ import { openURL } from "../RootNavigation";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
 class Table extends Component {
+    static contextType = ThemeContext
     constructor(props) {
         super(props)
     }
     renderRow({ item }) {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', marginBottom: 5 }}>
                 <View style={{ flex: 1, alignSelf: 'stretch' }}><ContentText style={{ fontWeight: "700" }}>{item[0]}</ContentText></View>
@@ -37,7 +36,7 @@ class Table extends Component {
                                             )
                                         }
                                     }
-                                    style={{ color: customColours.link }}
+                                    style={{ color: this.context.colors.link }}
                                 >
                                     {item[1].text}
                                 </ContentText>
@@ -140,8 +139,6 @@ class UserProfileScreen extends Component {
                 fullName
                     && this.props.navigation.setOptions({ title: sliceNavigationTitle(`${profileNavigationTitlePrepend} – ${fullName}`) });
 
-                customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
-
                 this.props.navigation.setOptions({
                     headerRight: () =>
                         <TouchableOpacity
@@ -151,7 +148,7 @@ class UserProfileScreen extends Component {
                         >
                             <IconComponent id={"\ue921"} style={{
                                 fontSize: 20,
-                                color: customColors.headerForeground,
+                                color: this.context.colors.headerForeground,
                                 paddingRight: 20
                             }} />
                         </TouchableOpacity>
@@ -199,7 +196,6 @@ class UserProfileScreen extends Component {
             })
     }
     render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
             <View>
                 <ScrollingScreenTemplate
@@ -233,7 +229,7 @@ class UserProfileScreen extends Component {
                                         />
                                         <View
                                             style={{
-                                                backgroundColor: customColours.contentBackground,
+                                                backgroundColor: this.context.colors.contentBackground,
                                                 padding: 20,
                                                 marginBottom: 20,
                                                 paddingBottom: 10,

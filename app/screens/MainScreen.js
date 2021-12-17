@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { Appearance } from 'react-native-appearance';
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from '../colours';
 import CalendarRow from '../components/CalendarRow';
 import DueWorkRow from '../components/DueWorkRow';
 import NewsRow from '../components/NewsRow';
@@ -37,14 +35,12 @@ class MainScreen extends Component {
     state = {}
     constructor(props) {
         super(props)
+        this.state = {
+            componentRows: []
+        }
     }
     onRefresh = () => {
         this.setState({})
-    }
-    componentDidMount = () => {
-        setTimeout(_ => {
-            // this.props.navigation.navigate("Homepage", { code: "8-0860-F" })
-        }, 1000)
     }
     renderItem({ name, RowComponent, props }) {
         return <RowComponent
@@ -52,17 +48,20 @@ class MainScreen extends Component {
             {...props}
         />
     }
+    componentDidMount = () => {
+        this.setState({
+            componentRows: mainScreenData.map(this.renderItem)
+        })
+    }
     keyExtractor(a, b) {
         return a + b
     }
     render() {
-
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         return (
             <View style={[
                 styles.container,
                 {
-                    backgroundColor: customColours.background
+                    backgroundColor: this.context.colors.background
                 }
             ]}>
                 <ScrollingScreenTemplate
@@ -70,7 +69,7 @@ class MainScreen extends Component {
                 >
                     <View style={{ padding: '5%', marginBottom: "20%" }}>
                         {
-                            mainScreenData.map(this.renderItem)
+                            this.state.componentRows
                         }
                     </View>
                 </ScrollingScreenTemplate>

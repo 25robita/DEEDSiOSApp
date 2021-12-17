@@ -1,7 +1,6 @@
 import React, { Component, useState } from 'react';
-import { Animated, Appearance, Image, Linking, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, Linking, TextInput, TouchableOpacity, View } from 'react-native';
 import { Easing } from 'react-native-reanimated';
-import { coloursDark, coloursLight } from '../colours';
 import { loginForgotPasswordLink, loginForgotUsernameLink } from '../consts';
 import { loginCredentialsErrorLabel, loginForgottenPasswordLabel, loginForgottenUsernameLabel, loginPasswordPlaceholderLabel, loginPromptLabel, loginSubmitLabel, loginUnknownErrorLabel, loginUsernamePlaceholderLabel } from '../lang';
 import { loginStyles } from '../styles';
@@ -11,7 +10,6 @@ import { ContentText } from './ContentTextComponent';
 const logoImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EBCDEA4_deeds-logo-with-crest_copy.jpg" }
 
 function LoginFunctionComponent(props) {
-    let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
     const [uName, setUName] = useState("")
     const [pWord, setPWord] = useState("")
 
@@ -24,7 +22,7 @@ function LoginFunctionComponent(props) {
                         [{
                             translateY: props.moveAnim
                         }],
-                    backgroundColor: customColours.loginContentBackground || customColours.contentBackground
+                    backgroundColor: colors.loginContentBackground || colors.contentBackground
                 }]}
         >
             <Image
@@ -40,7 +38,7 @@ function LoginFunctionComponent(props) {
                 style={[
                     loginStyles.text,
                     {
-                        color: customColours.loginText
+                        color: colors.loginText
                     },
                     loginStyles.loginHeader,
                     {
@@ -53,12 +51,12 @@ function LoginFunctionComponent(props) {
             {
                 props.errorMessage
                     ? <View style={[loginStyles.errorContainer, {
-                        backgroundColor: customColours.loginErrorBackground,
-                        borderColor: customColours.loginErrorBorder
+                        backgroundColor: colors.loginErrorBackground,
+                        borderColor: colors.loginErrorBorder
                     }]}>
                         <ContentText
                             style={[loginStyles.error, {
-                                color: customColours.loginErrorForeground
+                                color: colors.loginErrorForeground
                             }]}
                         >
                             {props.errorMessage}
@@ -72,23 +70,23 @@ function LoginFunctionComponent(props) {
                     onFocus={props.onFocus}
                     onBlur={props.onBlur}
                     style={[loginStyles.input, {
-                        backgroundColor: customColours.loginInputBackground,
-                        color: customColours.foreground
+                        backgroundColor: colors.loginInputBackground,
+                        color: colors.foreground
                     }, loginStyles.usernameInput]}
                     placeholder={loginUsernamePlaceholderLabel}
-                    placeholderTextColor={customColours.loginText}
+                    placeholderTextColor={colors.loginText}
                 />
                 <TextInput
                     onChange={({ nativeEvent: { text } }) => setPWord(text)}
                     onFocus={props.onFocus}
                     onBlur={props.onBlur}
                     style={[loginStyles.input, {
-                        backgroundColor: customColours.loginInputBackground,
-                        color: customColours.foreground
+                        backgroundColor: colors.loginInputBackground,
+                        color: colors.foreground
                     }, loginStyles.passwordInput]}
                     secureTextEntry={true}
                     placeholder={loginPasswordPlaceholderLabel}
-                    placeholderTextColor={customColours.loginText}
+                    placeholderTextColor={colors.loginText}
                 />
                 <View style={loginStyles.buttonsContainer}>
                     <View style={loginStyles.iForgotContainer}>
@@ -96,7 +94,7 @@ function LoginFunctionComponent(props) {
                             Linking.openURL(loginForgotUsernameLink)
                         }}>
                             <ContentText style={[loginStyles.iForgot, {
-                                color: customColours.loginIForgotMyForeground
+                                color: colors.loginIForgotMyForeground
                             }]}>
                                 {loginForgottenUsernameLabel}
                             </ContentText>
@@ -105,7 +103,7 @@ function LoginFunctionComponent(props) {
                             Linking.openURL(loginForgotPasswordLink)
                         }}>
                             <ContentText style={[loginStyles.iForgot, {
-                                color: customColours.loginIForgotMyForeground
+                                color: colors.loginIForgotMyForeground
                             }]}>
                                 {loginForgottenPasswordLabel}
                             </ContentText>
@@ -113,10 +111,10 @@ function LoginFunctionComponent(props) {
                     </View>
                     <TouchableOpacity activeOpacity={0.5} onPress={() => props.onLogin(uName.valueOf(), pWord.valueOf())}>
                         <View style={[loginStyles.submitButton, {
-                            backgroundColor: customColours.loginSubmitButtonBackground
+                            backgroundColor: colors.loginSubmitButtonBackground
                         }]}>
                             <ContentText style={[loginStyles.submitText, {
-                                color: customColours.loginSubmitButtonForeground
+                                color: colors.loginSubmitButtonForeground
                             }]}>
                                 {loginSubmitLabel}
                             </ContentText>

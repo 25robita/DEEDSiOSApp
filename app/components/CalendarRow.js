@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Appearance, SectionList, TouchableOpacity, View } from "react-native";
+import { SectionList, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../../ThemeProvider";
 import { coloursDark, coloursLight } from "../colours";
 import getCalendar from "../getters/calendar";
@@ -10,7 +10,7 @@ import LoaderComponent from "./LoaderComponent";
 import SectionComponent from "./SectionComponent";
 import TimeComponent from "./TimeComponent";
 
-class CalendarItem extends Component {
+export class CalendarItem extends Component {
     static contextType = ThemeContext;
     constructor(props) {
         super(props);
@@ -20,7 +20,7 @@ class CalendarItem extends Component {
         navigate("Calendar Item", { item: this.props.item })
     }
     render() {
-        let customColours = this.context.isDark ? coloursDark : coloursLight
+        const customColours = this.context.isDark ? coloursDark : coloursLight
         return (
             <TouchableOpacity
                 activeOpacity={0.5}
@@ -56,6 +56,7 @@ class CalendarItem extends Component {
 }
 
 class CalendarRow extends Component {
+    static contextType = ThemeContext;
     constructor() {
         super()
         this.state = {
@@ -104,14 +105,13 @@ class CalendarRow extends Component {
 
 
     }
-    handleRenderCalendarHeader({ section: { title, isFirst } }) {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+    handleRenderCalendarHeader = ({ section: { title, isFirst } }) => {
         return (
-            <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: customColours.calendarHeaderBackground }}>
+            <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: this.context.colors.calendarHeaderBackground }}>
                 <ContentText style={[{
                     margin: 8,
                     fontWeight: "800",
-                    color: customColours.link
+                    color: this.context.colors.link
                 }]}>
                     {title}
                 </ContentText>
@@ -119,9 +119,8 @@ class CalendarRow extends Component {
         )
     }
     render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
         return (
-            <SectionComponent title="calendar" navigateName="Calendar">
+            <SectionComponent title="calendar" navigatorName="Calendar">
                 <LoaderComponent
                     state={
                         !(this.state.calendar || this.state.failed) || this.state.showActivity
@@ -131,16 +130,16 @@ class CalendarRow extends Component {
                                 : "loaded"
                     }
                     failText="Unable to load the calendar at the moment"
-                    style={{ backgroundColor: customColours.calendarIndentBackground || customColours.contentBackground }}
+                    style={{ backgroundColor: this.context.colors.calendarIndentBackground || this.context.colors.contentBackground }}
                 >
                     {
                         this.state?.calendar ?
                             <View style={[styles.shadow, {
-                                borderColor: customColours.calendarBackground,
+                                borderColor: this.context.colors.calendarBackground,
                                 borderBottomWidth: 7,
                                 borderRightWidth: 7,
                                 borderLeftWidth: 0,
-                                backgroundColor: customColours.calendarBackground
+                                backgroundColor: this.context.colors.calendarBackground
                             }]}>
                                 <SectionList
                                     scrollEnabled={false}
@@ -150,7 +149,7 @@ class CalendarRow extends Component {
                                     keyExtractor={this.handleExtractKey}
                                     style={[{
                                         borderLeftWidth: 9,
-                                        borderColor: customColours.calendarIndentBackground || customColours.contentBackground
+                                        borderColor: this.context.colors.calendarIndentBackground || this.context.colors.contentBackground
                                     }]}
                                 />
                             </View>
@@ -161,5 +160,93 @@ class CalendarRow extends Component {
         )
     }
 }
+
+// export default function CalendarRow(props) {
+//     const { colors } = useContext(ThemeContext);
+
+//     const [calendar, setCalendar] = useState(false);
+//     const [failed, setFailed] = useState(false);
+//     const [willUpdate, setWillUpdate] = useState(false);
+//     const [willUpdateCh2, setWillUpdateCh2] = useState(false);
+//     const [showActivity, setShowActivity] = useState(false);
+
+//     useEffect(() =>
+//         getCalendar()
+//             .then(sectionListData => {
+//                 setCalendar(sectionListData)
+//             }, _ => {
+//                 setFailed(true);
+//             })
+//         , [])
+
+//     useEffect(() => {
+//         if (willUpdate)
+//             return setWillUpdate(false)
+
+//         if (willUpdateCh2)
+//             return setWillUpdateCh2(false)
+
+//         setWillUpdateCh2(true)
+//         setShowActivity(true)
+//         setWillUpdate(true)
+//         getCalendar()
+//             .then(sectionListData => {
+//                 setCalendar(sectionListData)
+//                 setShowActivity(false);
+//             }, _ => {
+//                 setFailed(true);
+//                 setShowActivity(false);
+//             })
+//     })
+
+//     return (
+//         <SectionComponent title="calendar" navigatorName="Calendar">
+//             <LoaderComponent
+//                 state={
+//                     !(calendar || failed) || showActivity
+//                         ? "loading"
+//                         : (failed)
+//                             ? "failed"
+//                             : "loaded"
+//                 }
+//                 failText="Unable to load the calendar at the moment"
+//                 style={{ backgroundColor: colors.calendarIndentBackground || colors.contentBackground }}
+//             >
+//                 {
+//                     calendar ?
+//                         <View style={[styles.shadow, {
+//                             borderColor: colors.calendarBackground,
+//                             borderBottomWidth: 7,
+//                             borderRightWidth: 7,
+//                             borderLeftWidth: 0,
+//                             backgroundColor: colors.calendarBackground
+//                         }]}>
+//                             <SectionList
+//                                 scrollEnabled={false}
+//                                 sections={calendar}
+//                                 renderItem={({ item }) => <CalendarItem item={item} />}
+//                                 renderSectionHeader={({ section: { title, isFirst } }) => <View style={{ paddingTop: (isFirst ? 7 : 0), backgroundColor: colors.calendarHeaderBackground }}>
+//                                     <ContentText style={[{
+//                                         margin: 8,
+//                                         fontWeight: "800",
+//                                         color: colors.link
+//                                     }]}>
+//                                         {title}
+//                                     </ContentText>
+//                                 </View>
+//                                 }
+//                                 keyExtractor={(a, b) => a + b}
+//                                 style={[{
+//                                     borderLeftWidth: 9,
+//                                     borderColor: colors.calendarIndentBackground || colors.contentBackground
+//                                 }]}
+//                             />
+//                         </View>
+//                         : null
+//                 }
+//             </LoaderComponent>
+//         </SectionComponent>
+//     )
+// }
 
 export default CalendarRow;

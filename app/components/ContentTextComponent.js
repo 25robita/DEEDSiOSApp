@@ -1,11 +1,11 @@
-import React from "react";
-import { Appearance, Text } from "react-native";
+import React, { useContext } from "react";
+import { Text } from "react-native";
 import Animated from "react-native-reanimated";
-import { coloursDark, coloursLight } from "../colours";
+import { ThemeContext } from "../../ThemeProvider";
 
 export function ContentText(props) {
-    let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
-    text = props.animated ? Animated.Text : Text
+    const { colors: customColours } = useContext(ThemeContext)
+    let text = props.animated ? Animated.Text : Text
     let textStyles = {
         color: customColours.foreground
     }

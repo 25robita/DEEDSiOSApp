@@ -1,10 +1,8 @@
 import JsBarcode from 'jsbarcode';
 import React, { Component } from "react";
 import { View } from "react-native";
-import { Appearance } from 'react-native-appearance';
 import { DOMImplementation, XMLSerializer } from 'xmldom';
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight } from '../colours';
 import { barcodeExplanation } from "../lang";
 import { renderHTMLText } from "../renderHTML";
 
@@ -15,14 +13,13 @@ class BarcodeScreen extends Component {
         this.state = { svgText: "", svgData: [] };
     }
     componentDidMount = () => {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         const xmlSerializer = new XMLSerializer();
         const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null);
         const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
         JsBarcode(svgNode, this.props.route.params.id, {
             xmlDocument: document,
-            lineColor: customColours.themePrimary,
+            lineColor: this.context.colors.themePrimary,
             height: 100,
             width: 4,
             margin: 0,
@@ -40,12 +37,11 @@ class BarcodeScreen extends Component {
         this.setState({ svgText, svgData })
     }
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
         let lastItem,
             width,
-            fillColor = customColours.barcodeColor || customColours.themePrimary;
+            fillColor = this.context.colors.barcodeColor || this.context.colors.themePrimary;
         return (
-            <View style={{ height: "100%", paddingHorizontal: 10, display: "flex", justifyContent: "flex-end", backgroundColor: customColours.background }}>
+            <View style={{ height: "100%", paddingHorizontal: 10, display: "flex", justifyContent: "flex-end", backgroundColor: this.context.colors.background }}>
                 <View>
                     {renderHTMLText(barcodeExplanation.replaceAll("{STUDENT_ID}", this.props.route.params.id))}
                 </View>

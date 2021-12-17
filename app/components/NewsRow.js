@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Appearance, FlatList, TouchableOpacity, View } from 'react-native';
-import { coloursDark, coloursLight } from '../colours';
+import React, { Component, useContext } from 'react';
+import { FlatList, TouchableOpacity, View } from 'react-native';
+import { ThemeContext } from '../../ThemeProvider';
 import { fetchJSONResource } from '../getters/get';
 import { homepageNewsFailTextLabel, homepageNewsTitle, newsItemAuthorLabel } from '../lang';
 import { renderHTMLText } from '../renderHTML';
@@ -34,95 +34,106 @@ export function getRelativeTime(unix) {
 
 }
 
-class NewsItem extends Component {
-    constructor(props) {
-        super(props)
-    }
-    handlePress = () => {
-        (['News', 'Homepage'].includes(getCurrentRoute().name)) ? null : push("News");
-        push("News Item", {
-            id: this.props.data.id
-        })
-    }
-    render() {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
-        return (
-            <TouchableOpacity activeOpacity={0.5} onPress={this.handlePress}>
-                <View
+function NewsItem(props) {
+    const { colors } = useContext(ThemeContext);
+
+    return (
+        <TouchableOpacity activeOpacity={0.5} onPress={() => {
+            (['News', 'Homepage'].includes(getCurrentRoute().name)) ? null : push("News");
+            push("News Item", {
+                id: props.data.id
+            })
+        }}>
+            <View
+                style={[
+                    newsStyles.newsItem, {
+                        backgroundColor: colors.contentBackground
+                    },
+                    styles.shadow,
+                    {
+                        backgroundColor: props.data.sticky
+                            ? (colors.newsItemPinnedBackground || colors.themeSeconday)
+                            : (colors.newsItemBackground || colors.contentBackground)
+                    }]
+                }
+            >
+                <ContentText
                     style={[
-                        newsStyles.newsItem, {
-                            backgroundColor: customColours.contentBackground
-                        },
-                        styles.shadow,
+                        newsStyles.newsTitle,
                         {
-                            backgroundColor: this.props.data.sticky
-                                ? (customColours.newsItemPinnedBackground || customColours.themeSeconday)
-                                : (customColours.newsItemBackground || customColours.contentBackground)
-                        }]
-                    }
-                >
-                    <ContentText
-                        style={[
-                            newsStyles.newsTitle,
-                            {
-                                color: customColours.link
-                            }
-                        ]}
-                    >
-                        {
-                            this.props.data.sticky
-                                ? (
-                                    <ContentText>
-                                        <IconComponent
-                                            name="pin"
-                                            style={{
-                                                fontSize: 16,
-                                                marginLeft: 10
-                                            }}
-                                        />  </ContentText>)
-                                : null
+                            color: colors.link
                         }
-                        {this.props.data.title}
-                    </ContentText>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: "center"
-                    }}>
-                        <UserLinkComponent
-                            id={this.props.data?.author?.id || this.props.data?.author?._links?.profile?.href?.match?.(/\d+/g)}
-                            userName={this.props.data?.author?.fullName || this.props.data?.author?.fullname}
-                            isMeta={true}
-                            textBefore={newsItemAuthorLabel}
-                            style={{
-                                marginRight: 10
-                            }}
-                        />
-                        <TimeComponent
-                            date={true}
-                            time={
-                                this.props.data?.publishAt?.relativeTime
-                                || getRelativeTime(this.props.data?.publishAt?.unixTimestamp)
-                            }
-                        />
-                    </View>
+                    ]}
+                >
                     {
-                        this.props.data.blurb
-                            ? <ContentText>{renderHTMLText(this.props.data.blurb)}</ContentText>
-                            : <View>{renderHTMLText(this.props.data.body)}</View>
-                    }
-                    {
-                        this.props.data.attachments
-                            ? <Meta style={{ marginTop: 5 }}>
-                                {this.props.data.attachments} {(this.props.data.attachments == 1) ? "attachment" : "attachments"}
-                            </Meta>
+                        props.data.sticky
+                            ? (
+                                <ContentText>
+                                    <IconComponent
+                                        name="pin"
+                                        style={{
+                                            fontSize: 16,
+                                            marginLeft: 10
+                                        }}
+                                    />  </ContentText>)
                             : null
                     }
+                    {props.data.title}
+                </ContentText>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: "center"
+                }}>
+                    <UserLinkComponent
+                        id={props.data?.author?.id || props.data?.author?._links?.profile?.href?.match?.(/\d+/g)}
+                        userName={props.data?.author?.fullName || props.data?.author?.fullname}
+                        isMeta={true}
+                        textBefore={newsItemAuthorLabel}
+                        style={{
+                            marginRight: 10
+                        }}
+                    />
+                    <TimeComponent
+                        date={true}
+                        time={
+                            props.data?.publishAt?.relativeTime
+                            || getRelativeTime(props.data?.publishAt?.unixTimestamp)
+                        }
+                    />
                 </View>
-            </TouchableOpacity>
-        )
-    }
+                {
+                    props.data.blurb
+                        ? <ContentText>{renderHTMLText(props.data.blurb)}</ContentText>
+                        : <View>{renderHTMLText(props.data.body)}</View>
+                }
+                {
+                    props.data.attachments
+                        ? <Meta style={{ marginTop: 5 }}>
+                            {props.data.attachments} {(props.data.attachments == 1) ? "attachment" : "attachments"}
+                        </Meta>
+                        : null
+                }
+            </View>
+        </TouchableOpacity>
+    )
 }
+
+// class NewsItem extends Component {
+//     constructor(props) {
+//         super(props)
+//     }
+//     handlePress = () => {
+//         (['News', 'Homepage'].includes(getCurrentRoute().name)) ? null : push("News");
+//         push("News Item", {
+//             id: this.props.data.id
+//         })
+//     }
+//     render() {
+//         let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
+
+//     }
+// }
 
 class NewsList extends Component {
     state = {

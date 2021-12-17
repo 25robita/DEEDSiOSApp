@@ -13,6 +13,7 @@ import { eventNavigationTitle, profileNavigationTitleInitial, timetableNavigatio
 import { MainNavigationReference, navigate } from './app/RootNavigation';
 import BarcodeScreen from './app/screens/BarcodeScreen';
 import CalendarItemScreen from './app/screens/CalendarItemScreen';
+import { CalendarScreen } from './app/screens/CalendarScreen';
 import GroupsScreen from './app/screens/GroupsScreen';
 import HomepageScreen from './app/screens/HomepageScreen';
 import LinksScreen from './app/screens/LinksScreen';
@@ -210,6 +211,12 @@ class App extends Component {
                                 name="Calendar Item"
                                 component={CalendarItemScreen}
                                 options={Object.assign({}, navigatorOptions, { title: eventNavigationTitle })}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Calendar"
+                                component={CalendarScreen}
+                                options={Object.assign({}, navigatorOptions)}
                                 initialParams={{}}
                             />
                             <MainStack.Screen

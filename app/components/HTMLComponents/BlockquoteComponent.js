@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View } from 'react-native';
-import { Appearance } from 'react-native-appearance';
-import { coloursDark, coloursLight } from '../../colours';
+import { ThemeContext } from '../../../ThemeProvider';
 import HTMLSpan from './SpanComponent';
 
 export default function HTMLBlockQuote(props) {
-    let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
+    const { colors } = useContext(ThemeContext);
     return <View
         style={{
             width: '100%',
-            backgroundColor: customColours.blockquoteBackground,
-            borderColor: customColours.blockquoteBorder,
+            backgroundColor: colors.blockquoteBackground,
+            borderColor: colors.blockquoteBorder,
             borderLeftWidth: 5,
             paddingLeft: 20,
             marginBottom: 10

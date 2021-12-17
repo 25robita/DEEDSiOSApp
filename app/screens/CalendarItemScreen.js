@@ -1,10 +1,9 @@
 import { decode } from 'html-entities';
 import React, { Component } from "react";
 import { View } from "react-native";
-import { Appearance } from 'react-native-appearance';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ThemeContext } from '../../ThemeProvider';
-import { coloursDark, coloursLight, foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
+import { foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from '../components/IconComponent';
 import LoaderComponent from "../components/LoaderComponent";
@@ -46,6 +45,7 @@ class CalendarItemScreen extends Component {
                     this.setState({ attendance: j })
                 })
         }
+
         this.props.navigation.setOptions({
             title: sliceNavigationTitle(`${eventNavigationTitle} – ${this.props.route.params?.item?.title}`),
             headerRight: () =>
@@ -56,7 +56,7 @@ class CalendarItemScreen extends Component {
                 >
                     <IconComponent id={"\ue921"} style={{
                         fontSize: 20,
-                        color: customColors.headerForeground,
+                        color: this.context.colors.headerForeground,
                         paddingRight: 20
                     }} />
                 </TouchableOpacity>
@@ -65,17 +65,16 @@ class CalendarItemScreen extends Component {
     }
 
     render() {
-        let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight;
         const dataHeaderStyle = {
             fontSize: 18,
-            color: customColours.neutralHighContrast,
+            color: this.context.colors.neutralHighContrast,
             marginBottom: 20
         }
         return (
             <ContentScreenTemplate>
                 <View
                     style={{
-                        backgroundColor: customColours.contentBackground,
+                        backgroundColor: this.context.colors.contentBackground,
                         marginBottom: 70
                     }}
                 >
@@ -116,8 +115,8 @@ class CalendarItemScreen extends Component {
                                                 > foregroundContrastBreakpoint // if color is lighter than midpoint of foreground and foregroundContrast
                                             )
                                         )
-                                            ? customColours.foregroundContrast
-                                            : customColours.foreground // may be the wrong way around i haven't tested it
+                                            ? this.context.colors.foregroundContrast
+                                            : this.context.colors.foreground // may be the wrong way around i haven't tested it
                                     }}
                                 >
                                     {this.props.route.params?.item?.data?.meta?.type.toUpperCase?.()}
@@ -222,7 +221,7 @@ class CalendarItemScreen extends Component {
                                                     >
                                                         <View
                                                             style={{
-                                                                backgroundColor: customColours.themeSeconday,
+                                                                backgroundColor: this.context.colors.themeSeconday,
                                                                 flex: 1,
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
@@ -232,7 +231,7 @@ class CalendarItemScreen extends Component {
                                                         >
                                                             <ContentText
                                                                 style={{
-                                                                    color: customColours.link
+                                                                    color: this.context.colors.link
                                                                 }}
                                                             >
                                                                 {eventAttendAcceptLabel}
@@ -240,7 +239,7 @@ class CalendarItemScreen extends Component {
                                                         </View>
                                                         <View
                                                             style={{
-                                                                backgroundColor: customColours.themeSeconday,
+                                                                backgroundColor: this.context.colors.themeSeconday,
                                                                 flex: 1,
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
@@ -249,7 +248,7 @@ class CalendarItemScreen extends Component {
                                                         >
                                                             <ContentText
                                                                 style={{
-                                                                    color: customColours.link
+                                                                    color: this.context.colors.link
                                                                 }}
                                                             >
                                                                 {eventAttendDeclineLabel}

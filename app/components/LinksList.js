@@ -1,49 +1,13 @@
 import React, { Component } from "react";
-import { Appearance, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { coloursDark, coloursLight } from "../colours";
+import { ThemeContext } from "../../ThemeProvider";
 import IconComponent from "../components/IconComponent";
 import { generateGenericEmptyMessage } from '../lang';
 import { openURL } from "../RootNavigation";
 import { styles } from "../styles";
 import { ContentText } from "./ContentTextComponent";
 import { Meta } from "./MetaTextComponent";
-
-const renderItem = ({ item }) => {
-    let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
-    return <TouchableOpacity activeOpacity={0.5}
-        onPress={_ => {
-            openURL(item.href)
-        }}
-    >
-        <View
-            style={[{
-                backgroundColor: customColours.contentBackground,
-                marginBottom: 20,
-                padding: 10,
-                paddingLeft: 15,
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 20
-            }, styles.shadow]}
-        >
-            <IconComponent
-                name={this.props.icon || "link"}
-                style={{
-                    color: customColours.link,
-                    fontSize: 20,
-                    marginRight: 15
-                }}
-            />
-            <ContentText
-                style={{
-                    color: customColours.link,
-                    fontSize: 16
-                }}
-            >{item.text}</ContentText>
-        </View>
-    </TouchableOpacity>
-}
 
 function keyExtractor(a, b) {
     return a + b
@@ -52,6 +16,7 @@ function keyExtractor(a, b) {
 var emptyTimes = 0;
 
 class LinksList extends Component {
+    static contextType = ThemeContext;
     constructor(props) {
         super(props)
     }
@@ -59,7 +24,6 @@ class LinksList extends Component {
         emptyTimes = 0;
     }
     renderItem = ({ item }) => {
-        let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
         return <TouchableOpacity activeOpacity={0.5}
             onPress={_ => {
                 openURL(item.href)
@@ -67,7 +31,7 @@ class LinksList extends Component {
         >
             <View
                 style={[{
-                    backgroundColor: customColours.contentBackground,
+                    backgroundColor: this.context.colors.contentBackground,
                     marginBottom: 20,
                     padding: 10,
                     paddingLeft: 15,
@@ -79,14 +43,14 @@ class LinksList extends Component {
                 <IconComponent
                     name={this.props.icon || "link"}
                     style={{
-                        color: customColours.link,
+                        color: this.context.colors.link,
                         fontSize: 20,
                         marginRight: 15
                     }}
                 />
                 <ContentText
                     style={{
-                        color: customColours.link,
+                        color: this.context.colors.link,
                         fontSize: 16
                     }}
                 >{item.text}</ContentText>
