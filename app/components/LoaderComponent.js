@@ -22,11 +22,9 @@ function LoaderComponent(props) {
                     </Meta>
                     : null
             }
-            {
-                props.state == "loaded"
-                    ? props.children
-                    : null
-            }
+            <View style={props.state == "loaded" ? {} : { display: "none" }}>
+                {props.children}
+            </View>
         </View>
 
     );

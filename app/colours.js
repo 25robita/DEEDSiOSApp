@@ -192,6 +192,49 @@ export function turnLightnessToTransparency(color) {
 
 export const customColours = darkMode ? coloursDark : coloursLight;
 
+
+export function invertBrightness(color, darkOrLight = "light") { // if dark then make dark, if light then make light
+    let doInvert = true;
+    let red, green, blue;
+    if (color.startsWith("#")
+        && color.replace(darkOrLight == "light" ? /[#012]/g : /[#fe]/g, '').length >= (darkOrLight == "light" ? 0 : 3)) {
+        let value = parseInt(color.replace("#", ''), 16);
+        blue = value % 256;
+        value = Math.floor(value / 256)
+        green = value % 256
+        value = Math.floor(value / 256)
+        red = value % 256
+    } else if (color.startsWith("rgb")) {
+        [red, green, blue] = color.matchAll(/(\d+).*[,)]?/g).next().value.slice(1).map(i => parseInt(i))
+        doInvert = darkOrLight == "light" ? (red + green + blue > 102) : (red + green + blue < 153)
+    } else {
+        doInvert = false;
+    }
+    if (doInvert) {
+        let colorArray = [red, green, blue];
+        let outputColor = [-1, -1, -1];
+
+        let minIndex = colorArray.indexOf(Math.min(...colorArray));
+        let maxIndex = colorArray.lastIndexOf(Math.max(...colorArray));
+        let midIndex =
+            (![minIndex, maxIndex].includes(0))
+                ? 0
+                : (
+                    (![minIndex, maxIndex].includes(1))
+                        ? 1
+                        : 2
+                );
+        outputColor[minIndex] = 255 - Math.max(...colorArray);
+        outputColor[maxIndex] = 255 - Math.min(...colorArray);
+
+        outputColor[outputColor.indexOf(-1)] = 255 - colorArray[midIndex];
+
+        console.log(color, outputColor)
+        return "#" + outputColor.map(number => number.toString(16)).join("");
+    }
+    return color
+}
+
 export function getRoughColorLightness(hexColor) { // makes a lightness value on a scale of 0 to 1
     if (!hexColor) return getRoughColorLightness(customColours.contentBackground); // fallback just because
     return [

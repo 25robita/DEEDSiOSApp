@@ -1,4 +1,4 @@
-import parse from "node-html-parser";
+import parse, { HTMLElement } from "node-html-parser";
 import React from "react";
 import { Appearance, View } from "react-native";
 import { coloursDark, coloursLight } from "./colours";
@@ -12,6 +12,7 @@ import SocialStreamAttatchment from "./components/HTMLComponents/SocialStreamAtt
 import HTMLSpan from "./components/HTMLComponents/SpanComponent";
 import HTMLSubscript from "./components/HTMLComponents/SubscriptComponent";
 import HTMLSuperscript from "./components/HTMLComponents/SuperscriptComponent";
+import HTMLTable from "./components/HTMLComponents/TableComponent";
 import HTMLUnorderedList from "./components/HTMLComponents/UnorderedListComponent";
 import HTMLWebView from "./components/HTMLComponents/WebViewComponent";
 import { serviceURL } from "./consts";
@@ -27,17 +28,60 @@ function parseStyle(style: any) {
         color: "color",
         "background-color": "backgroundColor",
     };
-    let outputStyle: any = {};
+    let outputStyle: Record<string, string> = {};
     let _, property, value;
     for ([_, property, value] of style.matchAll(/([\w-]+)\s*:\s*([^;]*);/g)) {
         if (properties[property]) {
             outputStyle[properties[property]] = value;
         }
     }
+
+
+    // in case forground color is too dark for dark mode
+    if (Appearance.getColorScheme() == "dark" && outputStyle.color && !outputStyle.backgroundColor) {
+        let doInvert = true;
+        let red: number, green: number, blue: number;
+        if (outputStyle.color.startsWith("#")
+            && !outputStyle.color.replace(/[#012]/g, '').length) {
+            let value = parseInt(outputStyle.color.replace("#", ''), 16);
+            blue = value % 256;
+            value = Math.floor(value / 256)
+            green = value % 256
+            value = Math.floor(value / 256)
+            red = value % 256
+        } else if (outputStyle.color.startsWith("rgb")) {
+            [red, green, blue] = outputStyle.color.matchAll(/(\d+).*[,)]?/g).next().value.slice(1).map(i => parseInt(i))
+            doInvert = (red + green + blue > 102)
+        } else {
+            doInvert = false;
+        }
+        if (doInvert) {
+            let color = [red, green, blue];
+            let outputColor: number[] = [-1, -1, -1];
+
+            let minIndex = color.indexOf(Math.min(...color));
+            let maxIndex = color.lastIndexOf(Math.max(...color));
+            let midIndex =
+                (![minIndex, maxIndex].includes(0))
+                    ? 0
+                    : (
+                        (![minIndex, maxIndex].includes(1))
+                            ? 1
+                            : 2
+                    );
+            outputColor[minIndex] = 255 - Math.max(...color);
+            outputColor[maxIndex] = 255 - Math.min(...color);
+
+            outputColor[outputColor.indexOf(-1)] = 255 - color[midIndex];
+
+            outputStyle.color = "#" + outputColor.map(number => number.toString(16)).join("");
+        }
+    }
+
     return outputStyle;
 }
 
-function renderChildren(elem: any, styles: any[]) {
+function renderChildren(elem: HTMLElement, styles: any[]) {
     // renders children of an element
     return elem.childNodes.map((i: any) =>
         i.nodeType == 1 ? renderHTMLElement(i, styles) : i.text
@@ -61,14 +105,15 @@ export function getLastStyleDecleration(
     return values[ignore] ?? fallback;
 }
 
-export function renderHTMLElement(elem: any, style: any[]) {
+export function renderHTMLElement(elem: any, style: any[], forceStyleString?: string) {
     let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight;
     let elemAttributes = elem.attributes;
     let styles = [...style];
+    let styleString = forceStyleString ?? elemAttributes?.style ?? ""
     let fontSize = getLastStyleDecleration(styles, "fontSize", 16);
-    elemAttributes?.style && styles.push(parseStyle(elemAttributes.style));
+    styleString && styles.push(parseStyle(styleString));
     [...(elem?.parentNodes || [])].filter((i) => i.tagName == "LI").length &&
-        console.log("renderHTML.js:56 says:", elemAttributes?.style);
+        console.log("renderHTML.js:56 says:", styleString);
     switch (elem.tagName) {
         case "P":
             if (
@@ -177,7 +222,13 @@ export function renderHTMLElement(elem: any, style: any[]) {
                 />
             );
         case "IMG":
-            return <HTMLImage style={style} src={elem.attributes.src} />;
+            return <HTMLImage style={styles} src={elem.attributes.src} />;
+        case "TABLE":
+            return <HTMLTable style={styles} elem={elem}></HTMLTable>
+        // case "TR":
+        //     return <HTMLTableRow style={styles}>{renderChildren(elem, styles)}</HTMLTableRow>
+        // case "TD":
+        //     return <HTMLSpan style={styles}>{renderChildren(elem, styles)}</HTMLSpan>
         default:
             if (elem?.classList?.contains?.("socialstream-attachment")) {
                 if (elem.querySelector("iframe")) {

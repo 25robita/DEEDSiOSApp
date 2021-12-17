@@ -1,9 +1,11 @@
 import { getItemAsync } from "expo-secure-store";
 import React, { Component } from "react";
 import { Appearance, FlatList, Image, View } from "react-native";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ThemeContext } from '../../ThemeProvider';
 import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
+import IconComponent from '../components/IconComponent';
 import LoaderComponent from "../components/LoaderComponent";
 import { serviceURL } from "../consts";
 import { fetchHTMLResource } from "../getters/get";
@@ -136,8 +138,24 @@ class UserProfileScreen extends Component {
                 let fullName = d.querySelector("#content h1").text.trim()
 
                 fullName
-                    ? this.props.navigation.setOptions({ title: sliceNavigationTitle(`${profileNavigationTitlePrepend} – ${fullName}`) })
-                    : null
+                    && this.props.navigation.setOptions({ title: sliceNavigationTitle(`${profileNavigationTitlePrepend} – ${fullName}`) });
+
+                customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+
+                this.props.navigation.setOptions({
+                    headerRight: () =>
+                        <TouchableOpacity
+                            onPress={() => {
+                                openURL(`/search/user/${this.state.id}`, false)
+                            }}
+                        >
+                            <IconComponent id={"\ue921"} style={{
+                                fontSize: 20,
+                                color: customColors.headerForeground,
+                                paddingRight: 20
+                            }} />
+                        </TouchableOpacity>
+                })
 
                 this.setState({
                     profileData: Object.assign(

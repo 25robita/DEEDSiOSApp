@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Animated, Appearance, Image, Linking, TextInput, TouchableOpacity, View } from 'react-native';
 import { Easing } from 'react-native-reanimated';
 import { coloursDark, coloursLight } from '../colours';
@@ -7,10 +7,14 @@ import { loginCredentialsErrorLabel, loginForgottenPasswordLabel, loginForgotten
 import { loginStyles } from '../styles';
 import { ContentText } from './ContentTextComponent';
 
+
 const logoImage = { uri: "https://camberwell.files.cloudworkengine.net.au/pub/5EBCDEA4_deeds-logo-with-crest_copy.jpg" }
 
 function LoginFunctionComponent(props) {
     let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight
+    const [uName, setUName] = useState("")
+    const [pWord, setPWord] = useState("")
+
     return (
         <Animated.View
             style={[
@@ -64,21 +68,20 @@ function LoginFunctionComponent(props) {
             }
             <View style={loginStyles.inputView}>
                 <TextInput
-                    onChange={this.handleUnameChange}
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
+                    onChange={({ nativeEvent: { text } }) => setUName(text)}
+                    onFocus={props.onFocus}
+                    onBlur={props.onBlur}
                     style={[loginStyles.input, {
                         backgroundColor: customColours.loginInputBackground,
                         color: customColours.foreground
                     }, loginStyles.usernameInput]}
                     placeholder={loginUsernamePlaceholderLabel}
                     placeholderTextColor={customColours.loginText}
-                    value={props.username}
                 />
                 <TextInput
-                    onChange={this.handlePwordChange}
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
+                    onChange={({ nativeEvent: { text } }) => setPWord(text)}
+                    onFocus={props.onFocus}
+                    onBlur={props.onBlur}
                     style={[loginStyles.input, {
                         backgroundColor: customColours.loginInputBackground,
                         color: customColours.foreground
@@ -89,14 +92,18 @@ function LoginFunctionComponent(props) {
                 />
                 <View style={loginStyles.buttonsContainer}>
                     <View style={loginStyles.iForgotContainer}>
-                        <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserUsername}>
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => {
+                            Linking.openURL(loginForgotUsernameLink)
+                        }}>
                             <ContentText style={[loginStyles.iForgot, {
                                 color: customColours.loginIForgotMyForeground
                             }]}>
                                 {loginForgottenUsernameLabel}
                             </ContentText>
                         </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.5} onPress={this.handleOpenBrowserPassword}>
+                        <TouchableOpacity activeOpacity={0.5} onPress={() => {
+                            Linking.openURL(loginForgotPasswordLink)
+                        }}>
                             <ContentText style={[loginStyles.iForgot, {
                                 color: customColours.loginIForgotMyForeground
                             }]}>
@@ -104,7 +111,7 @@ function LoginFunctionComponent(props) {
                             </ContentText>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity activeOpacity={0.5} onPress={this.onLogin}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={() => props.onLogin(uName.valueOf(), pWord.valueOf())}>
                         <View style={[loginStyles.submitButton, {
                             backgroundColor: customColours.loginSubmitButtonBackground
                         }]}>
@@ -158,15 +165,15 @@ class LoginComponent extends Component {
         // this.setState({ marginBottom: 0 })
     }
     handleUnameChange = (event = {}) => {
-        let value = event.nativeEvent.text
+        let value = event?.nativeEvent?.text
         this.setState({ username: value })
     }
     handlePwordChange = (event = {}) => {
-        let value = event.nativeEvent.text
+        let value = event?.nativeEvent?.text
         this.setState({ password: value })
     }
-    onLogin = _ => {
-        this.props.onSubmit(this.state.username, this.state.password, isIncorrectPassword => {
+    onLogin = (username, password) => {
+        this.props.onSubmit(username, password, isIncorrectPassword => {
             this.setState({
                 errorMessage: (isIncorrectPassword.ok)
                     ? loginCredentialsErrorLabel
@@ -174,18 +181,15 @@ class LoginComponent extends Component {
             })
         })
     }
-    handleOpenBrowserUsername() {
-        Linking.openURL(loginForgotUsernameLink)
-    }
-    handleOpenBrowserPassword() {
-        Linking.openURL(loginForgotPasswordLink)
-    }
     render() {
         return <LoginFunctionComponent
             moveAnim={this.state.moveAnim}
             errorMessage={this.state.errorMessage}
             username={this.state.username}
             password={this.state.password}
+            onLogin={this.onLogin}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
         />
     }
 }

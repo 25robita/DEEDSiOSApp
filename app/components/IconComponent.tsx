@@ -5,8 +5,7 @@ import { icons } from '../consts';
 import { styles } from '../styles';
 import { ContentText } from './ContentTextComponent';
 
-
-function IconComponent(props) {
+function IconComponent(props: { name: string, style: object | null } | { id: string, style: object | null }) {
     let colors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
     return (
         <ContentText

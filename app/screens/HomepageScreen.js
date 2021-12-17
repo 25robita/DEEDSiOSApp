@@ -1,8 +1,10 @@
 import React from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
+import { Appearance } from "react-native-appearance";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Component } from "react/cjs/react.production.min";
 import { ThemeContext } from '../../ThemeProvider';
-import { getColors } from "../colours";
+import { coloursDark, coloursLight, getColors } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
 import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
@@ -47,7 +49,25 @@ export default class HomepageScreen extends Component {
                 this.setState({ name: pageTitle })
                 pageTitle = sliceNavigationTitle(pageTitle)
 
-                this.props.navigation.setOptions({ title: pageTitle })
+                const customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+
+                this.props.navigation.setOptions({
+                    title: pageTitle,
+                    headerRight: () =>
+                        <TouchableOpacity
+                            onPress={() => {
+                                openURL(this.state.url, false)
+                            }}
+                        >
+                            <IconComponent id={"\ue921"} style={{
+                                fontSize: 20,
+                                color: customColors.headerForeground,
+                                paddingRight: 20
+                            }} />
+                        </TouchableOpacity>
+
+                })
+
                 let breadcrumbs = d.querySelectorAll(".breadcrumb li a")
                 if (breadcrumbs.length) {
                     breadcrumbs = breadcrumbs.map(item => {

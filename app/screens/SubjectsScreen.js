@@ -41,14 +41,10 @@ class SubjectsScreen extends Component {
                     state={this.state.loaded ? "loaded" : (this.state.failed ? "failed" : "loading")}
                     failText={subjectsFailTextLabel}
                 >
-                    {
-                        this.state.loaded
-                            ? <LinksList
-                                icon="teacher"
-                                data={this.state.items}
-                            />
-                            : null
-                    }
+                    <LinksList
+                        icon="teacher"
+                        data={this.state.items}
+                    />
                 </LoaderComponent>
             </ScrollingScreenTemplate>
         );

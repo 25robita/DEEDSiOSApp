@@ -102,13 +102,18 @@ class TimetableRow extends Component {
             failed: false,
             isFilled: false,
             willUpdate: false,
-            willUpdateCh2: false
+            willUpdateCh2: false,
+            noTimetable: false
         }
     }
     componentDidMount = () => {
         this.state.willUpdate = true // won't trigger event
         getNowOnwards()
             .then(timetable => {
+                console.log("obtained timetable")
+                if (timetable == null) {
+                    return this.setState({ failed: true, noTimetable: true })
+                }
                 this.setState({ timetable, isFilled: true })
             }, _ => {
                 this.setState({ failed: true })
@@ -128,6 +133,9 @@ class TimetableRow extends Component {
         this.state.willUpdate = true
         getNowOnwards()
             .then(timetable => {
+                if (timetable == null) {
+                    return this.setState({ failed: true, noTimetable: true, showActivity: false })
+                }
                 this.setState({ timetable, isFilled: true, showActivity: false })
             }, _ => {
                 this.setState({ failed: true, showActivity: false })

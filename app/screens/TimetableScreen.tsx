@@ -10,17 +10,17 @@ import IconComponent from '../components/IconComponent';
 import { Meta } from '../components/MetaTextComponent';
 import { TimetableSubject } from '../components/TimetableRow';
 import { getDayAndFull } from '../getters/timetable';
-import { days } from '../lang';
+import { days, timetableEmptyMessage } from '../lang';
 import { decodeTimetable } from '../MinifyTimetable';
 import { styles } from '../styles';
 const DaysTabs = createMaterialTopTabNavigator();
 const DaysTabsRef = createNavigationContainerRef();
 
-function handleKeyExtraction(index, item) {
+function handleKeyExtraction(index: Number, item: any) {
     return item + index
 }
 
-var handleRenderItem = ({ item }) => {
+var handleRenderItem = ({ item }: { item: Number }) => {
     return (
         <View>
             <TimetableSubject data={item} />
@@ -30,7 +30,7 @@ var handleRenderItem = ({ item }) => {
 
 class TimetableSubScreen extends Component {
     static contextType = ThemeContext;
-    constructor(props) {
+    constructor(props: any) {
         super(props)
     }
 
@@ -64,7 +64,7 @@ class TimetableSubScreen extends Component {
 }
 
 
-function DaySelector({ state, navigation }) {
+function DaySelector({ state, navigation }: { state: any, navigation: any }) {
     return (
         <View
             style={{
@@ -155,7 +155,8 @@ class TimetableScreen extends Component {
         fullTimetable: [],
         day: 0,
         now: undefined,
-        willUpdate: false
+        willUpdate: false,
+        error: false
     }
     constructor(props) {
         super(props);
@@ -166,9 +167,11 @@ class TimetableScreen extends Component {
     }
     updateTimetable = () => {
         getDayAndFull(this.state.day, this.state.now)
-            .then(([timetable, fullTimetable]) => {
+            .then((res) => {
+                this.setState({ error: false })
+                if (!res) return this.setState({ error: true })
+                let [_, __, fullTimetable] = res;
                 this.state.willUpdate = true;
-                let x;
                 this.setState({ fullTimetable })
             }, _ => {
                 console.log("f")
@@ -229,7 +232,16 @@ class TimetableScreen extends Component {
                                 }
                             </DaysTabs.Navigator>
                         </NavigationContainer>
-                        : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
+                        : (
+                            this.state.error
+                                ? <Meta style={{
+                                    textAlign: "center",
+                                    paddingVertical: 40
+                                }}>
+                                    {timetableEmptyMessage}
+                                </Meta>
+                                : <ActivityIndicator style={{ paddingTop: 100, transform: [{ scale: 0.7 }] }} size="large" />
+                        )
                 }
             </View>
         );

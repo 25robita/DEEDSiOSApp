@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Image, View } from "react-native";
 import { Appearance } from "react-native-appearance";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { ThemeContext } from '../../ThemeProvider';
 import { coloursDark, coloursLight } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
+import IconComponent from "../components/IconComponent";
 import LoaderComponent from "../components/LoaderComponent";
 import { Meta } from "../components/MetaTextComponent";
 import { getRelativeTime } from "../components/NewsRow";
@@ -11,6 +13,7 @@ import UserLinkComponent from "../components/UserLinkComponent";
 import { serviceURL } from "../consts";
 import { fetchJSONResource } from "../getters/get";
 import { newsItemAuthorLabel, newsItemNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
+import { openURL } from "../RootNavigation";
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
 
@@ -27,7 +30,23 @@ class NewsItemScreen extends Component {
                 .then(body => {
                     this.setState({ body, bodyDone: true })
                     let title = sliceNavigationTitle(`${newsItemNavigationTitlePrepend} – ${body.article.title}`)
-                    this.props.navigation.setOptions({ title })
+                    const customColors = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
+                    this.props.navigation.setOptions({
+                        title,
+                        headerRight: () =>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    openURL(`/news/${this.props.route.params.id}`, false)
+                                }}
+                            >
+                                <IconComponent id={"\ue921"} style={{
+                                    fontSize: 20,
+                                    color: customColors.headerForeground,
+                                    paddingRight: 20
+                                }} />
+                            </TouchableOpacity>
+
+                    })
                 })
         }
     }

@@ -15,6 +15,49 @@ export function sliceNavigationTitle(string, maxLength = maxNavigationTitleLengt
         : string
 }
 
+export const genericEmptyMessages = [ // there's some joke to be made here about missing assignments
+    "Nothing to see here!",
+    "This is empty, maybe you've gone down the wrong rabbithole?", // this one sounds terrible
+    "Sorry, nothing could be found at this time",
+    "Oops! No data found. Perhaps try again later?",
+    "Seems a bit empty; I hope it's not a bug...",
+    "We've searched the archives; nothing could be found",
+    "This is about as empty as my head",
+    "There are as many results as stars in the sky! In the daytime...",
+    "Maybe try looking next period, I can't see anything here right now."
+];
+
+export const genericEmptyMessagesTier2 = [
+    "Still nothing here!",
+    "Definitely nothing!",
+    "Really is empty",
+    "Did you think I was lying to you?",
+    "You don't have to keep asking",
+    "It's empty, I promise"
+]
+
+export const genericEmptyMessagesTier3 = [
+    "This is pointless",
+    "You can stop now",
+    "Really? There's nothing here.",
+    "I don't think this is productive.",
+    "Go do you homework or something, there's nothing here.",
+    "Empty as a birds bones!",
+]
+
+export const emptyMessageTiers = [
+    genericEmptyMessages,
+    genericEmptyMessagesTier2,
+    genericEmptyMessagesTier3
+]
+
+export const generateGenericEmptyMessage = (tier) => {
+    console.log(tier)
+    let messages = emptyMessageTiers[Math.min(emptyMessageTiers.length - 1, tier)]
+    return messages[Math.floor(Math.random() * messages.length)]
+}
+
+
 // Login Page (login~Label)
 export const loginSubmitLabel = "Sign In"
 export const loginForgottenPasswordLabel = "I forgot my password"
@@ -33,6 +76,7 @@ export const newsItemNavigationTitlePrepend = "Article";
 
 // Timetable (timetable~)
 export const timetableNavigationTitle = "Timetable"
+export const timetableEmptyMessage = "No timetable could be found"
 export const days = [
     "Monday",
     "Tuesday",

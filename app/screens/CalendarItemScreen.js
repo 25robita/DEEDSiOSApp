@@ -2,14 +2,17 @@ import { decode } from 'html-entities';
 import React, { Component } from "react";
 import { View } from "react-native";
 import { Appearance } from 'react-native-appearance';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ThemeContext } from '../../ThemeProvider';
 import { coloursDark, coloursLight, foregroundContrastBreakpoint, getRoughColorLightness, turnLightnessToTransparency } from "../colours";
 import { ContentText } from "../components/ContentTextComponent";
+import IconComponent from '../components/IconComponent';
 import LoaderComponent from "../components/LoaderComponent";
 import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
 import { fetchJSONResource } from "../getters/get";
 import { eventAttendAcceptLabel, eventAttendancePromptLabel, eventAttendDeclineLabel, eventAuthorLabel, eventDateAndTimeLabel, eventFailTextLabel, eventLocationLabel, eventNavigationTitle, eventNumberAcceptedLabel, eventNumberDeclinedLabel, eventNumberPendingLabel, sliceNavigationTitle } from "../lang";
+import { openURL } from '../RootNavigation';
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
 
@@ -43,7 +46,22 @@ class CalendarItemScreen extends Component {
                     this.setState({ attendance: j })
                 })
         }
-        this.props.navigation.setOptions({ title: sliceNavigationTitle(`${eventNavigationTitle} – ${this.props.route.params?.item?.title}`) })
+        this.props.navigation.setOptions({
+            title: sliceNavigationTitle(`${eventNavigationTitle} – ${this.props.route.params?.item?.title}`),
+            headerRight: () =>
+                <TouchableOpacity
+                    onPress={() => {
+                        openURL(`/calendar/event/${this.props.route.params?.item?.data?.meta?.eventId}`, false)
+                    }}
+                >
+                    <IconComponent id={"\ue921"} style={{
+                        fontSize: 20,
+                        color: customColors.headerForeground,
+                        paddingRight: 20
+                    }} />
+                </TouchableOpacity>
+
+        })
     }
 
     render() {

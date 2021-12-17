@@ -25,82 +25,93 @@ class SchoolboxSocialStream_Post extends Component {
     }
     render() {
         let customColours = Appearance.getColorScheme() == "dark" ? coloursDark : coloursLight
-        return <View
-            style={{
-                borderBottomColor: customColours.neutralLowContrast,
-                borderBottomWidth: 1,
-                backgroundColor: this.props.layer ? customColours.homepageSocialStream : 'transparent'
-            }}
-        >
+        return (
+            // <ContextMenu
+            //     actions={[
+            //         {
+            //             title: "Delete",
+            //             destructive: true,
+            //         },
+            //         {
+            //             title: "Reply"
+            //         }
+            //     ]}
+            // >
             <View
                 style={{
-                    flexDirection: 'row',
-                    alignItems: 'center'
+                    borderBottomColor: customColours.neutralLowContrast,
+                    borderBottomWidth: 1,
+                    backgroundColor: this.props.layer ? customColours.homepageSocialStream : 'transparent'
                 }}
             >
-                <TouchableOpacity
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                    onPress={this.onProfilePress}
-                >
-
-                    <Image
-                        style={{
-                            width: 50,
-                            height: 50,
-                        }}
-                        source={{ uri: serviceURL + this.props.authorImageURL }}
-                    />
-                </TouchableOpacity>
                 <View
                     style={{
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        flex: 1,
-                        flexWrap: 'wrap', // incase stuff is too long
-                        paddingHorizontal: 20
+                        alignItems: 'center'
                     }}
                 >
                     <TouchableOpacity
-                        hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                         onPress={this.onProfilePress}
                     >
-
-                        <ContentText
+                        <Image
                             style={{
-                                color: customColours.link,
-                                fontSize: 14,
-                                marginRight: 10 // force it to go on a newline if too close
+                                width: 50,
+                                height: 50,
                             }}
-                        >
-                            {this.props.postAuthor}
-                        </ContentText>
+                            source={{ uri: serviceURL + this.props.authorImageURL }}
+                        />
                     </TouchableOpacity>
-                    <Meta>
-                        {this.props.postMetaText}
-                    </Meta>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            flex: 1,
+                            flexWrap: 'wrap', // incase stuff is too long
+                            paddingHorizontal: 20
+                        }}
+                    >
+                        <TouchableOpacity
+                            hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
+                            onPress={this.onProfilePress}
+                        >
+                            <ContentText
+                                style={{
+                                    color: customColours.link,
+                                    fontSize: 14,
+                                    marginRight: 10 // force it to go on a newline if too close
+                                }}
+                            >
+                                {this.props.postAuthor}
+                            </ContentText>
+                        </TouchableOpacity>
+                        <Meta>
+                            {this.props.postMetaText}
+                        </Meta>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        paddingLeft: 70,
+                        paddingRight: 10
+                    }}
+                >
+                    <ContentText>
+                        {renderHTMLText(this.props.postContentHTML)}
+                    </ContentText>
+                </View>
+                <View
+                    style={{
+                        borderLeftWidth: 10,
+                        borderLeftColor: customColours.neutralHighContrast,
+                        marginLeft: this.props.layer == 1 ? 15 : 0
+                    }}
+                >
+                    {this.props.postReplies && this.props.postReplies.map(this.props.renderPost.bind(null, this.props.layer + 1))}
                 </View>
             </View>
-            <View
-                style={{
-                    paddingLeft: 70,
-                    paddingRight: 10
-                }}
-            >
-                <ContentText>
-                    {renderHTMLText(this.props.postContentHTML)}
-                </ContentText>
-
-            </View>
-            <View
-                style={{
-                    borderLeftWidth: 10,
-                    borderLeftColor: customColours.neutralHighContrast,
-                    marginLeft: this.props.layer == 1 ? 15 : 0
-                }}
-            >
-                {this.props.postReplies && this.props.postReplies.map(this.props.renderPost.bind(null, this.props.layer + 1))}
-            </View>
-        </View>
+            // </ContextMenu>
+        )
     }
 }
 

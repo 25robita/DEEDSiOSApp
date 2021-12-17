@@ -5,6 +5,7 @@ import { Appearance } from 'react-native-appearance';
 import { ThemeContext } from '../../ThemeProvider';
 import { coloursDark, coloursLight } from '../colours';
 import LoginComponent from '../components/LoginComponent';
+import { authenticate } from '../getters/authenticate';
 import { fetchHTMLResource } from '../getters/get';
 import { loginStyles, styles } from '../styles';
 
@@ -15,42 +16,46 @@ class LoginScreen extends Component {
     constructor(props) {
         super(props)
     }
-    handleLogin = (u, p, cb) => {
-        setItemAsync("u", u);
-        setItemAsync("p", p);
-        fetchHTMLResource("/")
-            .then(d => {
-                let js = d
-                    .querySelectorAll("script")
-                    .filter(i => !i.src && /schoolboxUser\s+=/g.test(i.text))
-                    .map(i => i.text)[0]
-                js = js.replaceAll(/\n\s+/g, "\n").replaceAll(/\s+=\s+/g, " = ")
-                js = js.slice(js.indexOf("var schoolboxUser"), js.lastIndexOf("\n//"))
-                let jsVars = Array.from(
-                    js.matchAll(/(\w+) = ([^\n;]*)/g)
-                )
-                    .map(([_, name, value]) =>
-                        [
-                            name,
-                            (value.startsWith("Boolean")
-                                ? Boolean(
-                                    JSON.parse(
-                                        Array.from(
-                                            value.matchAll(/Boolean\(([^\)]+)\)/g)
-                                        )[0][1]
-                                            .replaceAll("'", '"')
-                                    )
-                                )
-                                : JSON.parse(value)
-                            )
-                        ]);
-                setItemAsync("userMeta", JSON.stringify(
-                    Object.fromEntries(
-                        jsVars
+    handleLogin = (username, password, callback) => {
+        console.log(username, password)
+        setItemAsync("u", username);
+        setItemAsync("p", password);
+        authenticate(username, password).then((a) => {
+            console.log(a)
+            fetchHTMLResource("/")
+                .then(d => {
+                    let js = d
+                        .querySelectorAll("script")
+                        .filter(i => !i.src && /schoolboxUser\s+=/g.test(i.text))
+                        .map(i => i.text)[0]
+                    js = js.replaceAll(/\n\s+/g, "\n").replaceAll(/\s+=\s+/g, " = ")
+                    js = js.slice(js.indexOf("var schoolboxUser"), js.lastIndexOf("\n//"))
+                    let jsVars = Array.from(
+                        js.matchAll(/(\w+) = ([^\n;]*)/g)
                     )
-                ))
-                this.props.navigation.navigate("Home")
-            }, cb)
+                        .map(([_, name, value]) =>
+                            [
+                                name,
+                                (value.startsWith("Boolean")
+                                    ? Boolean(
+                                        JSON.parse(
+                                            Array.from(
+                                                value.matchAll(/Boolean\(([^\)]+)\)/g)
+                                            )[0][1]
+                                                .replaceAll("'", '"')
+                                        )
+                                    )
+                                    : JSON.parse(value)
+                                )
+                            ]);
+                    setItemAsync("userMeta", JSON.stringify(
+                        Object.fromEntries(
+                            jsVars
+                        )
+                    ))
+                    this.props.navigation.navigate("Home")
+                }, callback)
+        })
     }
     render() {
         let customColours = Appearance.getColorScheme() == 'dark' ? coloursDark : coloursLight

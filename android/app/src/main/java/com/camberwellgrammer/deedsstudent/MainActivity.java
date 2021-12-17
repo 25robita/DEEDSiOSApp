@@ -1,4 +1,4 @@
-package deeds.ios;
+package com.camberwellgrammer.deedsstudent;
 import android.content.res.Configuration;
 import android.content.Intent;
 

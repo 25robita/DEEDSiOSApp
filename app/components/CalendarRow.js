@@ -133,25 +133,29 @@ class CalendarRow extends Component {
                     failText="Unable to load the calendar at the moment"
                     style={{ backgroundColor: customColours.calendarIndentBackground || customColours.contentBackground }}
                 >
-                    <View style={[styles.shadow, {
-                        borderColor: customColours.calendarBackground,
-                        borderBottomWidth: 7,
-                        borderRightWidth: 7,
-                        borderLeftWidth: 0,
-                        backgroundColor: customColours.calendarBackground
-                    }]}>
-                        <SectionList
-                            scrollEnabled={false}
-                            sections={this.state.calendar}
-                            renderItem={this.handleRenderCalendarEvent}
-                            renderSectionHeader={this.handleRenderCalendarHeader}
-                            keyExtractor={this.handleExtractKey}
-                            style={[{
-                                borderLeftWidth: 9,
-                                borderColor: customColours.calendarIndentBackground || customColours.contentBackground
-                            }]}
-                        />
-                    </View>
+                    {
+                        this.state?.calendar ?
+                            <View style={[styles.shadow, {
+                                borderColor: customColours.calendarBackground,
+                                borderBottomWidth: 7,
+                                borderRightWidth: 7,
+                                borderLeftWidth: 0,
+                                backgroundColor: customColours.calendarBackground
+                            }]}>
+                                <SectionList
+                                    scrollEnabled={false}
+                                    sections={this.state.calendar}
+                                    renderItem={this.handleRenderCalendarEvent}
+                                    renderSectionHeader={this.handleRenderCalendarHeader}
+                                    keyExtractor={this.handleExtractKey}
+                                    style={[{
+                                        borderLeftWidth: 9,
+                                        borderColor: customColours.calendarIndentBackground || customColours.contentBackground
+                                    }]}
+                                />
+                            </View>
+                            : null
+                    }
                 </LoaderComponent>
             </SectionComponent>
         )
