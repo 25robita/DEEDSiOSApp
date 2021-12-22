@@ -17,7 +17,6 @@ export const ThemeContext = createContext({
 export const ThemeProvider = (props: any) => {
     // Getting the device color theme, this will also work with react-native-web
     const colorScheme = Appearance.getColorScheme(); // Can be dark | light | no-preference
-    console.log(colorScheme)
     /*
      * To enable changing the app theme dynamicly in the app (run-time)
      * we're gonna use useState so we can override the default device theme
@@ -35,13 +34,11 @@ export const ThemeProvider = (props: any) => {
 
     const defaultTheme = {
         isDark,
-        // Chaning color schemes according to theme
+        // Changing color schemes according to theme
         colors: isDark ? darkColors : lightColors,
         // Overrides the isDark value will cause re-render inside the context.
-        setScheme: (scheme?: any) => setIsDark(scheme === "dark"), // according to typescript scheme is not present?
+        setScheme: (scheme?: any) => setIsDark(scheme === "dark"),
     };
-
-    console.log(isDark);
 
     return (
         <ThemeContext.Provider value={defaultTheme}>

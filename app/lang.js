@@ -1,3 +1,5 @@
+import { PixelRatio } from "react-native";
+
 export const barcodeExplanation = `
 <b>Barcode</b>
 <p>This barcode can be used to sign in at Student Services as well as the Middle School Office. It can also allow you to borrow books at the library. It is identical to the one on your Student ID.
@@ -8,10 +10,26 @@ const authoredLabel = "By"; // used to indicate content author
 const accept = "Yes";
 const decline = "No";
 
-export const maxNavigationTitleLength = 27; // cuts off title at length
-export function sliceNavigationTitle(string, maxLength = maxNavigationTitleLength) {
-    return string.length > maxLength
-        ? string.slice(0, maxLength - 3) + '...'
+// export const maxNavigationTitleLength.maxNavigationTitleLength = 27; // cuts off title at length
+
+export const maxNavigationTitleLength = {
+    get maxNavigationTitleLength() {
+        // console.log(PixelRatio.getFontScale());
+        // console.log("test test test test")
+        let l = Math.floor(PixelRatio.getFontScale() * -19.6 + 47.4);
+        console.log(l)
+        console.log(PixelRatio.get())
+
+        return l
+        // return 31 // 31 at 0.823, 27 at 1, 21 at 1.353
+    }
+}
+
+export function sliceNavigationTitle(string, maxLength) {
+    // console.log('PENIS123')
+    maxLength = maxLength ?? maxNavigationTitleLength.maxNavigationTitleLength;
+    return string.length > (maxLength)
+        ? string.slice(0, (maxLength) - 3) + '...'
         : string
 }
 

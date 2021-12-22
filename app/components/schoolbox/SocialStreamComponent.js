@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import ContextMenu from 'react-native-context-menu-view';
 import { Component } from 'react/cjs/react.production.min';
 import { ThemeContext } from '../../../ThemeProvider';
 // import { customColours } from '../../colours';
@@ -14,95 +15,94 @@ import LoaderComponent from '../LoaderComponent';
 import { Meta } from '../MetaTextComponent';
 import SchoolboxComponent from './SchoolboxComponent';
 
-
 function SchoolboxSocialStream_Post(props) {
     const { colors } = useContext(ThemeContext);
     return (
-        // <ContextMenu
-        //     actions={[
-        //         {
-        //             title: "Delete",
-        //             destructive: true,
-        //         },
-        //         {
-        //             title: "Reply"
-        //         }
-        //     ]}
-        // >
-        <View
-            style={{
-                borderBottomColor: colors.neutralLowContrast,
-                borderBottomWidth: 1,
-                backgroundColor: props.layer ? colors.homepageSocialStream : 'transparent'
-            }}
+        <ContextMenu
+            actions={[
+                {
+                    title: "Delete",
+                    destructive: true,
+                },
+                {
+                    title: "Reply"
+                }
+            ]}
         >
             <View
                 style={{
-                    flexDirection: 'row',
-                    alignItems: 'center'
+                    borderBottomColor: colors.neutralLowContrast,
+                    borderBottomWidth: 1,
+                    backgroundColor: props.layer ? colors.homepageSocialStream : 'transparent'
                 }}
             >
-                <TouchableOpacity
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                    onPress={() => openURL(props.profileURL)}
-                >
-                    <Image
-                        style={{
-                            width: 50,
-                            height: 50,
-                        }}
-                        source={{ uri: serviceURL + props.authorImageURL }}
-                    />
-                </TouchableOpacity>
                 <View
                     style={{
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        flex: 1,
-                        flexWrap: 'wrap', // incase stuff is too long
-                        paddingHorizontal: 20
+                        alignItems: 'center'
                     }}
                 >
                     <TouchableOpacity
-                        hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                         onPress={() => openURL(props.profileURL)}
                     >
-                        <ContentText
+                        <Image
                             style={{
-                                color: colors.link,
-                                fontSize: 14,
-                                marginRight: 10 // force it to go on a newline if too close
+                                width: 50,
+                                height: 50,
                             }}
-                        >
-                            {props.postAuthor}
-                        </ContentText>
+                            source={{ uri: serviceURL + props.authorImageURL }}
+                        />
                     </TouchableOpacity>
-                    <Meta>
-                        {props.postMetaText}
-                    </Meta>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            flex: 1,
+                            flexWrap: 'wrap', // incase stuff is too long
+                            paddingHorizontal: 20
+                        }}
+                    >
+                        <TouchableOpacity
+                            hitSlop={{ top: 20, bottom: 20, left: 10, right: 10 }}
+                            onPress={() => openURL(props.profileURL)}
+                        >
+                            <ContentText
+                                style={{
+                                    color: colors.link,
+                                    fontSize: 14,
+                                    marginRight: 10 // force it to go on a newline if too close
+                                }}
+                            >
+                                {props.postAuthor}
+                            </ContentText>
+                        </TouchableOpacity>
+                        <Meta>
+                            {props.postMetaText}
+                        </Meta>
+                    </View>
+                </View>
+                <View
+                    style={{
+                        paddingLeft: 70,
+                        paddingRight: 10
+                    }}
+                >
+                    <ContentText>
+                        {renderHTMLText(props.postContentHTML)}
+                    </ContentText>
+                </View>
+                <View
+                    style={{
+                        borderLeftWidth: 10,
+                        borderLeftColor: colors.neutralHighContrast,
+                        marginLeft: props.layer == 1 ? 15 : 0
+                    }}
+                >
+                    {props.postReplies && props.postReplies.map(props.renderPost.bind(null, props.layer + 1))}
                 </View>
             </View>
-            <View
-                style={{
-                    paddingLeft: 70,
-                    paddingRight: 10
-                }}
-            >
-                <ContentText>
-                    {renderHTMLText(props.postContentHTML)}
-                </ContentText>
-            </View>
-            <View
-                style={{
-                    borderLeftWidth: 10,
-                    borderLeftColor: colors.neutralHighContrast,
-                    marginLeft: props.layer == 1 ? 15 : 0
-                }}
-            >
-                {props.postReplies && props.postReplies.map(props.renderPost.bind(null, props.layer + 1))}
-            </View>
-        </View>
-        // </ContextMenu>
+        </ContextMenu>
     )
 
 }

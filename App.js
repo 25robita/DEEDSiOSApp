@@ -22,13 +22,13 @@ import MainScreen from './app/screens/MainScreen';
 import NavigationScreen from './app/screens/NavigationScreen';
 import NewsItemScreen from './app/screens/NewsItemScreen';
 import NewsScreen from './app/screens/NewsScreen';
+import SettingsScreen from './app/screens/SettingsScreen';
 import SubjectsScreen from './app/screens/SubjectsScreen';
 import TimetableScreen from './app/screens/TimetableScreen';
-import UserProfileScreen from './app/screens/UserProfile';
+import UserProfileScreen from './app/screens/UserProfileScreen';
 import WaitingScreen from './app/screens/WaitingScreen';
 import { styles } from './app/styles';
 import { ThemeProvider } from './ThemeProvider';
-
 
 const MainStack = createStackNavigator();
 
@@ -42,7 +42,8 @@ const headerButtonHitslop = {
 const navigatorOptions = {
     headerStyle: [styles.topBar],
     headerTitleStyle: [styles.topBarHeading],
-    headerTintColor: customColours.headerForeground
+    headerTintColor: customColours.headerForeground,
+    statusBarStyle: 'light-content'
 }
 
 const navigatorOptionsHideBack = Object.assign({}, navigatorOptions, {
@@ -114,6 +115,10 @@ class App extends Component {
         super(props)
     }
     componentDidMount() {
+        // Notifications.events().registerRemoteNotificationsRegistered((event) => {
+        //     console.log(event.deviceToken);
+        // });
+        // console.log(Notifications);
         loadAsync({
             schoolbox: require("./app/assets/fonts/schoolbox.ttf")
         })
@@ -222,6 +227,12 @@ class App extends Component {
                             <MainStack.Screen
                                 name="Barcode"
                                 component={BarcodeScreen}
+                                options={navigatorOptions}
+                                initialParams={{}}
+                            />
+                            <MainStack.Screen
+                                name="Settings"
+                                component={SettingsScreen}
                                 options={navigatorOptions}
                                 initialParams={{}}
                             />

@@ -11,6 +11,7 @@ import UserLinkComponent from "../components/UserLinkComponent";
 import { UserList } from "../components/UserListComponent";
 import { fetchJSONResource } from "../getters/get";
 import { eventAttendAcceptLabel, eventAttendancePromptLabel, eventAttendDeclineLabel, eventAuthorLabel, eventDateAndTimeLabel, eventFailTextLabel, eventLocationLabel, eventNavigationTitle, eventNumberAcceptedLabel, eventNumberDeclinedLabel, eventNumberPendingLabel, sliceNavigationTitle } from "../lang";
+import { postJSON } from '../posters/post';
 import { openURL } from '../RootNavigation';
 import { styles } from "../styles";
 import ContentScreenTemplate, { HorizontalRule, HTMLTextView } from "./ContentScreenTemplate";
@@ -35,14 +36,14 @@ class CalendarItemScreen extends Component {
     static contextType = ThemeContext;
     constructor(props) {
         super(props);
-        this.state = { attendance: {} };
+        this.state = { attendance: {}, attending: null };
     }
 
     componentDidMount = () => {
         if (this.props.route.params?.item?.data?.meta?.eventId) {
             fetchJSONResource(`/calendar/event/attendance/${this.props.route.params?.item?.data?.meta?.eventId}`)
                 .then(j => {
-                    this.setState({ attendance: j })
+                    this.setState({ attendance: j, attending: [null, null, true, false][j.currentUser.status] })
                 })
         }
 
@@ -54,11 +55,14 @@ class CalendarItemScreen extends Component {
                         openURL(`/calendar/event/${this.props.route.params?.item?.data?.meta?.eventId}`, false)
                     }}
                 >
-                    <IconComponent id={"\ue921"} style={{
-                        fontSize: 20,
-                        color: this.context.colors.headerForeground,
-                        paddingRight: 20
-                    }} />
+                    <IconComponent
+                        id={"\ue921"}
+                        maxFontSizeMultiplier={1.2}
+                        style={{
+                            fontSize: 20,
+                            color: this.context.colors.headerForeground,
+                            paddingRight: 20
+                        }} />
                 </TouchableOpacity>
 
         })
@@ -221,7 +225,7 @@ class CalendarItemScreen extends Component {
                                                     >
                                                         <View
                                                             style={{
-                                                                backgroundColor: this.context.colors.themeSeconday,
+                                                                backgroundColor: this.state.attending ? this.context.colors.themePositive : this.context.colors.themeSeconday,
                                                                 flex: 1,
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
@@ -229,31 +233,72 @@ class CalendarItemScreen extends Component {
                                                                 marginRight: 2
                                                             }}
                                                         >
-                                                            <ContentText
-                                                                style={{
-                                                                    color: this.context.colors.link
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    postJSON(
+                                                                        `/calendar/event/attendance/${this.props.route.params?.item?.data?.meta?.eventId}/accept?returnUrl=L2NhbGVuZGFyLzAxLTEyLTIwMjEvMTc4`
+                                                                    ).then(async res => {
+                                                                        this.setState({
+                                                                            attending: (await res.json()).currentUser.status == 2
+                                                                        })
+                                                                    })
+                                                                }}
+                                                                hitSlop={{
+                                                                    top: 10,
+                                                                    bottom: 10,
+                                                                    right: 75,
+                                                                    left: 75,
                                                                 }}
                                                             >
-                                                                {eventAttendAcceptLabel}
-                                                            </ContentText>
+                                                                <ContentText
+                                                                    style={{
+                                                                        color: this.context.colors.link
+                                                                    }}
+                                                                >
+                                                                    {eventAttendAcceptLabel}
+                                                                </ContentText>
+                                                            </TouchableOpacity>
                                                         </View>
                                                         <View
                                                             style={{
-                                                                backgroundColor: this.context.colors.themeSeconday,
+                                                                backgroundColor: this.state.attending === false ? this.context.colors.themeNegative : this.context.colors.themeSeconday,
                                                                 flex: 1,
                                                                 justifyContent: 'center',
                                                                 alignItems: 'center',
                                                                 padding: 10,
                                                             }}
                                                         >
-                                                            <ContentText
-                                                                style={{
-                                                                    color: this.context.colors.link
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    postJSON(
+                                                                        `/calendar/event/attendance/${this.props.route.params?.item?.data?.meta?.eventId}/decline`
+                                                                    ).then(async res => {
+                                                                        this.setState({
+                                                                            attending: false
+                                                                            // (await res.json()).currentUser.status == 3
+                                                                        })
+                                                                    }, rej => {
+                                                                        console.log(`/calendar/event/attendance/${this.props.route.params?.item?.data?.meta?.eventId}/decline`)
+                                                                    })
+                                                                }}
+                                                                hitSlop={{
+                                                                    top: 10,
+                                                                    bottom: 10,
+                                                                    right: 75,
+                                                                    left: 75,
                                                                 }}
                                                             >
-                                                                {eventAttendDeclineLabel}
-                                                            </ContentText>
+
+                                                                <ContentText
+                                                                    style={{
+                                                                        color: this.context.colors.link
+                                                                    }}
+                                                                >
+                                                                    {eventAttendDeclineLabel}
+                                                                </ContentText>
+                                                            </TouchableOpacity>
                                                         </View>
+
                                                     </View>
                                                 </View>
                                                 : null

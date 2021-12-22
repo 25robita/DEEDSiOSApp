@@ -7,9 +7,10 @@ interface Event {
     isFirst: boolean;
 }
 
-function getCalendar(start?: Date, elapsed = 60 * 60 * 24 * 2, sectionize = true): Promise<any[] | any[][]> {
+function getCalendar(start?: Date, elapsed = 60 * 60 * 24 * 2, sectionize = true, startOffset = 0): Promise<any[] | any[][]> { // startoffset only for unset start
     return new Promise((resolve, reject) => {
         getItemAsync("userMeta").then((t: any) => {
+            console.log(startOffset)
             var userId: string = JSON.parse(t).schoolboxUser.id;
             var startToday: any = new Date();
             startToday.setHours(0);
@@ -17,46 +18,69 @@ function getCalendar(start?: Date, elapsed = 60 * 60 * 24 * 2, sectionize = true
             startToday.setSeconds(0);
             startToday.setMilliseconds(0);
             var startTodayN = Math.floor((startToday - 0) / 1000);
-            const url = `/calendar/ajax/full?start=${start ?? startTodayN}&end=${(Number(start) || startTodayN) + elapsed}&userId=${userId}`;
+            console.log("getting calendar")
+            const url = `/calendar/ajax/full?start=${Math.floor(Number(start) / 1000) || (startTodayN + startOffset)}&end=${(Math.floor(Number(start) / 1000) || (startTodayN + startOffset)) + elapsed}&userId=${userId}`;
+            console.log(url)
             fetchJSONResource(url, {}).then(
                 (calendar: any) => {
+                    console.log("obtained calendar")
                     if (sectionize) {
+                        var days: number[] = [];
+                        var dayMonths: number[] = [];
+                        var daysEvents: Event[][] = [];
 
-                        var days = [startToday.getDate(), startToday.getDate() + 1];
-                        var day1Events: Event[] = [];
-                        var day2Events: Event[] = [];
-                        // new Date(json[3].start).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })
-                        for (var eventData of calendar) {
-                            (new Date(eventData.start.split(" ")[0]).getDate() == days[0]
-                                ? day1Events
-                                : day2Events
-                            ).push(eventData);
+                        for (let i = 0; i < (elapsed / (60 * 60 * 24)); i++) {
+                            console.log(i)
+                            console.log(start)
+                            var date = new Date(Number(start ?? startToday) + 60 * 60 * 24 * 1000 * i);
+                            days.push(date.getDate())
+                            dayMonths.push(date.getMonth())
+                            daysEvents.push([])
                         }
-                        var sectionListData = [
-                            day1Events.length
+                        // new Date(json[3].start).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })
+
+                        let daysEventsObject: Record<string, Event[]> = {}
+
+                        for (var eventData of calendar) {
+                            // console.log(days);
+                            // var date = new Date(eventData.start.split(" ")[0]).getDate();
+                            // console.log(date);
+                            // var dayIndex = days.indexOf(date)
+                            // console.log("calendar.tsx:37 says:", dayIndex);
+                            // daysEvents[dayIndex].push(eventData)
+                            if (daysEventsObject[eventData.start.split(" ")[0]]) {
+                                daysEventsObject[eventData.start.split(" ")[0]].push(eventData);
+                            } else {
+                                daysEventsObject[eventData.start.split(" ")[0]] = [eventData]
+                            }
+                        }
+                        var sectionListData = Object.entries(daysEventsObject).map(([dateString, dayEvents], index) => (
+                            dayEvents.length
                                 ? {
-                                    title: startToday.toLocaleDateString(undefined, {
+                                    title: new Date(dateString).toLocaleDateString(undefined, {
                                         weekday: "long",
                                         day: "numeric",
                                         month: "long",
                                     }),
-                                    data: day1Events,
-                                    isFirst: true,
+                                    data: dayEvents,
+                                    isFirst: index == 0,
                                 }
-                                : null,
-                            day2Events.length
-                                ? {
-                                    title: (startToday.setDate(days[1]),
-                                        startToday).toLocaleDateString(undefined, {
-                                            weekday: "long",
-                                            day: "numeric",
-                                            month: "long",
-                                        }),
-                                    data: day2Events,
-                                    isFirst: false,
-                                }
-                                : null,
-                        ];
+                                : null
+                        ))
+                        // var sectionListData = daysEvents.map((dayEvents, index) =>
+                        // dayEvents.length
+                        //     ? {
+                        //         title: (startToday.setDate(days[index]), startToday.setMonth(dayMonths[index]),
+                        //             startToday).toLocaleDateString(undefined, {
+                        //                 weekday: "long",
+                        //                 day: "numeric",
+                        //                 month: "long",
+                        //             }),
+                        //         data: dayEvents,
+                        //         isFirst: index == 0,
+                        //     }
+                        //     : null
+                        // )
                         return resolve(sectionListData.filter(i => i));
                     } else resolve(calendar)
                 },

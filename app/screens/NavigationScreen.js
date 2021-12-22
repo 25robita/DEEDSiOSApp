@@ -9,75 +9,96 @@ import { dispatch } from "../RootNavigation";
 
 const navigationItems = [
     {
-        'name': 'Timetable',
-        'link': {
-            'name': "Timetable",
-            'params': {}
+        name: 'Timetable',
+        link: {
+            name: "Timetable",
+            params: {}
         },
-        'icon': {
-            'name': 'clock'
+        icon: {
+            name: 'clock'
         }
     },
     {
-        'name': 'Home',
-        'link': {
-            'name': "Home",
-            'params': {}
+        name: 'Home',
+        link: {
+            name: "Home",
+            params: {}
         },
-        'icon': {
-            'name': 'home'
+        icon: {
+            name: 'home'
         }
     },
     {
-        'name': 'Profile',
-        'link': {
-            'name': "User",
-            'params': {}
+        name: 'News',
+        link: {
+            name: "News",
+            params: {}
         },
-        'icon': {
-            'name': 'user'
+        icon: {
+            name: 'news'
         }
     },
     {
-        'name': 'News',
-        'link': {
-            'name': "News",
-            'params': {}
+        name: 'Profile',
+        link: {
+            name: "User",
+            params: {}
         },
-        'icon': {
-            'name': 'news'
+        icon: {
+            name: 'user'
         }
     },
     {
-        'name': 'My Classes',
-        'link': {
-            'name': "Subjects",
-            'params': {}
+        name: 'Calendar',
+        link: {
+            name: "Calendar",
+            params: {}
         },
-        'icon': {
-            'name': 'teacher'
+        icon: {
+            name: 'calendar'
         }
     },
     {
-        'name': 'My Groups',
-        'link': {
-            'name': "Groups",
-            'params': {}
+        name: 'My Classes',
+        link: {
+            name: "Subjects",
+            params: {}
         },
-        'icon': {
-            'name': 'group'
+        icon: {
+            name: 'teacher'
         }
     },
     {
-        'name': 'My Links',
-        'link': {
-            'name': "Links",
-            'params': {}
+        name: 'My Links',
+        link: {
+            name: "Links",
+            params: {}
         },
-        'icon': {
-            'name': 'link'
+        icon: {
+            name: 'link'
         }
     },
+    {
+        name: 'My Groups',
+        link: {
+            name: "Groups",
+            params: {}
+        },
+        icon: {
+            name: 'group'
+        }
+    },
+    {
+        name: 'Settings',
+        link: {
+            name: "Settings",
+            params: {}
+        },
+        icon: {
+            name: 'settings'
+        }
+    },
+
 ]
 
 class NavigationScreen extends Component {
@@ -94,7 +115,8 @@ class NavigationScreen extends Component {
         }
         let textStyle = {
             color: this.context.colors.navigation || this.context.colors.themePrimary,
-            fontSize: 18
+            fontSize: 18,
+            maxWidth: "90%"
         }
         return <TouchableOpacity activeOpacity={0.5}
             onPress={_ => {
@@ -114,16 +136,18 @@ class NavigationScreen extends Component {
                     flexDirection: "column",
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    paddingVertical: 15,
+                    paddingVertical: "10%",
                 }}
             >
                 {
                     icon.name
-                        ? <IconComponent style={iconStyle} name={icon.name} />
-                        : <IconComponent style={iconStyle} id={icon.id} />
+                        ? <IconComponent style={iconStyle} allowFontScaling={false} name={icon.name} />
+                        : <IconComponent style={iconStyle} allowFontScaling={false} id={icon.id} />
                 }
                 <ContentText
+                    adjustsFontSizeToFit={true}
                     style={textStyle}
+                    numberOfLines={1}
                 >
                     {name}
                 </ContentText>

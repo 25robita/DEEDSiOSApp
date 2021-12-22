@@ -1,5 +1,5 @@
 import { getItemAsync } from "expo-secure-store";
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 import { FlatList, Image, View } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ThemeContext } from '../../ThemeProvider';
@@ -12,39 +12,44 @@ import { profileNavigationTitlePrepend, sliceNavigationTitle } from "../lang";
 import { openURL } from "../RootNavigation";
 import ScrollingScreenTemplate from "./ScrollingScreenTemplate";
 
+function TableRow(props) {
+    const { colors } = useContext(ThemeContext);
+    return (
+        <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', marginBottom: 5 }}>
+            <View style={{ flex: 1, alignSelf: 'stretch' }}><ContentText style={{ fontWeight: "700" }}>{props.item[0]}</ContentText></View>
+            <View style={{ flex: 1, alignSelf: 'stretch' }}>
+                {
+                    props.item[1].type == "string"
+                        ? <ContentText>{props.item[1].text}</ContentText>
+                        : (
+                            <ContentText
+                                onPress={
+                                    _ => {
+                                        openURL(
+                                            props.item[1].type == "email"
+                                                ? `mailto:${props.item[1].text}`
+                                                : props.item[1].href
+                                        )
+                                    }
+                                }
+                                style={{ color: colors.link }}
+                            >
+                                {props.item[1].text}
+                            </ContentText>
+                        )
+                }
+            </View>
+        </View>
+    );
+}
+
 class Table extends Component {
     static contextType = ThemeContext
     constructor(props) {
         super(props)
     }
     renderRow({ item }) {
-        return (
-            <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', marginBottom: 5 }}>
-                <View style={{ flex: 1, alignSelf: 'stretch' }}><ContentText style={{ fontWeight: "700" }}>{item[0]}</ContentText></View>
-                <View style={{ flex: 1, alignSelf: 'stretch' }}>
-                    {
-                        item[1].type == "string"
-                            ? <ContentText>{item[1].text}</ContentText>
-                            : (
-                                <ContentText
-                                    onPress={
-                                        _ => {
-                                            openURL(
-                                                item[1].type == "email"
-                                                    ? `mailto:${item[1].text}`
-                                                    : item[1].href
-                                            )
-                                        }
-                                    }
-                                    style={{ color: this.context.colors.link }}
-                                >
-                                    {item[1].text}
-                                </ContentText>
-                            )
-                    }
-                </View>
-            </View>
-        );
+        return <TableRow item={item}></TableRow>
     }
 
     keyExtractor(a, b) {
@@ -146,11 +151,15 @@ class UserProfileScreen extends Component {
                                 openURL(`/search/user/${this.state.id}`, false)
                             }}
                         >
-                            <IconComponent id={"\ue921"} style={{
-                                fontSize: 20,
-                                color: this.context.colors.headerForeground,
-                                paddingRight: 20
-                            }} />
+                            <IconComponent
+                                // adjustsFontSizeToFit={true}
+                                maxFontSizeMultiplier={1.2}
+                                id={"\ue921"}
+                                style={{
+                                    fontSize: 20,
+                                    color: this.context.colors.headerForeground,
+                                    paddingRight: 20,
+                                }} />
                         </TouchableOpacity>
                 })
 

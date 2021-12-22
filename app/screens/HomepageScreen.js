@@ -56,7 +56,7 @@ export default class HomepageScreen extends Component {
                                 openURL(this.state.url, false)
                             }}
                         >
-                            <IconComponent id={"\ue921"} style={{
+                            <IconComponent maxFontSizeMultiplier={1.2} id={"\ue921"} style={{
                                 fontSize: 20,
                                 color: this.context.colors.headerForeground,
                                 paddingRight: 20

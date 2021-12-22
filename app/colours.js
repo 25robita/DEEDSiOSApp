@@ -6,6 +6,8 @@ export const coloursLight = {
     themePrimary: "#041e42",
     themeSeconday: "#e5f4ff",
     themeTertiary: "#daaa00",
+    themePositive: "#77ee77",
+    themeNegative: "#ee6666",
 
     // other important colours
     background: "#ededed",
@@ -70,6 +72,8 @@ export const coloursDark = {
     themePrimary: "#041e42",
     themeSeconday: "#232B37",
     themeTertiary: "#daaa00",
+    themePositive: "#184322",
+    themeNegative: "#421922",
 
     // other important colours
     background: "#101114",

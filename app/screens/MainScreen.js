@@ -40,7 +40,9 @@ class MainScreen extends Component {
         }
     }
     onRefresh = () => {
-        this.setState({})
+        this.setState({
+            componentRows: mainScreenData.map(this.renderItem)
+        })
     }
     renderItem({ name, RowComponent, props }) {
         return <RowComponent

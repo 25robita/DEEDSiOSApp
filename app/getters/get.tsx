@@ -73,7 +73,7 @@ function fetchHTMLResource(resourcePath: string): Promise<HTMLElement> {
     });
 }
 
-function fetchJSONResource(resourcePath: string, options: any) {
+function fetchJSONResource(resourcePath: string, options: any): Promise<object | any[]> {
     return new Promise((resolve, reject) => {
         fetchResource(
             resourcePath,

@@ -3,10 +3,12 @@ import { SectionList, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../../ThemeProvider";
 import { coloursDark, coloursLight } from "../colours";
 import getCalendar from "../getters/calendar";
+import { generateGenericEmptyMessage } from "../lang";
 import { navigate } from "../RootNavigation";
 import { styles } from "../styles";
 import { ContentText } from "./ContentTextComponent";
 import LoaderComponent from "./LoaderComponent";
+import { Meta } from "./MetaTextComponent";
 import SectionComponent from "./SectionComponent";
 import TimeComponent from "./TimeComponent";
 
@@ -133,7 +135,7 @@ class CalendarRow extends Component {
                     style={{ backgroundColor: this.context.colors.calendarIndentBackground || this.context.colors.contentBackground }}
                 >
                     {
-                        this.state?.calendar ?
+                        this.state?.calendar?.length ?
                             <View style={[styles.shadow, {
                                 borderColor: this.context.colors.calendarBackground,
                                 borderBottomWidth: 7,
@@ -153,7 +155,19 @@ class CalendarRow extends Component {
                                     }]}
                                 />
                             </View>
-                            : null
+                            : <View
+                                style={{
+                                    padding: 20
+                                }}
+                            >
+                                <Meta
+                                    style={{
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    {generateGenericEmptyMessage(0)}
+                                </Meta>
+                            </View>
                     }
                 </LoaderComponent>
             </SectionComponent>

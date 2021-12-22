@@ -49,9 +49,12 @@ class LinksList extends Component {
                     }}
                 />
                 <ContentText
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={2}
                     style={{
                         color: this.context.colors.link,
-                        fontSize: 16
+                        fontSize: 16,
+                        maxWidth: "90%"
                     }}
                 >{item.text}</ContentText>
             </View>

@@ -9,6 +9,7 @@ function IconComponent(props: { name: string, style: object | null } | { id: str
     const { colors } = useContext(ThemeContext)
     return (
         <ContentText
+            {...props}
             style={[
                 styles.icon,
                 {
